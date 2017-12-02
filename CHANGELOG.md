@@ -16,15 +16,9 @@ Types of changes
 
 ## [Unreleased]
 
-## 1.0.0 - [Date]
+## 0.1.0 - 2017-12-02
 
 ### Features
-### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security
+* The initial release after clean installation from composer-package-template
 
-
-[Unreleased]: https://github.com/GinoPane/composer-package-template/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/GinoPane/composer-package-template/compare/v0.1.0...HEAD
