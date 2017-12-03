@@ -4,8 +4,114 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "eccc490b9e1fe7f9ce037ec254a781be",
-    "packages": [],
+    "content-hash": "5f1febebe02bd37bfb1fcd85fef1f499",
+    "packages": [
+        {
+            "name": "gino-pane/nano-rest",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GinoPane/php-nano-rest.git",
+                "reference": "8a5fa5b829a583e579e5cc1ee4d16363ffda498e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/8a5fa5b829a583e579e5cc1ee4d16363ffda498e",
+                "reference": "8a5fa5b829a583e579e5cc1ee4d16363ffda498e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2.0",
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "^6.0",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GinoPane\\NanoRest\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey <Gino Pane> Karavay",
+                    "email": "sergey.karavay@gmail.com",
+                    "homepage": "http://sergey.karavay.name",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Minimalistic and self-contained cURL HTTP REST client for PHP",
+            "homepage": "http://github.com/GinoPane/PhpNanoRest",
+            "keywords": [
+                "http",
+                "http client",
+                "minimalistic",
+                "nano rest",
+                "php rest",
+                "rest",
+                "rest client"
+            ],
+            "time": "2017-11-30T19:51:34+00:00"
+        },
+        {
+            "name": "vlucas/phpdotenv",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vlucas/phpdotenv.git",
+                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
+                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dotenv\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause-Attribution"
+            ],
+            "authors": [
+                {
+                    "name": "Vance Lucas",
+                    "email": "vance@vancelucas.com",
+                    "homepage": "http://www.vancelucas.com"
+                }
+            ],
+            "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
+            "keywords": [
+                "dotenv",
+                "env",
+                "environment"
+            ],
+            "time": "2016-09-01T10:05:43+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "cilex/cilex",
@@ -4278,7 +4384,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.0"
+        "php": "^7.1"
     },
     "platform-dev": []
 }

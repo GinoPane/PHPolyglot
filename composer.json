@@ -28,7 +28,9 @@
     },
     "type": "project",
     "require": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "vlucas/phpdotenv": "^2.4",
+        "gino-pane/nano-rest": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
