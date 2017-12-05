@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "gino-pane/nano-rest",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GinoPane/php-nano-rest.git",
-                "reference": "a943e89e4677c32358547c2cda549803c0b5e55a"
+                "reference": "8ec1213c141fc7bec5bfc44042d4e1c30ab4db7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/a943e89e4677c32358547c2cda549803c0b5e55a",
-                "reference": "a943e89e4677c32358547c2cda549803c0b5e55a",
+                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/8ec1213c141fc7bec5bfc44042d4e1c30ab4db7d",
+                "reference": "8ec1213c141fc7bec5bfc44042d4e1c30ab4db7d",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "rest",
                 "rest client"
             ],
-            "time": "2017-12-04T10:04:02+00:00"
+            "time": "2017-12-05T12:46:48+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -2891,7 +2891,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -2947,16 +2947,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "7cad097cf081c0ab3d0322cc38d34ee80484d86f"
+                "reference": "46270f1ca44f08ebc134ce120fd2c2baf5fd63de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/7cad097cf081c0ab3d0322cc38d34ee80484d86f",
-                "reference": "7cad097cf081c0ab3d0322cc38d34ee80484d86f",
+                "url": "https://api.github.com/repos/symfony/console/zipball/46270f1ca44f08ebc134ce120fd2c2baf5fd63de",
+                "reference": "46270f1ca44f08ebc134ce120fd2c2baf5fd63de",
                 "shasum": ""
             },
             "require": {
@@ -3004,7 +3004,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-11-16T15:20:19+00:00"
+            "time": "2017-11-29T09:33:18+00:00"
         },
         {
             "name": "symfony/debug",
@@ -3128,7 +3128,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -3237,7 +3237,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -3345,7 +3345,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -3394,7 +3394,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
@@ -3507,16 +3507,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v2.8.31",
+            "version": "v2.8.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "2c5ae6fa983b65c58cb7c4481cd54871a3bfd10a"
+                "reference": "d3f8bf19db07dde2ed3f4c43907bb18eb876a0c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/2c5ae6fa983b65c58cb7c4481cd54871a3bfd10a",
-                "reference": "2c5ae6fa983b65c58cb7c4481cd54871a3bfd10a",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/d3f8bf19db07dde2ed3f4c43907bb18eb876a0c1",
+                "reference": "d3f8bf19db07dde2ed3f4c43907bb18eb876a0c1",
                 "shasum": ""
             },
             "require": {
@@ -3576,7 +3576,7 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
-            "time": "2017-11-10T18:59:36+00:00"
+            "time": "2017-12-04T12:15:49+00:00"
         },
         {
             "name": "theseer/tokenizer",

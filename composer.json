@@ -26,7 +26,7 @@
         "docs": "https://github.com/GinoPane/PHPolyglot/blob/master/README.md",
         "issues": "https://github.com/GinoPane/PHPolyglot/issues"
     },
-    "type": "project",
+    "type": "library",
     "require": {
         "php": "^7.1",
         "vlucas/phpdotenv": "^2.4",
