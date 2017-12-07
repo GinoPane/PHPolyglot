@@ -1,6 +1,6 @@
 <?php
 
-namespace GinoPane\PHPolyglot\Exceptions;
+namespace GinoPane\PHPolyglot\Exception;
 
 /**
  * Class InitEnvironmentException

@@ -1,6 +1,6 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Factories;
+namespace GinoPane\PHPolyglot\API\Factory;
 
 /**
  * Interface ApiFactoryInterface
