@@ -18,7 +18,10 @@ class TranslateApiAbstract extends ApiAbstract implements TranslateApiInterface
      */
     public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        return $this->callApi(__FUNCTION__);
+        /** @var TranslateResponse $response */
+        $response = $this->callApi(__FUNCTION__);
+
+        return $response;
     }
 
     /**
@@ -30,6 +33,9 @@ class TranslateApiAbstract extends ApiAbstract implements TranslateApiInterface
      */
     public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        return $this->callApi(__FUNCTION__);
+        /** @var TranslateResponse $response */
+        $response = $this->callApi(__FUNCTION__);
+
+        return $response;
     }
 }
