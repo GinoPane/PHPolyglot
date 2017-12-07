@@ -3,33 +3,33 @@
 namespace GinoPane\PHPolyglot\API\Implementation;
 
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
+use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponseCollection;
 
-class TranslateApiAbstract implements TranslateApiInterface
+class TranslateApiAbstract extends ApiAbstract implements TranslateApiInterface
 {
-
     /**
      * @param string $text
-     * @param string $to
-     * @param string $from
+     * @param string $languageTo
+     * @param string $languageFrom
      *
      * @return TranslateResponse
      */
-    public function translate(string $text, string $to, string $from = ''): TranslateResponse
+    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        // TODO: Implement translate() method.
+        return $this->callApi(__FUNCTION__);
     }
 
     /**
      * @param array $text
-     * @param string $to
-     * @param string $from
+     * @param string $languageTo
+     * @param string $languageFrom
      *
-     * @return TranslateResponseCollection
+     * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $to, string $from = ''): TranslateResponseCollection
+    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        // TODO: Implement translateBulk() method.
+        return $this->callApi(__FUNCTION__);
     }
 }
