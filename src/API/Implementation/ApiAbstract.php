@@ -5,6 +5,7 @@ namespace GinoPane\PHPolyglot\API\Implementation;
 use Exception;
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 
 /**
@@ -25,6 +26,8 @@ abstract class ApiAbstract
      * @var string
      */
     protected $apiEndpoint = '';
+
+    protected $responseClass = '';
 
     /**
      * ApiAbstract constructor
@@ -63,5 +66,8 @@ abstract class ApiAbstract
         return $apiResponse;
     }
 
-    abstract protected function setResponseErrorFromException(Exception $exception): ApiResponseInterface;
+    protected function setResponseErrorFromException(Exception $exception): ApiResponseInterface
+    {
+
+    }
 }

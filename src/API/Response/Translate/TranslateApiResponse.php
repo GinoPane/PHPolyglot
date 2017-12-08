@@ -5,9 +5,9 @@ namespace GinoPane\PHPolyglot\API\Response\Translate;
 use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
 
 /**
- * Class TranslateResponse
+ * Class TranslateApiResponse
  */
-class TranslateResponse implements ApiResponseInterface
+class TranslateApiResponse implements ApiResponseInterface
 {
 
 }
