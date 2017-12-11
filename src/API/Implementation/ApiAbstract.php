@@ -85,7 +85,7 @@ abstract class ApiAbstract
     }
 
     /**
-     * Filters ResponseContext from common errors
+     * Filters ResponseContext from common HTTP errors
      *
      * @param ResponseContext $responseContext
      *
@@ -95,7 +95,9 @@ abstract class ApiAbstract
      */
     protected function filterApiResponseContext(ResponseContext $responseContext): void
     {
-        throw new BadResponseContextException();
+        if ($responseContext->hasHttpError()) {
+            throw new BadResponseContextException("HTTP error happened", $responseContext->getHttpStatusCode());
+        }
     }
 
     /**
