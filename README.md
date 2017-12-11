@@ -1,8 +1,6 @@
 PHPolyglot
 ============
 
-<sub>Powered by [composer-package-template](https://github.com/GinoPane/composer-package-template)</sub>
-
 [![Latest Stable Version](https://poser.pugx.org/gino-pane/phpolyglot/v/stable)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![License](https://poser.pugx.org/gino-pane/phpolyglot/license)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![composer.lock](https://poser.pugx.org/gino-pane/phpolyglot/composerlock)](https://packagist.org/packages/gino-pane/phpolyglot)
@@ -62,3 +60,8 @@ PhpUnit:
 --------
 
  ```php vendor/phpunit/phpunit/phpunit -c build/phpunit.xml```
+ 
+Notes
+=====
+
+Powered by [composer-package-template](https://github.com/GinoPane/composer-package-template).
