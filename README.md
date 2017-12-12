@@ -1,8 +1,6 @@
 PHPolyglot
 ============
 
-<sub>Powered by [composer-package-template](https://github.com/GinoPane/composer-package-template)</sub>
-
 [![Latest Stable Version](https://poser.pugx.org/gino-pane/phpolyglot/v/stable)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![License](https://poser.pugx.org/gino-pane/phpolyglot/license)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![composer.lock](https://poser.pugx.org/gino-pane/phpolyglot/composerlock)](https://packagist.org/packages/gino-pane/phpolyglot)
@@ -21,6 +19,46 @@ Installation
 ============
 
     composer require gino-pane/phpolyglot
+    
+Useful Tools
+============
+
+Running Tests:
+--------
+
+    php vendor/bin/phpunit
+ 
+ or 
+ 
+    composer test
+
+Code Sniffer Tool:
+------------------
+
+    php vendor/bin/phpcs --standard=PSR2 src/
+ 
+ or
+ 
+    composer psr2check
+
+Code Auto-fixer:
+----------------
+
+    php vendor/bin/phpcbf --standard=PSR2 src/ 
+    
+ or
+ 
+    composer psr2autofix
+ 
+ 
+Building Docs:
+--------
+
+    php vendor/bin/phpdoc -d "src" -t "docs"
+ 
+ or 
+ 
+    composer docs
     
 Changelog
 =========
@@ -45,20 +83,7 @@ License
 
 Please refer to [LICENSE](https://github.com/GinoPane/PHPolyglot/blob/master/LICENSE).
 
-Useful Tools
-============
+Notes
+=====
 
-Code sniffer tool:
-------------------
-
- ```php vendor/squizlabs/php_codesniffer/scripts/phpcs -s --report-full=phpcs.txt --standard=PSR2 src/```
-
-Code auto-fixer:
-----------------
-
- ```php vendor/squizlabs/php_codesniffer/scripts/phpcbf --standard=PSR2 src/```    
- 
-PhpUnit:
---------
-
- ```php vendor/phpunit/phpunit/phpunit -c build/phpunit.xml```
+Powered by [composer-package-template](https://github.com/GinoPane/composer-package-template)
