@@ -61,16 +61,16 @@
         },
         {
             "name": "gino-pane/nano-rest",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GinoPane/php-nano-rest.git",
-                "reference": "66d9a7f550966c0e6347b41d9fe918e9ed76fed0"
+                "reference": "14c0a348eee3fc0613528278d6321387227bc6ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/66d9a7f550966c0e6347b41d9fe918e9ed76fed0",
-                "reference": "66d9a7f550966c0e6347b41d9fe918e9ed76fed0",
+                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/14c0a348eee3fc0613528278d6321387227bc6ac",
+                "reference": "14c0a348eee3fc0613528278d6321387227bc6ac",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,7 @@
                 "rest",
                 "rest client"
             ],
-            "time": "2017-12-12T12:16:43+00:00"
+            "time": "2017-12-12T19:39:37+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
