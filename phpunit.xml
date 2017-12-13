@@ -13,7 +13,10 @@
 		stopOnRisky="false"
 >
 	<testsuites>
-		<testsuite name="Main tests">
+		<testsuite name="Supplemental Tests">
+			<directory>./tests/suites/supplemental/</directory>
+		</testsuite>
+		<testsuite name="Main Tests">
 			<directory>./tests/suites/main/</directory>
 		</testsuite>
 	</testsuites>

@@ -1,15 +1,13 @@
-<?php 
+<?php
 
 namespace GinoPane\PHPolyglot;
-
-use PHPUnit\Framework\TestCase;
 
 /**
 *  Corresponding class to test PHPolyglot class
 *
 *  @author Sergey <Gino Pane> Karavay
 */
-class PHPolyglotTest extends TestCase
+class PHPolyglotTest extends PHPolyglotTestCase
 {
     /**
      * Just check if the PHPolyglot can be created

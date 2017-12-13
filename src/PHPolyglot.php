@@ -2,6 +2,10 @@
 
 namespace GinoPane\PHPolyglot;
 
+use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
+use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
+
 define('ROOT_DIRECTORY', dirname(__FILE__, 2));
 
 /**
@@ -33,9 +37,16 @@ class PHPolyglot
         return $this;
     }
 
-    public function translate()
+    /**
+     * @param string $text
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @return TranslateApiResponse
+     */
+    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse
     {
-
+        return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
     }
 
     public function translateBulk()
@@ -51,5 +62,15 @@ class PHPolyglot
     public function lookup()
     {
 
+    }
+
+    /**
+     * Get Translate API instance
+     *
+     * @return TranslateApiInterface
+     */
+    protected function getTranslateApi(): TranslateApiInterface
+    {
+        return (new TranslateApiFactory())->getApi();
     }
 }
