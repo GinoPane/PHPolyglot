@@ -4,6 +4,7 @@ namespace GinoPane\PHPolyglot\API\Implementation;
 
 use Exception;
 use GinoPane\NanoRest\NanoRest;
+use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
 use GinoPane\PHPolyglot\Exception\BadResponseClassException;
@@ -66,15 +67,16 @@ abstract class ApiAbstract
      * Call API method by creating RequestContext, sending it, filtering the result and preparing the response
      *
      * @param string $apiClassMethod
+     * @param array $arguments Arguments that need to be passed to API-related methods
      *
      * @return ApiResponseInterface
      */
-    protected function callApi(string $apiClassMethod): ApiResponseInterface
+    protected function callApi(string $apiClassMethod, array $arguments = []): ApiResponseInterface
     {
         try {
-            $responseContext = $this->getApiResponseContext($apiClassMethod);
+            $requestContext = $this->getApiRequestContext($apiClassMethod, $arguments);
 
-            $this->filterApiResponseContext($responseContext);
+            $responseContext = $this->getApiResponseContext($requestContext);
 
             $apiResponse = $this->prepareApiResponse($responseContext, $apiClassMethod);
         } catch (Exception $exception) {
@@ -93,7 +95,7 @@ abstract class ApiAbstract
      *
      * @return void
      */
-    protected function filterApiResponseContext(ResponseContext $responseContext): void
+    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
     {
         if ($responseContext->hasHttpError()) {
             throw new BadResponseContextException("HTTP error happened", $responseContext->getHttpStatusCode());
@@ -120,25 +122,38 @@ abstract class ApiAbstract
     }
 
     /**
-     * Gets RequestContext and sends it to API to get ResponseContext
+     * Accepts RequestContext and sends it to API to get ResponseContext
      *
-     * @param string $apiClassMethod
-     *
-     * @throws MethodDoesNotExistException
+     * @param RequestContext $requestContext
      *
      * @return ResponseContext
      */
-    private function getApiResponseContext(string $apiClassMethod): ResponseContext
+    private function getApiResponseContext(RequestContext $requestContext): ResponseContext
+    {
+        $responseContext = $this->httpClient->sendRequest($requestContext);
+
+        $this->processApiResponseContextErrors($responseContext);
+
+        return $responseContext;
+    }
+
+    /**
+     * Gets RequestContext for sending
+     *
+     * @param string $apiClassMethod
+     * @param array $arguments Arguments that need to be passed to API-related methods
+     *
+     * @return RequestContext
+     */
+    private function getApiRequestContext(string $apiClassMethod, array $arguments = []): RequestContext
     {
         $getRequestContext = sprintf("create%sContext", ucfirst($apiClassMethod));
 
         $this->assertMethodExists($getRequestContext);
 
-        $requestContext = $this->{$getRequestContext}();
+        $requestContext = $this->{$getRequestContext}(...$arguments);
 
-        $responseContext = $this->httpClient->sendRequest($requestContext);
-
-        return $responseContext;
+        return $requestContext;
     }
 
     /**

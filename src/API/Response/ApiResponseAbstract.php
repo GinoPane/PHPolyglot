@@ -15,11 +15,15 @@ abstract class ApiResponseAbstract implements ApiResponseInterface
     private $success = false;
 
     /**
+     * The string describing what error happened
+     *
      * @var string
      */
     private $errorMessage = '';
 
     /**
+     * The code describing what error happened
+     *
      * @var int
      */
     private $errorCode = 0;

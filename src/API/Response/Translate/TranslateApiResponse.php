@@ -2,12 +2,12 @@
 
 namespace GinoPane\PHPolyglot\API\Response\Translate;
 
-use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
+use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
 
 /**
  * Class TranslateApiResponse
  */
-class TranslateApiResponse implements ApiResponseInterface
+class TranslateApiResponse extends ApiResponseAbstract
 {
 
 }
