@@ -5,12 +5,12 @@ namespace GinoPane\PHPolyglot;
 define('ROOT_DIRECTORY', dirname(__FILE__, 2));
 
 /**
-*  PHPolyglot
-*
-*  Easily translate, do spell check and speak-out texts in different languages
-*
-*  @author Sergey <Gino Pane> Karavay
-*/
+ *  PHPolyglot
+ *
+ *  Easily translate, do spell check and speak-out texts in different languages
+ *
+ *  @author Sergey <Gino Pane> Karavay
+ */
 class PHPolyglot
 {
     public function from(string $language): PHPolyglot
