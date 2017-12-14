@@ -22,6 +22,9 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      */
     private static $env = null;
 
+    /**
+     * ApiFactoryAbstract constructor
+     */
     public function __construct()
     {
         if (is_null(self::$config) || is_null(self::$env)) {
@@ -30,6 +33,9 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
         }
     }
 
+    /**
+     * @throws InvalidPathException
+     */
     protected function initEnvironment(): void
     {
         $envFile = $this->getRootDirectory() . DIRECTORY_SEPARATOR . $this->getEnvFileName();
@@ -39,31 +45,48 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
         self::$env = (new Dotenv($this->getRootDirectory(), $this->getEnvFileName()))->load();
     }
 
+    /**
+     * @throws InvalidPathException
+     */
     protected function initConfig(): void
     {
         $configFile = $this->getRootDirectory() . DIRECTORY_SEPARATOR . $this->getConfigFileName();
 
         $this->assertFileIsReadable($configFile);
 
-        self::$config = include $configFile;
+        self::$config = (array)(include $configFile);
     }
 
+    /**
+     * @return string
+     */
     protected function getRootDirectory(): string
     {
         return dirname(\GinoPane\PHPolyglot\ROOT_DIRECTORY);
     }
 
+    /**
+     * @return string
+     */
     protected function getEnvFileName(): string
     {
         return ".env";
     }
 
+    /**
+     * @return string
+     */
     protected function getConfigFileName(): string
     {
         return "config.php";
     }
 
-    private function assertFileIsReadable(string $fileName)
+    /**
+     * @param string $fileName
+     *
+     * @throws InvalidPathException
+     */
+    private function assertFileIsReadable(string $fileName): void
     {
         if (!is_file($fileName) || !is_readable($fileName)) {
             throw new InvalidPathException(sprintf('Unable to read the file at %s', $fileName));

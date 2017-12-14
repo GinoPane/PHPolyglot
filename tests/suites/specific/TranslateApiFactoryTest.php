@@ -26,7 +26,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
         $stub->method('getConfigFileName')->willReturn('test');
         $stub->method('getEnvFileName')->willReturn('test');
 
-        $stub->__construct('factory');
+        $stub->__construct();
     }
 
     public function testIfTranslateApiFactoryThrowsExceptionOnWrongEnvFile()
@@ -42,12 +42,9 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
         $stub->method('getConfigFileName')->willReturn('test.config.php');
         $stub->method('getEnvFileName')->willReturn('test');
 
-        $stub->__construct('factory');
+        $stub->__construct();
     }
 
-    /**
-     * Just check if the TranslateApiFactory can be created
-     */
     public function testIfTranslateApiFactoryObjectCanBeCreated()
     {
         $this->getTranslateApiFactory();
@@ -80,7 +77,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
         $stub->method('getConfigFileName')->willReturn('test.config.php');
         $stub->method('getEnvFileName')->willReturn('test.env');
 
-        $stub->__construct('factory');
+        $stub->__construct();
 
         return $stub;
     }
