@@ -2,6 +2,6 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-require_once 'PHPolyglotTestCase.php';
+define('TEST_ROOT', dirname(__FILE__));
 
-define('PROJECT_ROOT', dirname(__DIR__));
+require_once 'PHPolyglotTestCase.php';

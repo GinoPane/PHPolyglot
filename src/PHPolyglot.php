@@ -6,7 +6,7 @@ use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 
-define('ROOT_DIRECTORY', dirname(__FILE__, 2));
+define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__, 2));
 
 /**
  *  PHPolyglot

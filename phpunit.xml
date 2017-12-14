@@ -13,11 +13,11 @@
 		stopOnRisky="false"
 >
 	<testsuites>
-		<testsuite name="Supplemental Tests">
-			<directory>./tests/suites/supplemental/</directory>
+		<testsuite name="Specific Tests">
+			<directory>./tests/suites/specific/</directory>
 		</testsuite>
-		<testsuite name="Main Tests">
-			<directory>./tests/suites/main/</directory>
+		<testsuite name="General Tests">
+			<directory>./tests/suites/general/</directory>
 		</testsuite>
 	</testsuites>
 	<filter>

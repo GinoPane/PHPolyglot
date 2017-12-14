@@ -3,6 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Factory;
 
 use Dotenv\Dotenv;
+use GinoPane\PHPolyglot\Exception\InvalidPathException;
 
 /**
  * Interface ApiFactoryAbstract
@@ -23,25 +24,49 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
 
     public function __construct()
     {
-        $this->initConfig();
-        $this->initEnvironment();
-    }
-
-    protected function initConfig(): void
-    {
-        if (!is_null(self::$env)) {
-            return;
+        if (is_null(self::$config) || is_null(self::$env)) {
+            $this->initConfig();
+            $this->initEnvironment();
         }
-
-        self::$env = (new Dotenv(dirname(ROOT_DIRECTORY)))->load();
     }
 
     protected function initEnvironment(): void
     {
-        if (!is_null(self::$config)) {
-            return;
-        }
+        $envFile = $this->getRootDirectory() . DIRECTORY_SEPARATOR . $this->getEnvFileName();
 
-        self::$config = include ROOT_DIRECTORY . DIRECTORY_SEPARATOR . "config.php";
+        $this->assertFileIsReadable($envFile);
+
+        self::$env = (new Dotenv($this->getRootDirectory(), $this->getEnvFileName()))->load();
+    }
+
+    protected function initConfig(): void
+    {
+        $configFile = $this->getRootDirectory() . DIRECTORY_SEPARATOR . $this->getConfigFileName();
+
+        $this->assertFileIsReadable($configFile);
+
+        self::$config = include $configFile;
+    }
+
+    protected function getRootDirectory(): string
+    {
+        return dirname(\GinoPane\PHPolyglot\ROOT_DIRECTORY);
+    }
+
+    protected function getEnvFileName(): string
+    {
+        return ".env";
+    }
+
+    protected function getConfigFileName(): string
+    {
+        return "config.php";
+    }
+
+    private function assertFileIsReadable(string $fileName)
+    {
+        if (!is_file($fileName) || !is_readable($fileName)) {
+            throw new InvalidPathException(sprintf('Unable to read the file at %s', $fileName));
+        }
     }
 }
