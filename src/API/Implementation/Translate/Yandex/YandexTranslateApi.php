@@ -2,7 +2,9 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Translate\Yandex;
 
-class YandexTranslateApi
+use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
+
+class YandexTranslateApi extends TranslateApiAbstract
 {
 
 }

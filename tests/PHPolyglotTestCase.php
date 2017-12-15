@@ -17,21 +17,23 @@ class PHPolyglotTestCase extends TestCase
      * @param $property
      * @return ReflectionProperty
      */
-    protected function getReflectionProperty($object, $property)
+    protected function getReflectionProperty($object, $property): ReflectionProperty
     {
         $reflection         = new ReflectionClass($object);
         $reflectionProperty = $reflection->getProperty($property);
         $reflectionProperty->setAccessible(true);
+
         return $reflectionProperty;
     }
 
     /**
-     * This method modifies the protected properties of any object.
+     * This method modifies the protected or private properties of any object|class
+     *
      * @param object $object   The object to modify.
      * @param string $property The name of the property to modify.
      * @param mixed  $value    The value to set.
      */
-    public function setInternalProperty(&$object, string $property, $value)
+    public function setInternalProperty($object, string $property, $value): void
     {
         $reflectionProperty = $this->getReflectionProperty($object, $property);
         $reflectionProperty->setValue($object, $value);
@@ -51,9 +53,10 @@ class PHPolyglotTestCase extends TestCase
     /**
      * @param $object
      * @param string $name
+     *
      * @return ReflectionMethod
      */
-    public function getInternalMethod($object, string $name)
+    public function getInternalMethod($object, string $name): ReflectionMethod
     {
         $class = new ReflectionClass($object);
         $method = $class->getMethod($name);

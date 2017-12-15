@@ -4,26 +4,49 @@ namespace GinoPane\PHPolyglot\API\Factory;
 
 use Dotenv\Dotenv;
 use GinoPane\PHPolyglot\Exception\InvalidPathException;
+use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 
 /**
  * Interface ApiFactoryAbstract
- *
  * Abstract class that provides a method to get the necessary API object
+ *
+ * @author Sergey <Gino Pane> Karavay
  */
 abstract class ApiFactoryAbstract implements ApiFactoryInterface
 {
     /**
-     * @var array|null
+     * Environment file name
      */
-    private static $config = null;
+    const ENV_FILE_NAME = ".env";
+
+    /**
+     * Config file name
+     */
+    const CONFIG_FILE_NAME = "config.php";
+
+    /**
+     * Config section name that is being checked for existence. API-specific properties must
+     * be located under that section
+     *
+     * @var string
+     */
+    protected $configSectionName = "";
 
     /**
      * @var array|null
      */
-    private static $env = null;
+    protected static $config = null;
+
+    /**
+     * @var array|null
+     */
+    protected static $env = null;
 
     /**
      * ApiFactoryAbstract constructor
+     *
+     * @throws InvalidPathException
+     * @throws InvalidConfigException
      */
     public function __construct()
     {
@@ -31,9 +54,56 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
             $this->initConfig();
             $this->initEnvironment();
         }
+
+        $this->assertConfigIsValid();
     }
 
     /**
+     * Gets necessary API object
+     *
+     * @throws InvalidConfigException
+     *
+     * @return mixed
+     */
+    public function getApi()
+    {
+        $this->assertConfigIsValid();
+
+        $apiClass = $this->getFactorySpecificConfig()['class'];
+        
+        return new $apiClass();
+    }
+
+
+    /**
+     * Returns config section specific for current factory. Returns an empty array for invalid section name in case of
+     * improper method call
+     *
+     * @return array
+     */
+    protected function getFactorySpecificConfig(): array
+    {
+        return self::$config[$this->configSectionName] ?: [];
+    }
+
+    /**
+     * Performs basic validation of config structure. This method is to be overridden by custom implementations if
+     * required
+     *
+     * @throws InvalidConfigException
+     */
+    protected function assertConfigIsValid(): void
+    {
+        if (empty(self::$config[$this->configSectionName]['class'])) {
+            throw new InvalidConfigException(
+                "Config section does not exist or is not filled properly: {$this->configSectionName}"
+            );
+        }
+    }
+
+    /**
+     * Initialize environment variables
+     *
      * @throws InvalidPathException
      */
     protected function initEnvironment(): void
@@ -46,6 +116,8 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     }
 
     /**
+     * Initialize config variables
+     *
      * @throws InvalidPathException
      */
     protected function initConfig(): void
@@ -58,6 +130,8 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     }
 
     /**
+     * Returns package root directory
+     *
      * @return string
      */
     protected function getRootDirectory(): string
@@ -66,22 +140,28 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     }
 
     /**
+     * Returns environment file name
+     *
      * @return string
      */
     protected function getEnvFileName(): string
     {
-        return ".env";
+        return self::ENV_FILE_NAME;
     }
 
     /**
+     * Returns config file name
+     *
      * @return string
      */
     protected function getConfigFileName(): string
     {
-        return "config.php";
+        return self::CONFIG_FILE_NAME;
     }
 
     /**
+     * A simple check that file exists and is readable
+     *
      * @param string $fileName
      *
      * @throws InvalidPathException

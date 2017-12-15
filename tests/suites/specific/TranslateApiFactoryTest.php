@@ -22,7 +22,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $stub->method('getRootDirectory')->willReturn(TEST_ROOT);
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
         $stub->method('getConfigFileName')->willReturn('test');
         $stub->method('getEnvFileName')->willReturn('test');
 
@@ -38,7 +38,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $stub->method('getRootDirectory')->willReturn(TEST_ROOT);
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
         $stub->method('getConfigFileName')->willReturn('test.config.php');
         $stub->method('getEnvFileName')->willReturn('test');
 
@@ -73,7 +73,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $stub->method('getRootDirectory')->willReturn(TEST_ROOT);
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
         $stub->method('getConfigFileName')->willReturn('test.config.php');
         $stub->method('getEnvFileName')->willReturn('test.env');
 

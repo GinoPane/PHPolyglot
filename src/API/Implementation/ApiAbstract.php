@@ -38,6 +38,19 @@ abstract class ApiAbstract
     protected $responseClassName = '';
 
     /**
+     * Mapping of properties to environment variables which must supply these properties, like this:
+     *
+     *      [
+     *          'apiKey' => 'ENVIRONMENT_API_KEY'
+     *      ]
+     *
+     * These properties and corresponding environment variables will be validated
+     *
+     * @var array
+     */
+    protected $environmentProperties = [];
+
+    /**
      * ApiAbstract constructor
      */
     public function __construct()
@@ -57,7 +70,9 @@ abstract class ApiAbstract
     protected function setResponseClassName(string $responseClassName): void
     {
         if (!in_array(ApiResponseInterface::class, class_implements($responseClassName, true))) {
-            throw new BadResponseClassException($responseClassName);
+            throw new BadResponseClassException(
+                sprintf("Class %s must implement %s", $responseClassName, ApiResponseInterface::class)
+            );
         }
 
         $this->responseClassName = $responseClassName;

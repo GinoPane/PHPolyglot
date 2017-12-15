@@ -1,9 +1,9 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Implementation;
+namespace GinoPane\PHPolyglot\API\Implementation\Translate;
 
+use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
-use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 
 class TranslateApiAbstract extends ApiAbstract implements TranslateApiInterface
 {

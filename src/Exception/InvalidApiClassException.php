@@ -3,11 +3,11 @@
 namespace GinoPane\PHPolyglot\Exception;
 
 /**
- * Class BadResponseContextException
+ * Class InvalidConfigException
  *
  * @author Sergey <Gino Pane> Karavay
  */
-class BadResponseContextException extends \Exception
+class InvalidApiClassException extends \Exception
 {
 
 }
