@@ -29,7 +29,7 @@ class PHPolyglotTestCase extends TestCase
     /**
      * This method modifies the protected or private properties of any object|class
      *
-     * @param object $object   The object to modify.
+     * @param object|string $object   The object or class to modify.
      * @param string $property The name of the property to modify.
      * @param mixed  $value    The value to set.
      */

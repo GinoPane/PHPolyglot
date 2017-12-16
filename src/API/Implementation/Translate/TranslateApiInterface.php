@@ -10,6 +10,8 @@ use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 interface TranslateApiInterface
 {
     /**
+     * Translate single text string
+     *
      * @param string $text
      * @param string $languageTo
      * @param string $languageFrom
@@ -19,6 +21,8 @@ interface TranslateApiInterface
     public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse;
 
     /**
+     * Translate multiple text strings
+     *
      * @param array $text
      * @param string $languageTo
      * @param string $languageFrom

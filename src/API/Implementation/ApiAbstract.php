@@ -7,8 +7,10 @@ use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
+use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\BadResponseClassException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 
 /**
@@ -31,7 +33,7 @@ abstract class ApiAbstract
     protected $apiEndpoint = '';
 
     /**
-     * Response class name
+     * Response class name defined the class which instance must be returned by API calls
      *
      * @var string
      */
@@ -48,7 +50,7 @@ abstract class ApiAbstract
      *
      * @var array
      */
-    protected $environmentProperties = [];
+    protected $envProperties = [];
 
     /**
      * ApiAbstract constructor
@@ -56,10 +58,13 @@ abstract class ApiAbstract
     public function __construct()
     {
         $this->httpClient = new NanoRest();
+
+        $this->initPropertiesFromEnvironment();
+        $this->assertResponseClassNameIsValid($this->responseClassName);
     }
 
     /**
-     * Sets response class name
+     * Asserts that specified response class name is valid. Implemented for validation of custom APIs
      *
      * @param string $responseClassName
      *
@@ -67,15 +72,13 @@ abstract class ApiAbstract
      *
      * @return void
      */
-    protected function setResponseClassName(string $responseClassName): void
+    protected function assertResponseClassNameIsValid(string $responseClassName): void
     {
         if (!in_array(ApiResponseInterface::class, class_implements($responseClassName, true))) {
             throw new BadResponseClassException(
                 sprintf("Class %s must implement %s", $responseClassName, ApiResponseInterface::class)
             );
         }
-
-        $this->responseClassName = $responseClassName;
     }
 
     /**
@@ -113,7 +116,10 @@ abstract class ApiAbstract
     protected function processApiResponseContextErrors(ResponseContext $responseContext): void
     {
         if ($responseContext->hasHttpError()) {
-            throw new BadResponseContextException("HTTP error happened", $responseContext->getHttpStatusCode());
+            throw new BadResponseContextException(
+                $responseContext->getHttpStatusMessage(),
+                $responseContext->getHttpStatusCode()
+            );
         }
     }
 
@@ -137,9 +143,36 @@ abstract class ApiAbstract
     }
 
     /**
+     * Fills specified properties using environment variables
+     *
+     * @throws InvalidPropertyException
+     * @throws InvalidEnvironmentException
+     */
+    protected function initPropertiesFromEnvironment(): void
+    {
+        foreach ($this->envProperties as $property => $env) {
+            if (!property_exists($this, $property)) {
+                throw new InvalidPropertyException(
+                    sprintf("Property \"%s\" does not exist within the class \"%s\"", $property, get_class($this))
+                );
+            }
+
+            if (false === ($envSetting = getenv($env))) {
+                throw new InvalidEnvironmentException(
+                    sprintf("Required environment variable \"%s\" is not set", $env)
+                );
+            }
+
+            $this->{$property} = $envSetting;
+        }
+    }
+
+    /**
      * Accepts RequestContext and sends it to API to get ResponseContext
      *
      * @param RequestContext $requestContext
+     *
+     * @throws BadResponseContextException
      *
      * @return ResponseContext
      */
@@ -159,6 +192,8 @@ abstract class ApiAbstract
      * @param array $arguments Arguments that need to be passed to API-related methods
      *
      * @return RequestContext
+     *
+     * @throws MethodDoesNotExistException
      */
     private function getApiRequestContext(string $apiClassMethod, array $arguments = []): RequestContext
     {
@@ -183,7 +218,7 @@ abstract class ApiAbstract
      */
     private function prepareApiResponse(ResponseContext $responseContext, string $apiClassMethod): ApiResponseInterface
     {
-        $prepareApiResponse = sprintf("prepare%sApiResponse", ucfirst($apiClassMethod));
+        $prepareApiResponse = sprintf("prepare%sResponse", ucfirst($apiClassMethod));
 
         $this->assertMethodExists($prepareApiResponse);
 
@@ -204,7 +239,9 @@ abstract class ApiAbstract
     private function assertMethodExists(string $method): void
     {
         if (!method_exists($this, $method)) {
-            throw new MethodDoesNotExistException();
+            throw new MethodDoesNotExistException(
+                sprintf("Specified method \"%s\" does not exist", $method)
+            );
         }
     }
 }

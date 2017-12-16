@@ -3,6 +3,8 @@
 namespace GinoPane\PHPolyglot;
 
 use Exception;
+use GinoPane\PHPolyglot\Exception\InvalidConfigException;
+use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 
@@ -54,11 +56,40 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
         $this->assertEquals('YANDEX_TRANSLATE_TEST_KEY', getenv('YANDEX_TRANSLATE_API_KEY'));
     }
 
-    public function testIfTranslateApiCanBeCreatedByFactory()
+    public function testIfTranslateApiFactoryThrowsExceptionOnInvalidConfigFile()
     {
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $this->expectException(InvalidConfigException::class);
 
-        $this->assertTrue($translateApi instanceof TranslateApiInterface);
+        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
+
+        $stub = $this->getMockBuilder(TranslateApiFactory::class)
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
+        $stub->method('getConfigFileName')->willReturn('invalid1.config.php');
+        $stub->method('getEnvFileName')->willReturn('test.env');
+
+        $stub->__construct();
+    }
+
+    public function testIfTranslateApiFactoryThrowsExceptionOnInvalidClassInConfigFile()
+    {
+        $this->expectException(InvalidApiClassException::class);
+
+        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
+
+        $stub = $this->getMockBuilder(TranslateApiFactory::class)
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
+        $stub->method('getConfigFileName')->willReturn('invalid2.config.php');
+        $stub->method('getEnvFileName')->willReturn('test.env');
+
+        $stub->__construct();
     }
 
     /**

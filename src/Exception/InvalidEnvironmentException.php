@@ -3,11 +3,11 @@
 namespace GinoPane\PHPolyglot\Exception;
 
 /**
- * Class BadResponseClassException
+ * Class InvalidEnvironmentException
  *
  * @author Sergey <Gino Pane> Karavay
  */
-class BadResponseClassException extends \Exception
+class InvalidEnvironmentException extends \Exception
 {
 
 }

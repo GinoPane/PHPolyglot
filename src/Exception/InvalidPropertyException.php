@@ -3,11 +3,11 @@
 namespace GinoPane\PHPolyglot\Exception;
 
 /**
- * Class BadResponseClassException
+ * Class InvalidPropertyException
  *
  * @author Sergey <Gino Pane> Karavay
  */
-class BadResponseClassException extends \Exception
+class InvalidPropertyException extends \Exception
 {
 
 }
