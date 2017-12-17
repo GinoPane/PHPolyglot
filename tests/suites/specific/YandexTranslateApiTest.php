@@ -2,11 +2,16 @@
 
 namespace GinoPane\PHPolyglot;
 
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
+use GinoPane\NanoRest\NanoRest;
+use GinoPane\NanoRest\Request\RequestContext;
+use GinoPane\NanoRest\Response\JsonResponseContext;
+use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\BadResponseClassException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Translate\Yandex\YandexTranslateApi;
 
@@ -19,6 +24,8 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
 {
     public function testIfTranslateApiCanBeCreatedByFactory()
     {
+        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
+
         $translateApi = $this->getTranslateApiFactory()->getApi();
 
         $this->assertTrue($translateApi instanceof TranslateApiInterface);
@@ -80,15 +87,128 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         );
     }
 
+    public function testIfTranslateApiCreatesValidTranslateRequestContext()
+    {
+        $translateApi = $this->getTranslateApiFactory()->getApi();
+
+        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateContext');
+
+        $translateString = 'Hello World!';
+        /** @var RequestContext $context */
+        $context = $createRequestMethod->invoke($translateApi, $translateString, 'en', 'ru');
+
+        $this->assertTrue($context instanceof RequestContext);
+        $this->assertEquals(
+            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
+            $context->getRequestUrl()
+        );
+        $this->assertEquals('text=' . urlencode($translateString), $context->getRequestData());
+    }
+
+    public function testIfTranslateApiCreatesValidBulkTranslateRequestContext()
+    {
+        $translateApi = $this->getTranslateApiFactory()->getApi();
+
+        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateBulkContext');
+
+        $translateStrings = [
+            'Hello',
+            'world'
+        ];
+        /** @var RequestContext $context */
+        $context = $createRequestMethod->invoke($translateApi, $translateStrings, 'en', 'ru');
+
+        $this->assertTrue($context instanceof RequestContext);
+        $this->assertEquals(
+            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
+            $context->getRequestUrl()
+        );
+        $this->assertEquals('text=Hello&text=world', $context->getRequestData());
+    }
+
+    /**
+     * @dataProvider getErroneousResponsesForErrorProcessing
+     *
+     * @param ResponseContext $context
+     * @param string          $expectedError
+     *
+     * @throws InvalidConfigException
+     */
+    public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError)
+    {
+        $nanoRest = $this->getMockBuilder(NanoRest::class)
+            ->setMethods(array('sendRequest'))
+            ->getMock();
+
+        $nanoRest->method('sendRequest')->willReturn($context);
+
+        $translateApi = $this->getTranslateApiFactory()->getApi();
+
+        $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
+
+        $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
+
+        /** @var TranslateApiResponse $response */
+        $response = $callApiMethod->invoke($translateApi, 'translate', ['','','']);
+
+        $this->assertTrue($response instanceof TranslateApiResponse);
+        $this->assertFalse($response->isSuccess());
+        $this->assertEquals(
+            $expectedError,
+            $response->getErrorMessage()
+        );
+    }
+
+    /**
+     * @dataProvider getValidResponsesForResponseProcessing
+     *
+     * @param ResponseContext $context
+     *
+     * @param array           $translations
+     * @param string          $languageFrom
+     * @param string          $languageTo
+     *
+     * @throws InvalidConfigException
+     */
+    public function testIfValidResponseCanBeProcessed(
+        ResponseContext $context,
+        array $translations,
+        string $languageFrom,
+        string $languageTo
+    ){
+        $nanoRest = $this->getMockBuilder(NanoRest::class)
+            ->setMethods(array('sendRequest'))
+            ->getMock();
+
+        $nanoRest->method('sendRequest')->willReturn($context);
+
+        $translateApi = $this->getTranslateApiFactory()->getApi();
+
+        $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
+
+        $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
+
+        /** @var TranslateApiResponse $response */
+        $response = $callApiMethod->invoke($translateApi, 'translate', ['','','']);
+
+        $this->assertTrue($response instanceof TranslateApiResponse);
+        $this->assertTrue($response->isSuccess());
+        $this->assertEquals($languageTo, $response->getLanguageTo());
+        $this->assertEquals($languageFrom, $response->getLanguageFrom());
+        $this->assertEquals($translations, $response->getTranslations());
+    }
+
     /**
      * Get stubbed version of TranslateApiFactory
      *
+     * @param array $methods
+     *
      * @return TranslateApiFactory|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function getTranslateApiFactory()
+    private function getTranslateApiFactory(array $methods = [])
     {
         $stub = $this->getMockBuilder(TranslateApiFactory::class)
-            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory') + $methods)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -99,5 +219,80 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         $stub->__construct();
 
         return $stub;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErroneousResponsesForErrorProcessing(): array
+    {
+        return [
+            [
+                new JsonResponseContext(),
+                'Response status undefined'
+            ],
+            [
+                new JsonResponseContext('{
+                    "code": 501,
+                    "message": "The specified translation direction is not supported"
+                }'),
+                'The specified translation direction is not supported'
+            ],
+            [
+                new JsonResponseContext('{
+                    "code": 401
+                }'),
+                'Invalid API key'
+            ],
+            [
+                (new JsonResponseContext('{
+                    "code": 405
+                }'))->setHttpStatusCode(405),
+                'Method Not Allowed'
+            ],
+            [
+                (new JsonResponseContext('{
+                    "code": 200
+                }'))->setHttpStatusCode(200),
+                'There is no required field "text" in response'
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidResponsesForResponseProcessing(): array
+    {
+        return [
+            [
+                (
+                    new JsonResponseContext('{
+                        "code": 200,
+                        "lang": "ru-en",
+                        "text": [
+                            "Hello World!"
+                        ]
+                    }')
+                )->setHttpStatusCode(200),
+                ['Hello World!'],
+                'ru',
+                'en'
+            ],
+            [
+                (
+                new JsonResponseContext('{
+                        "code": 200,
+                        "lang": "no-en",
+                        "text": [
+                            "Hello World!"
+                        ]
+                    }')
+                )->setHttpStatusCode(200),
+                ['Hello World!'],
+                '',
+                'en'
+            ]
+        ];
     }
 }

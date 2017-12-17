@@ -43,6 +43,8 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     }
 
     /**
+     * Create request context for translate request
+     *
      * @param string $text
      * @param string $languageTo
      * @param string $languageFrom
@@ -56,6 +58,8 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     ): RequestContext;
 
     /**
+     * Process response of translate request and prepare valid response
+     *
      * @param ResponseContext $context
      *
      * @return TranslateApiResponse
@@ -63,19 +67,23 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     abstract protected function prepareTranslateResponse(ResponseContext $context): TranslateApiResponse;
 
     /**
-     * @param string $text
+     * Create request context for bulk translate request
+     *
+     * @param array $texts
      * @param string $languageTo
      * @param string $languageFrom
      *
      * @return RequestContext
      */
     abstract protected function createTranslateBulkContext(
-        string $text,
+        array $texts,
         string $languageTo,
         string $languageFrom
     ): RequestContext;
 
     /**
+     * Process response of bulk translate request and prepare valid response
+     *
      * @param ResponseContext $context
      *
      * @return TranslateApiResponse
