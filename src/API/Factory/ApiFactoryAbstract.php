@@ -133,6 +133,8 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      * Returns package root directory
      *
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     protected function getRootDirectory(): string
     {
@@ -143,6 +145,8 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      * Returns environment file name
      *
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     protected function getEnvFileName(): string
     {
@@ -153,6 +157,8 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      * Returns config file name
      *
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     protected function getConfigFileName(): string
     {

@@ -131,10 +131,11 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
      *
      * @param ResponseContext $context
      * @param string          $expectedError
+     * @param int             $expectedErrorCode
      *
      * @throws InvalidConfigException
      */
-    public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError)
+    public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError, int $expectedErrorCode = 0)
     {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
@@ -157,6 +158,10 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
             $expectedError,
             $response->getErrorMessage()
         );
+        $this->assertEquals(
+            $expectedErrorCode,
+            $response->getErrorCode()
+        );
     }
 
     /**
@@ -175,7 +180,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         array $translations,
         string $languageFrom,
         string $languageTo
-    ){
+    ) {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
             ->getMock();
@@ -186,10 +191,45 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
 
         $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
 
-        $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
+        /** @var TranslateApiResponse $response */
+        $response = $translateApi->translate('', '', '');
+
+        $this->assertTrue($response instanceof TranslateApiResponse);
+        $this->assertTrue($response->isSuccess());
+        $this->assertEquals($languageTo, $response->getLanguageTo());
+        $this->assertEquals($languageFrom, $response->getLanguageFrom());
+        $this->assertEquals($translations, $response->getTranslations());
+    }
+
+    /**
+     * @dataProvider getValidResponsesForBulkResponseProcessing
+     *
+     * @param ResponseContext $context
+     *
+     * @param array           $translations
+     * @param string          $languageFrom
+     * @param string          $languageTo
+     *
+     * @throws InvalidConfigException
+     */
+    public function testIfValidBulkResponseCanBeProcessed(
+        ResponseContext $context,
+        array $translations,
+        string $languageFrom,
+        string $languageTo
+    ) {
+        $nanoRest = $this->getMockBuilder(NanoRest::class)
+            ->setMethods(array('sendRequest'))
+            ->getMock();
+
+        $nanoRest->method('sendRequest')->willReturn($context);
+
+        $translateApi = $this->getTranslateApiFactory()->getApi();
+
+        $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
 
         /** @var TranslateApiResponse $response */
-        $response = $callApiMethod->invoke($translateApi, 'translate', ['','','']);
+        $response = $translateApi->translateBulk([], '', '');
 
         $this->assertTrue($response instanceof TranslateApiResponse);
         $this->assertTrue($response->isSuccess());
@@ -229,32 +269,37 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         return [
             [
                 new JsonResponseContext(),
-                'Response status undefined'
+                'Response status undefined',
+                0
             ],
             [
                 new JsonResponseContext('{
                     "code": 501,
                     "message": "The specified translation direction is not supported"
                 }'),
-                'The specified translation direction is not supported'
+                'The specified translation direction is not supported',
+                501
             ],
             [
                 new JsonResponseContext('{
                     "code": 401
                 }'),
-                'Invalid API key'
+                'Invalid API key',
+                401
             ],
             [
                 (new JsonResponseContext('{
                     "code": 405
                 }'))->setHttpStatusCode(405),
-                'Method Not Allowed'
+                'Method Not Allowed',
+                405
             ],
             [
                 (new JsonResponseContext('{
                     "code": 200
                 }'))->setHttpStatusCode(200),
-                'There is no required field "text" in response'
+                'There is no required field "text" in response',
+                0
             ],
         ];
     }
@@ -290,6 +335,45 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
                     }')
                 )->setHttpStatusCode(200),
                 ['Hello World!'],
+                '',
+                'en'
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidResponsesForBulkResponseProcessing(): array
+    {
+        return [
+            [
+                (
+                new JsonResponseContext('{
+                        "code": 200,
+                        "lang": "ru-en",
+                        "text": [
+                            "Hello",
+                            "World"
+                        ]
+                    }')
+                )->setHttpStatusCode(200),
+                ['Hello', 'World'],
+                'ru',
+                'en'
+            ],
+            [
+                (
+                new JsonResponseContext('{
+                        "code": 200,
+                        "lang": "no-en",
+                        "text": [
+                            "Hello",
+                            "World"
+                        ]
+                    }')
+                )->setHttpStatusCode(200),
+                ['Hello', 'World'],
                 '',
                 'en'
             ]

@@ -5,15 +5,15 @@ namespace GinoPane\PHPolyglot;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
+use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 
-define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__, 2));
+define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 
 /**
  *  PHPolyglot
- *
  *  Easily translate, do spell check and speak-out texts in different languages
  *
- *  @author Sergey <Gino Pane> Karavay
+ * @author Sergey <Gino Pane> Karavay
  */
 class PHPolyglot
 {
@@ -42,16 +42,25 @@ class PHPolyglot
      * @param string $languageTo
      * @param string $languageFrom
      *
+     * @throws InvalidConfigException
      * @return TranslateApiResponse
      */
-    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse
+    public function translate(string $text, string $languageTo = '', string $languageFrom = ''): TranslateApiResponse
     {
         return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
     }
 
-    public function translateBulk()
+    /**
+     * @param array  $text
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @throws InvalidConfigException
+     * @return TranslateApiResponse
+     */
+    public function translateBulk(array $text, string $languageTo = '', string $languageFrom = ''): TranslateApiResponse
     {
-
+        return $this->getTranslateApi()->translateBulk($text, $languageTo, $languageFrom);
     }
 
     public function speak()
@@ -67,6 +76,7 @@ class PHPolyglot
     /**
      * Get Translate API instance
      *
+     * @throws InvalidConfigException
      * @return TranslateApiInterface
      */
     protected function getTranslateApi(): TranslateApiInterface

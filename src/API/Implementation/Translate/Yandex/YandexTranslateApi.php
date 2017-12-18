@@ -2,15 +2,13 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Translate\Yandex;
 
-
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
+use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
+use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
-use GinoPane\PHPolyglot\Exception\BadResponseContextException;
-use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
-use PHPUnit\Runner\Exception;
 
 /**
  * Class YandexTranslateApi
@@ -23,6 +21,7 @@ use PHPUnit\Runner\Exception;
  */
 class YandexTranslateApi extends TranslateApiAbstract
 {
+    const LANGUAGE_UNDETECTED = 'no';
     /**
      * URL path for translate action
      */
@@ -95,8 +94,7 @@ class YandexTranslateApi extends TranslateApiAbstract
         string $text,
         string $languageTo,
         string $languageFrom
-    ): RequestContext
-    {
+    ): RequestContext {
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::TRANSLATE_API_PATH)))
             ->setRequestParameters(
                 [
@@ -104,7 +102,8 @@ class YandexTranslateApi extends TranslateApiAbstract
                 ] + $this->getAuthData()
             )
             ->setData(['text'  => $text])
-            ->setMethod(RequestContext::METHOD_POST);
+            ->setMethod(RequestContext::METHOD_POST)
+            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED);
 
         return $requestContext;
     }
@@ -115,8 +114,6 @@ class YandexTranslateApi extends TranslateApiAbstract
      * @param ResponseContext $context
      *
      * @return TranslateApiResponse
-     *
-     * @throws InvalidResponseContent
      */
     protected function prepareTranslateResponse(ResponseContext $context): TranslateApiResponse
     {
@@ -138,8 +135,7 @@ class YandexTranslateApi extends TranslateApiAbstract
         array $texts,
         string $languageTo,
         string $languageFrom
-    ): RequestContext
-    {
+    ): RequestContext {
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::TRANSLATE_API_PATH)))
             ->setRequestParameters(
                 [
@@ -148,7 +144,8 @@ class YandexTranslateApi extends TranslateApiAbstract
             )
             ->setData(['text'  => $texts])
             ->setMethod(RequestContext::METHOD_POST)
-            ->setEncodeArraysUsingDuplication(true);
+            ->setEncodeArraysUsingDuplication(true)
+            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED);
 
         return $requestContext;
     }
@@ -157,8 +154,6 @@ class YandexTranslateApi extends TranslateApiAbstract
      * Process response of bulk translate request and prepare valid response
      *
      * @param ResponseContext $context
-     *
-     * @throws InvalidResponseContent
      *
      * @return TranslateApiResponse
      */
@@ -226,7 +221,7 @@ class YandexTranslateApi extends TranslateApiAbstract
         if (isset($responseArray['lang'])) {
             list($fromLanguage, $toLanguage) = explode("-", $responseArray['lang']);
 
-            if ($fromLanguage !== 'no') {
+            if ($fromLanguage !== self::LANGUAGE_UNDETECTED) {
                 $response->setLanguageFrom($fromLanguage);
             }
 

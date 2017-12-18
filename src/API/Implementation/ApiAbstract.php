@@ -54,6 +54,10 @@ abstract class ApiAbstract
 
     /**
      * ApiAbstract constructor
+     *
+     * @throws InvalidPropertyException
+     * @throws BadResponseClassException
+     * @throws InvalidEnvironmentException
      */
     public function __construct()
     {
@@ -178,7 +182,10 @@ abstract class ApiAbstract
      */
     private function getApiResponseContext(RequestContext $requestContext): ResponseContext
     {
-        $responseContext = $this->httpClient->sendRequest($requestContext);
+        $responseContext = $this->httpClient->sendRequest(
+            $requestContext,
+            ResponseContext::getByType(ResponseContext::RESPONSE_TYPE_JSON)
+        );
 
         $this->processApiResponseContextErrors($responseContext);
 
