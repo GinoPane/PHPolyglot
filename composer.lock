@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "eecfc1433f3a8b6ac2988b44bca80ad7",
+    "content-hash": "03beb6293abc22af094c485b464b3779",
     "packages": [
         {
             "name": "gino-pane/nano-http-status",
@@ -61,16 +61,16 @@
         },
         {
             "name": "gino-pane/nano-rest",
-            "version": "v1.1.3",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GinoPane/php-nano-rest.git",
-                "reference": "310a144fe87a9342ccb1dc77115c4e198a06e193"
+                "reference": "2c61cafb59df55c2c44b031cc5875124fb23de12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/310a144fe87a9342ccb1dc77115c4e198a06e193",
-                "reference": "310a144fe87a9342ccb1dc77115c4e198a06e193",
+                "url": "https://api.github.com/repos/GinoPane/php-nano-rest/zipball/2c61cafb59df55c2c44b031cc5875124fb23de12",
+                "reference": "2c61cafb59df55c2c44b031cc5875124fb23de12",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,7 @@
                 "rest",
                 "rest client"
             ],
-            "time": "2017-12-14T09:44:19+00:00"
+            "time": "2017-12-18T18:51:10+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

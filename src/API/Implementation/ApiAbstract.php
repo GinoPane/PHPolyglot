@@ -183,8 +183,7 @@ abstract class ApiAbstract
     private function getApiResponseContext(RequestContext $requestContext): ResponseContext
     {
         $responseContext = $this->httpClient->sendRequest(
-            $requestContext,
-            ResponseContext::getByType(ResponseContext::RESPONSE_TYPE_JSON)
+            $requestContext
         );
 
         $this->processApiResponseContextErrors($responseContext);

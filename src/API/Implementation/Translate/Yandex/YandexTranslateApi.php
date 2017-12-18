@@ -4,6 +4,7 @@ namespace GinoPane\PHPolyglot\API\Implementation\Translate\Yandex;
 
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
@@ -102,10 +103,9 @@ class YandexTranslateApi extends TranslateApiAbstract
                 ] + $this->getAuthData()
             )
             ->setData(['text'  => $text])
-            ->setMethod(RequestContext::METHOD_POST)
-            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED);
+            ->setMethod(RequestContext::METHOD_POST);
 
-        return $requestContext;
+        return $this->fillGeneralRequestSettings($requestContext);
     }
 
     /**
@@ -144,10 +144,9 @@ class YandexTranslateApi extends TranslateApiAbstract
             )
             ->setData(['text'  => $texts])
             ->setMethod(RequestContext::METHOD_POST)
-            ->setEncodeArraysUsingDuplication(true)
-            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED);
+            ->setEncodeArraysUsingDuplication(true);
 
-        return $requestContext;
+        return $this->fillGeneralRequestSettings($requestContext);
     }
 
     /**
@@ -192,6 +191,22 @@ class YandexTranslateApi extends TranslateApiAbstract
         if (empty($responseArray['text'])) {
             throw new InvalidResponseContent(sprintf('There is no required field "%s" in response', 'text'));
         }
+    }
+
+    /**
+     * @param RequestContext $requestContext
+     *
+     * @throws RequestContextException
+     *
+     * @return RequestContext
+     */
+    private function fillGeneralRequestSettings(RequestContext $requestContext): RequestContext
+    {
+        $requestContext
+            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED)
+            ->setResponseContextClass(JsonResponseContext::class);
+
+        return $requestContext;
     }
 
     /**
