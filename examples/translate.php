@@ -20,7 +20,7 @@ try {
             $textToTranslate,
             $languageFrom,
             $languageTo,
-            $response->getTranslations()[0]
+            $response
         );
 
         $textToTranslate = $response->getTranslations()[0];

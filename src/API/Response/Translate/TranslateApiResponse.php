@@ -20,14 +20,18 @@ class TranslateApiResponse extends ApiResponseAbstract
     private $languageTo = '';
 
     /**
+     * Returns an array of translations
+     *
      * @return array
      */
     public function getTranslations(): array
     {
-        return (array)$this->data;
+        return array_values((array)$this->data);
     }
 
     /**
+     * Sets an array of translations
+     *
      * @param array $translations
      */
     public function setTranslations(array $translations)
@@ -36,6 +40,8 @@ class TranslateApiResponse extends ApiResponseAbstract
     }
 
     /**
+     * Returns source language string
+     *
      * @return string
      */
     public function getLanguageFrom(): string
@@ -44,6 +50,8 @@ class TranslateApiResponse extends ApiResponseAbstract
     }
 
     /**
+     * Sets source language string
+     *
      * @param string $languageFrom
      */
     public function setLanguageFrom(string $languageFrom)
@@ -52,6 +60,8 @@ class TranslateApiResponse extends ApiResponseAbstract
     }
 
     /**
+     * Returns target language string
+     *
      * @return string
      */
     public function getLanguageTo(): string
@@ -60,10 +70,29 @@ class TranslateApiResponse extends ApiResponseAbstract
     }
 
     /**
+     * Sets target language string
+     *
      * @param string $languageTo
      */
     public function setLanguageTo(string $languageTo)
     {
         $this->languageTo = $languageTo;
+    }
+
+    /**
+     * Returns string representation of translation.
+     * Please note that for bulk response it will return imploded translations divided by newlines
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        $translations = $this->getTranslations();
+
+        if (count($translations) == 1) {
+            return $translations[0];
+        } else {
+            return implode(PHP_EOL, $translations);
+        }
     }
 }

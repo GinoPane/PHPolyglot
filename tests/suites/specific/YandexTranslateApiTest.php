@@ -4,18 +4,17 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Response\ResponseContext;
-use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\BadResponseClassException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
+use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Translate\Yandex\YandexTranslateApi;
-use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 
 /**
 *  Corresponding class to test YandexTranslateApiTest class
@@ -186,6 +185,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         $this->assertEquals($languageTo, $response->getLanguageTo());
         $this->assertEquals($languageFrom, $response->getLanguageFrom());
         $this->assertEquals($translations, $response->getTranslations());
+        $this->assertEquals($translations[0], (string)$response);
     }
 
     /**
@@ -222,6 +222,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         $this->assertEquals($languageTo, $response->getLanguageTo());
         $this->assertEquals($languageFrom, $response->getLanguageFrom());
         $this->assertEquals($translations, $response->getTranslations());
+        $this->assertEquals(implode(PHP_EOL, $translations), (string)$response);
     }
 
     /**
