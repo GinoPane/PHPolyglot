@@ -43,6 +43,7 @@ class PHPolyglot
      * @param string $languageFrom
      *
      * @throws InvalidConfigException
+     *
      * @return TranslateApiResponse
      */
     public function translate(string $text, string $languageTo = '', string $languageFrom = ''): TranslateApiResponse

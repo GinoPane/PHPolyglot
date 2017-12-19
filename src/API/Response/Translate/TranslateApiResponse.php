@@ -10,21 +10,21 @@ use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
 class TranslateApiResponse extends ApiResponseAbstract
 {
     /**
-     * @var array
+     * @var string
      */
-    private $translations = [];
+    private $languageFrom = '';
 
     /**
      * @var string
      */
-    private $languageFrom = '';
+    private $languageTo = '';
 
     /**
      * @return array
      */
     public function getTranslations(): array
     {
-        return $this->translations;
+        return (array)$this->data;
     }
 
     /**
@@ -32,7 +32,7 @@ class TranslateApiResponse extends ApiResponseAbstract
      */
     public function setTranslations(array $translations)
     {
-        $this->translations = $translations;
+        $this->setData($translations);
     }
 
     /**
@@ -66,9 +66,4 @@ class TranslateApiResponse extends ApiResponseAbstract
     {
         $this->languageTo = $languageTo;
     }
-
-    /**
-     * @var string
-     */
-    private $languageTo = '';
 }

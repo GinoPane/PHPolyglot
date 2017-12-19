@@ -2,7 +2,8 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation;
 
-use Exception;
+use GinoPane\NanoRest\Exceptions\ResponseContextException;
+use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
@@ -89,21 +90,22 @@ abstract class ApiAbstract
      * Call API method by creating RequestContext, sending it, filtering the result and preparing the response
      *
      * @param string $apiClassMethod
-     * @param array $arguments Arguments that need to be passed to API-related methods
+     * @param array  $arguments Arguments that need to be passed to API-related methods
+     *
+     * @throws TransportException
+     * @throws ResponseContextException
+     * @throws BadResponseContextException
+     * @throws MethodDoesNotExistException
      *
      * @return ApiResponseInterface
      */
     protected function callApi(string $apiClassMethod, array $arguments = []): ApiResponseInterface
     {
-        try {
-            $requestContext = $this->getApiRequestContext($apiClassMethod, $arguments);
+        $requestContext = $this->getApiRequestContext($apiClassMethod, $arguments);
 
-            $responseContext = $this->getApiResponseContext($requestContext);
+        $responseContext = $this->getApiResponseContext($requestContext);
 
-            $apiResponse = $this->prepareApiResponse($responseContext, $apiClassMethod);
-        } catch (Exception $exception) {
-            $apiResponse = $this->setResponseErrorFromException($exception);
-        }
+        $apiResponse = $this->prepareApiResponse($responseContext, $apiClassMethod);
 
         return $apiResponse;
     }
@@ -125,25 +127,6 @@ abstract class ApiAbstract
                 $responseContext->getHttpStatusCode()
             );
         }
-    }
-
-    /**
-     * Sets error response from exception
-     *
-     * @param Exception $exception
-     *
-     * @return ApiResponseInterface
-     */
-    protected function setResponseErrorFromException(Exception $exception): ApiResponseInterface
-    {
-        /** @var ApiResponseInterface $response */
-        $response = new $this->responseClassName();
-
-        $response->setSuccess(false);
-        $response->setErrorCode((int)$exception->getCode());
-        $response->setErrorMessage($exception->getMessage());
-
-        return $response;
     }
 
     /**
@@ -176,6 +159,8 @@ abstract class ApiAbstract
      *
      * @param RequestContext $requestContext
      *
+     * @throws TransportException
+     * @throws ResponseContextException
      * @throws BadResponseContextException
      *
      * @return ResponseContext

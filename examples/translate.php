@@ -15,10 +15,6 @@ try {
     foreach($languages as $languageTo) {
         $response = $phpolyglot->translate($textToTranslate, $languageTo, $languageFrom);
 
-        if (!$response->isSuccess()) {
-            throw new Exception($response->getErrorMessage(), $response->getErrorCode());
-        }
-
         echo sprintf(
             "%s (%s) => (%s) %s\n",
             $textToTranslate,

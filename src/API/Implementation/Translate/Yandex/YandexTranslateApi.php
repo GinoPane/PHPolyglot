@@ -230,7 +230,6 @@ class YandexTranslateApi extends TranslateApiAbstract
 
         $response = new TranslateApiResponse();
 
-        $response->setSuccess(true);
         $response->setTranslations((array)$responseArray['text']);
 
         if (isset($responseArray['lang'])) {

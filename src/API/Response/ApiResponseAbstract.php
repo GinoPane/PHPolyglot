@@ -10,75 +10,29 @@ namespace GinoPane\PHPolyglot\API\Response;
 abstract class ApiResponseAbstract implements ApiResponseInterface
 {
     /**
-     * @var bool
+     * @var mixed
      */
-    private $success = false;
+    protected $data;
 
     /**
-     * The string describing what error happened
+     * Returns response value
      *
-     * @var string
+     * @return mixed
      */
-    private $errorMessage = '';
+    public function getData()
+    {
+        return $this->data;
+    }
 
     /**
-     * The code describing what error happened
+     * Sets response data
      *
-     * @var int
+     * @param $data
+     *
+     * @return void
      */
-    private $errorCode = 0;
-
-    /**
-     * @inheritDoc
-     */
-    public function isSuccess(): bool
+    protected function setData($data)
     {
-        return $this->success;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setSuccess(bool $success): ApiResponseInterface
-    {
-        $this->success = $success;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getErrorMessage(): string
-    {
-        return $this->errorMessage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setErrorMessage(string $errorMessage): ApiResponseInterface
-    {
-        $this->errorMessage = $errorMessage;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getErrorCode(): int
-    {
-        return $this->errorCode;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setErrorCode(int $errorCode): ApiResponseInterface
-    {
-        $this->errorCode = $errorCode;
-
-        return $this;
+        $this->data = $data;
     }
 }
