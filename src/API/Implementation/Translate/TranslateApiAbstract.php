@@ -5,7 +5,7 @@ namespace GinoPane\PHPolyglot\API\Implementation\Translate;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 
 /**
  * Class TranslateApiAbstract
@@ -17,11 +17,11 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      * @param string $languageTo
      * @param string $languageFrom
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse
+    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        /** @var TranslateApiResponse $response */
+        /** @var TranslateResponse $response */
         $response = $this->callApi(__FUNCTION__, [$text, $languageTo, $languageFrom]);
 
         return $response;
@@ -32,11 +32,11 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      * @param string $languageTo
      * @param string $languageFrom
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse
+    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        /** @var TranslateApiResponse $response */
+        /** @var TranslateResponse $response */
         $response = $this->callApi(__FUNCTION__, [$text, $languageTo, $languageFrom]);
 
         return $response;
@@ -62,9 +62,9 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      *
      * @param ResponseContext $context
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    abstract protected function prepareTranslateResponse(ResponseContext $context): TranslateApiResponse;
+    abstract protected function prepareTranslateResponse(ResponseContext $context): TranslateResponse;
 
     /**
      * Create request context for bulk translate request
@@ -86,7 +86,7 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      *
      * @param ResponseContext $context
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    abstract protected function prepareTranslateBulkResponse(ResponseContext $context): TranslateApiResponse;
+    abstract protected function prepareTranslateBulkResponse(ResponseContext $context): TranslateResponse;
 }

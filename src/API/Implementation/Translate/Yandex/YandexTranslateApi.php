@@ -8,7 +8,7 @@ use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
 
 /**
@@ -69,7 +69,7 @@ class YandexTranslateApi extends TranslateApiAbstract
      *
      * @var string
      */
-    protected $responseClassName = TranslateApiResponse::class;
+    protected $responseClassName = TranslateResponse::class;
 
     /**
      * Mapping of properties to environment variables which must supply these properties
@@ -113,9 +113,9 @@ class YandexTranslateApi extends TranslateApiAbstract
      *
      * @param ResponseContext $context
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    protected function prepareTranslateResponse(ResponseContext $context): TranslateApiResponse
+    protected function prepareTranslateResponse(ResponseContext $context): TranslateResponse
     {
         return $this->processTranslateResponse($context);
     }
@@ -154,9 +154,9 @@ class YandexTranslateApi extends TranslateApiAbstract
      *
      * @param ResponseContext $context
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    protected function prepareTranslateBulkResponse(ResponseContext $context): TranslateApiResponse
+    protected function prepareTranslateBulkResponse(ResponseContext $context): TranslateResponse
     {
         return $this->processTranslateResponse($context);
     }
@@ -222,13 +222,13 @@ class YandexTranslateApi extends TranslateApiAbstract
     /**
      * @param ResponseContext $context
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    private function processTranslateResponse(ResponseContext $context): TranslateApiResponse
+    private function processTranslateResponse(ResponseContext $context): TranslateResponse
     {
         $responseArray = $context->getArray();
 
-        $response = new TranslateApiResponse();
+        $response = new TranslateResponse();
 
         $response->setTranslations((array)$responseArray['text']);
 

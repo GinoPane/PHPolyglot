@@ -20,6 +20,12 @@ Installation
 
     composer require gino-pane/phpolyglot
     
+Possible To Do
+==============
+* transcribe words;
+* get synonyms, antonyms, derivatives;
+* detect language of text.
+    
 Useful Tools
 ============
 

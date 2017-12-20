@@ -3,7 +3,7 @@
 namespace GinoPane\PHPolyglot;
 
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 
@@ -43,10 +43,9 @@ class PHPolyglot
      * @param string $languageFrom
      *
      * @throws InvalidConfigException
-     *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    public function translate(string $text, string $languageTo = '', string $languageFrom = ''): TranslateApiResponse
+    public function translate(string $text, string $languageTo = '', string $languageFrom = ''): TranslateResponse
     {
         return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
     }
@@ -57,9 +56,9 @@ class PHPolyglot
      * @param string $languageFrom
      *
      * @throws InvalidConfigException
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $languageTo = '', string $languageFrom = ''): TranslateApiResponse
+    public function translateBulk(array $text, string $languageTo = '', string $languageFrom = ''): TranslateResponse
     {
         return $this->getTranslateApi()->translateBulk($text, $languageTo, $languageFrom);
     }

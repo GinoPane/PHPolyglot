@@ -5,9 +5,9 @@ namespace GinoPane\PHPolyglot\API\Response\Translate;
 use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
 
 /**
- * Class TranslateApiResponse
+ * Class TranslateResponse
  */
-class TranslateApiResponse extends ApiResponseAbstract
+class TranslateResponse extends ApiResponseAbstract
 {
     /**
      * @var string

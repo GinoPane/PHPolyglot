@@ -2,7 +2,7 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Translate;
 
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateApiResponse;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 
 /**
  * Interface TranslateApiInterface
@@ -16,9 +16,9 @@ interface TranslateApiInterface
      * @param string $languageTo
      * @param string $languageFrom
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse;
+    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse;
 
     /**
      * Translate multiple text strings
@@ -27,7 +27,7 @@ interface TranslateApiInterface
      * @param string $languageTo
      * @param string $languageFrom
      *
-     * @return TranslateApiResponse
+     * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateApiResponse;
+    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse;
 }
