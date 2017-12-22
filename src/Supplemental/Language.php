@@ -11,6 +11,11 @@ use ReflectionClass;
  */
 class Language implements LanguageInterface
 {
+    /**
+     * Used to store an array of constants
+     *
+     * @var array
+     */
     private static $constants = [];
 
     /**

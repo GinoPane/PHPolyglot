@@ -19,6 +19,9 @@
 		<testsuite name="General Tests">
 			<directory>./tests/suites/general/</directory>
 		</testsuite>
+		<testsuite name="Supplemental Tests">
+			<directory>./tests/suites/supplemental/</directory>
+		</testsuite>
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="false">

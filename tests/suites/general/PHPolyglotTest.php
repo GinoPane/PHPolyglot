@@ -10,7 +10,7 @@ use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 
 /**
- *  Corresponding class to test PHPolyglot class
+ * Corresponding class to test PHPolyglot class
  *
  * @author Sergey <Gino Pane> Karavay
  */
