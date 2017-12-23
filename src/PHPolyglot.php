@@ -10,8 +10,8 @@ use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 
 /**
- *  PHPolyglot
- *  Easily translate, do spell check and speak-out texts in different languages
+ * PHPolyglot
+ * Easily translate, do spell check and speak-out texts in different languages
  *
  * @author Sergey <Gino Pane> Karavay
  */
