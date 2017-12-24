@@ -6,6 +6,8 @@ use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
+use GinoPane\PHPolyglot\Exception\InvalidLanguageCodeException;
+use GinoPane\PHPolyglot\Supplemental\Language;
 
 define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 
@@ -82,5 +84,23 @@ class PHPolyglot
     protected function getTranslateApi(): TranslateApiInterface
     {
         return (new TranslateApiFactory())->getApi();
+    }
+
+    /**
+     * Checks that specified language codes are valid
+     *
+     * @param array $languages
+     *
+     * @throws InvalidLanguageCodeException
+     */
+    private function assertLanguagesAreValid(array $languages): void
+    {
+        foreach ($languages as $language) {
+            if ((new Language())->codeIsValid($language)) {
+                throw new InvalidLanguageCodeException(
+                    sprintf("Language code \"%s\" is invalid", $language)
+                );
+            }
+        }
     }
 }
