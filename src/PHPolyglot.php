@@ -87,6 +87,24 @@ class PHPolyglot
     }
 
     /**
+     * Checks that language codes are valid and also transforms them
+     *
+     * @param array $languages
+     *
+     * @throws InvalidLanguageCodeException
+     *
+     * @return array
+     */
+    private function sanitizeLanguages(array $languages): array
+    {
+        $languages = array_map('strtolower', $languages);
+
+        $this->assertLanguagesAreValid($languages);
+
+        return $languages;
+    }
+
+    /**
      * Checks that specified language codes are valid
      *
      * @param array $languages
