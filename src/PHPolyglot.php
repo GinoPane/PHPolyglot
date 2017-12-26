@@ -45,10 +45,14 @@ class PHPolyglot
      * @param string $languageFrom
      *
      * @throws InvalidConfigException
+     * @throws InvalidLanguageCodeException
+     *
      * @return TranslateResponse
      */
-    public function translate(string $text, string $languageTo = '', string $languageFrom = ''): TranslateResponse
+    public function translate(string $text, string $languageTo, string $languageFrom): TranslateResponse
     {
+        list($languageTo, $languageFrom) = $this->sanitizeLanguages([$languageTo, $languageFrom]);
+
         return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
     }
 
@@ -58,10 +62,14 @@ class PHPolyglot
      * @param string $languageFrom
      *
      * @throws InvalidConfigException
+     * @throws InvalidLanguageCodeException
+     *
      * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $languageTo = '', string $languageFrom = ''): TranslateResponse
+    public function translateBulk(array $text, string $languageTo, string $languageFrom): TranslateResponse
     {
+        list($languageTo, $languageFrom) = $this->sanitizeLanguages([$languageTo, $languageFrom]);
+
         return $this->getTranslateApi()->translateBulk($text, $languageTo, $languageFrom);
     }
 
@@ -114,7 +122,7 @@ class PHPolyglot
     private function assertLanguagesAreValid(array $languages): void
     {
         foreach ($languages as $language) {
-            if ((new Language())->codeIsValid($language)) {
+            if (!(new Language())->codeIsValid($language)) {
                 throw new InvalidLanguageCodeException(
                     sprintf("Language code \"%s\" is invalid", $language)
                 );
