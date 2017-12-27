@@ -9,13 +9,14 @@ use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
-use GinoPane\PHPolyglot\Exception\BadResponseClassException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 
 /**
  * Class ApiAbstract
+ *
+ * @author Sergey <Gino Pane> Karavay
  */
 abstract class ApiAbstract
 {
@@ -34,13 +35,6 @@ abstract class ApiAbstract
     protected $apiEndpoint = '';
 
     /**
-     * Response class name defined the class which instance must be returned by API calls
-     *
-     * @var string
-     */
-    protected $responseClassName = '';
-
-    /**
      * Mapping of properties to environment variables which must supply these properties, like this:
      *
      *      [
@@ -57,7 +51,6 @@ abstract class ApiAbstract
      * ApiAbstract constructor
      *
      * @throws InvalidPropertyException
-     * @throws BadResponseClassException
      * @throws InvalidEnvironmentException
      */
     public function __construct()
@@ -65,25 +58,6 @@ abstract class ApiAbstract
         $this->httpClient = new NanoRest();
 
         $this->initPropertiesFromEnvironment();
-        $this->assertResponseClassNameIsValid($this->responseClassName);
-    }
-
-    /**
-     * Asserts that specified response class name is valid. Implemented for validation of custom APIs
-     *
-     * @param string $responseClassName
-     *
-     * @throws BadResponseClassException
-     *
-     * @return void
-     */
-    protected function assertResponseClassNameIsValid(string $responseClassName): void
-    {
-        if (!in_array(ApiResponseInterface::class, class_implements($responseClassName, true))) {
-            throw new BadResponseClassException(
-                sprintf("Class %s must implement %s", $responseClassName, ApiResponseInterface::class)
-            );
-        }
     }
 
     /**

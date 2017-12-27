@@ -6,6 +6,8 @@ use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 
 /**
  * Interface TranslateApiInterface
+ *
+ * @author Sergey <Gino Pane> Karavay
  */
 interface TranslateApiInterface
 {

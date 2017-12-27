@@ -1,8 +1,15 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Implementation\Dictionary;
+namespace GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex;
 
-class YandexDictionaryApi
+use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
+
+/**
+ * Class YandexDictionaryApi
+ *
+ * @author Sergey <Gino Pane> Karavay
+ */
+class YandexDictionaryApi implements DictionaryApiInterface
 {
 
 }

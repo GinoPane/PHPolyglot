@@ -19,10 +19,13 @@ use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
  * API version 1.5
  *
  * @link https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/
+ *
+ * @author Sergey <Gino Pane> Karavay
  */
 class YandexTranslateApi extends TranslateApiAbstract
 {
     const LANGUAGE_UNDETECTED = 'no';
+
     /**
      * URL path for translate action
      */
@@ -31,7 +34,8 @@ class YandexTranslateApi extends TranslateApiAbstract
     const STATUS_SUCCESS                        = 200;
     const STATUS_INVALID_API_KEY                = 401;
     const STATUS_BLOCKED_API_KEY                = 402;
-    const STATUS_AMOUNT_LIMIT_EXCEEDED          = 404;
+    const STATUS_REQUEST_AMOUNT_LIMIT_EXCEEDED  = 403;
+    const STATUS_TEXT_AMOUNT_LIMIT_EXCEEDED     = 404;
     const STATUS_TEXT_SIZE_LIMIT_EXCEEDED       = 413;
     const STATUS_TEXT_CANNOT_BE_TRANSLATED      = 422;
     const STATUS_TRANSLATION_DIRECTION_INVALID  = 501;
@@ -44,7 +48,8 @@ class YandexTranslateApi extends TranslateApiAbstract
     private static $customStatusMessages = [
         self::STATUS_INVALID_API_KEY                => "Invalid API key",
         self::STATUS_BLOCKED_API_KEY                => "Blocked API key",
-        self::STATUS_AMOUNT_LIMIT_EXCEEDED          => "Exceeded the daily limit on the amount of translated text",
+        self::STATUS_REQUEST_AMOUNT_LIMIT_EXCEEDED  => "Exceeded the daily limit on the number of requests",
+        self::STATUS_TEXT_AMOUNT_LIMIT_EXCEEDED     => "Exceeded the daily limit on the amount of translated text",
         self::STATUS_TEXT_SIZE_LIMIT_EXCEEDED       => "Exceeded the maximum text size",
         self::STATUS_TEXT_CANNOT_BE_TRANSLATED      => "The text cannot be translated",
         self::STATUS_TRANSLATION_DIRECTION_INVALID  => "The specified translation direction is not supported"
@@ -63,13 +68,6 @@ class YandexTranslateApi extends TranslateApiAbstract
      * @var string
      */
     protected $apiKey = '';
-
-    /**
-     * Response class name defined the class which instance must be returned by API calls
-     *
-     * @var string
-     */
-    protected $responseClassName = TranslateResponse::class;
 
     /**
      * Mapping of properties to environment variables which must supply these properties

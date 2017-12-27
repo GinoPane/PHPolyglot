@@ -3,5 +3,8 @@
 return [
     'translateApi' => [
 
+    ],
+    'dictionaryApi' => [
+
     ]
 ];

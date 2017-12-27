@@ -49,6 +49,8 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
 
     public function testIfTranslateApiFactoryObjectCanBeCreated()
     {
+        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
+
         $this->getTranslateApiFactory();
 
         $this->assertArrayHasKey('YANDEX_TRANSLATE_API_KEY', $_ENV);

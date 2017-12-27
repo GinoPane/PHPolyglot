@@ -74,7 +74,6 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
         return new $apiClass();
     }
 
-
     /**
      * Returns config section specific for current factory. Returns an empty array for invalid section name in case of
      * improper method call

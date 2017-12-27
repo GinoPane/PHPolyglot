@@ -4,11 +4,17 @@ namespace GinoPane\PHPolyglot\API\Implementation\Translate;
 
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
+use GinoPane\NanoRest\Exceptions\ResponseContextException;
+use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 
 /**
  * Class TranslateApiAbstract
+ *
+ * @author Sergey <Gino Pane> Karavay
  */
 abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiInterface
 {
@@ -16,6 +22,11 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      * @param string $text
      * @param string $languageTo
      * @param string $languageFrom
+     *
+     * @throws TransportException
+     * @throws ResponseContextException
+     * @throws BadResponseContextException
+     * @throws MethodDoesNotExistException
      *
      * @return TranslateResponse
      */
@@ -28,9 +39,14 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     }
 
     /**
-     * @param array $text
+     * @param array  $text
      * @param string $languageTo
      * @param string $languageFrom
+     *
+     * @throws TransportException
+     * @throws ResponseContextException
+     * @throws BadResponseContextException
+     * @throws MethodDoesNotExistException
      *
      * @return TranslateResponse
      */

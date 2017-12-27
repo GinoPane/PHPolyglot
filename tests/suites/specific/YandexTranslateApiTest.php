@@ -8,7 +8,6 @@ use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
-use GinoPane\PHPolyglot\Exception\BadResponseClassException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
@@ -54,19 +53,6 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
             ->getMock();
 
         $this->setInternalProperty($stub, 'envProperties', ['apiKey' => 'WRONG_VARIABLE']);
-
-        $stub->__construct();
-    }
-
-    public function testIfTranslateApiThrowsExceptioOnBadResponseClass()
-    {
-        $this->expectException(BadResponseClassException::class);
-
-        $stub = $this->getMockBuilder(YandexTranslateApi::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->setInternalProperty($stub, 'responseClassName', YandexTranslateApi::class);
 
         $stub->__construct();
     }
