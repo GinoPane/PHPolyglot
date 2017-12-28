@@ -28,7 +28,7 @@ class TranslateResponse extends ApiResponseAbstract
      */
     public function getTranslations(): array
     {
-        return array_values((array)$this->data);
+        return array_values((array)$this->getData());
     }
 
     /**
