@@ -24,7 +24,7 @@ class TranslateResponse extends ApiResponseAbstract
     /**
      * Returns an array of translations
      *
-     * @return array
+     * @return string[]
      */
     public function getTranslations(): array
     {
@@ -34,7 +34,7 @@ class TranslateResponse extends ApiResponseAbstract
     /**
      * Sets an array of translations
      *
-     * @param array $translations
+     * @param string[] $translations
      */
     public function setTranslations(array $translations)
     {
