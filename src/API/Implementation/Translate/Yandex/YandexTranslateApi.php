@@ -9,6 +9,7 @@ use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
+use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiErrorsTrait;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
 
 /**
@@ -30,30 +31,6 @@ class YandexTranslateApi extends TranslateApiAbstract
      * URL path for translate action
      */
     const TRANSLATE_API_PATH = 'translate';
-
-    const STATUS_SUCCESS                        = 200;
-    const STATUS_INVALID_API_KEY                = 401;
-    const STATUS_BLOCKED_API_KEY                = 402;
-    const STATUS_REQUEST_AMOUNT_LIMIT_EXCEEDED  = 403;
-    const STATUS_TEXT_AMOUNT_LIMIT_EXCEEDED     = 404;
-    const STATUS_TEXT_SIZE_LIMIT_EXCEEDED       = 413;
-    const STATUS_TEXT_CANNOT_BE_TRANSLATED      = 422;
-    const STATUS_TRANSLATION_DIRECTION_INVALID  = 501;
-
-    /**
-     * Custom status messages for error statuses
-     *
-     * @var array
-     */
-    private static $customStatusMessages = [
-        self::STATUS_INVALID_API_KEY                => "Invalid API key",
-        self::STATUS_BLOCKED_API_KEY                => "Blocked API key",
-        self::STATUS_REQUEST_AMOUNT_LIMIT_EXCEEDED  => "Exceeded the daily limit on the number of requests",
-        self::STATUS_TEXT_AMOUNT_LIMIT_EXCEEDED     => "Exceeded the daily limit on the amount of translated text",
-        self::STATUS_TEXT_SIZE_LIMIT_EXCEEDED       => "Exceeded the maximum text size",
-        self::STATUS_TEXT_CANNOT_BE_TRANSLATED      => "The text cannot be translated",
-        self::STATUS_TRANSLATION_DIRECTION_INVALID  => "The specified translation direction is not supported"
-    ];
 
     /**
      * Main API endpoint
@@ -77,6 +54,8 @@ class YandexTranslateApi extends TranslateApiAbstract
     protected $envProperties = [
         'apiKey' => 'YANDEX_TRANSLATE_API_KEY'
     ];
+
+    use YandexApiErrorsTrait;
 
     /**
      * Create request context for translate request
@@ -171,18 +150,7 @@ class YandexTranslateApi extends TranslateApiAbstract
     {
         $responseArray = $responseContext->getArray();
 
-        if (!isset($responseArray['code'])) {
-            throw new BadResponseContextException('Response status undefined');
-        }
-
-        if (($responseArray['code'] !== self::STATUS_SUCCESS) &&
-            isset(self::$customStatusMessages[$responseArray['code']])
-        ) {
-            $errorMessage = $responseArray['message']
-                ?? self::$customStatusMessages[$responseArray['code']];
-
-            throw new BadResponseContextException($errorMessage, $responseArray['code']);
-        }
+        $this->filterYandexSpecificErrors($responseArray);
 
         parent::processApiResponseContextErrors($responseContext);
 
