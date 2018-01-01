@@ -17,7 +17,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      *
      * @var string
      */
-    protected $apiEndpoint = 'https://translate.yandex.net/api/v1.5/tr.json';
+    protected $apiEndpoint = 'https://dictionary.yandex.net/api/v1/dicservice.json';
 
     /**
      * API key required for calls
@@ -32,7 +32,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      * @var array
      */
     protected $envProperties = [
-        'apiKey' => 'YANDEX_TRANSLATE_API_KEY'
+        'apiKey' => 'YANDEX_DICTIONARY_API_KEY'
     ];
 
     use YandexApiErrorsTrait;
