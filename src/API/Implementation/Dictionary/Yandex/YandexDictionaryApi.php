@@ -8,6 +8,12 @@ use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
 /**
  * Class YandexDictionaryApi
  *
+ * Yandex Dictionary API implementation
+ *
+ * API version 1
+ *
+ * @link https://tech.yandex.com/dictionary/doc/dg/concepts/api-overview-docpage/
+ *
  * @author Sergey <Gino Pane> Karavay
  */
 class YandexDictionaryApi extends DictionaryApiAbstract
