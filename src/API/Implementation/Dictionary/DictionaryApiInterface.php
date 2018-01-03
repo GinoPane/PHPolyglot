@@ -12,18 +12,30 @@ use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 interface DictionaryApiInterface
 {
     /**
-     * Gets text alternatives either in the same language (possible text forms)
-     * or in different language (alternative translations)
+     * Gets text alternatives
      *
      * @param string $text
-     * @param string $languageFrom
-     * @param string $languageTo
+     * @param string $language
      *
      * @return DictionaryResponse
      */
     public function getTextAlternatives(
         string $text,
-        string $languageFrom,
-        string $languageTo = ''
+        string $language
+    ): DictionaryResponse;
+
+    /**
+     * Gets text translate alternatives
+     *
+     * @param string $text
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @return DictionaryResponse
+     */
+    public function getTranslateAlternatives(
+        string $text,
+        string $languageTo,
+        string $languageFrom
     ): DictionaryResponse;
 }

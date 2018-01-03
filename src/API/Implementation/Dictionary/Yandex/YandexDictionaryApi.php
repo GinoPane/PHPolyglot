@@ -2,6 +2,9 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex;
 
+use GinoPane\NanoRest\Request\RequestContext;
+use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiErrorsTrait;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
 
@@ -42,4 +45,62 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     ];
 
     use YandexApiErrorsTrait;
+
+    /**
+     * Create request context for get-text-alternatives request
+     *
+     * @param string $text
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @return RequestContext
+     */
+    protected function createGetTextAlternativesContext(
+        string $text,
+        string $languageTo,
+        string $languageFrom
+    ): RequestContext {
+        // TODO: Implement createGetTextAlternativesContext() method.
+    }
+
+    /**
+     * Process response of get-text-alternatives request and prepare valid response
+     *
+     * @param ResponseContext $context
+     *
+     * @return DictionaryResponse
+     */
+    protected function prepareGetTextAlternativesResponse(ResponseContext $context): DictionaryResponse
+    {
+        // TODO: Implement prepareGetTextAlternativesResponse() method.
+    }
+
+    /**
+     * Create request context for get-translate-alternatives request
+     *
+     * @param array  $texts
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @return RequestContext
+     */
+    protected function createGetTranslateAlternativesContext(
+        array $texts,
+        string $languageTo,
+        string $languageFrom
+    ): RequestContext {
+        // TODO: Implement createGetTranslateAlternativesContext() method.
+    }
+
+    /**
+     * Process response of get-translate-alternatives request and prepare valid response
+     *
+     * @param ResponseContext $context
+     *
+     * @return DictionaryResponse
+     */
+    protected function prepareGetTranslateAlternativesResponse(ResponseContext $context): DictionaryResponse
+    {
+        // TODO: Implement prepareGetTranslateAlternativesResponse() method.
+    }
 }

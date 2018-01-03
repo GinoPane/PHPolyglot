@@ -33,7 +33,7 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
         /** @var TranslateResponse $response */
-        $response = $this->callApi(__FUNCTION__, [$text, $languageTo, $languageFrom]);
+        $response = $this->callApi(__FUNCTION__, func_get_args());
 
         return $response;
     }
@@ -53,7 +53,7 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
         /** @var TranslateResponse $response */
-        $response = $this->callApi(__FUNCTION__, [$text, $languageTo, $languageFrom]);
+        $response = $this->callApi(__FUNCTION__, func_get_args());
 
         return $response;
     }
