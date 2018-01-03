@@ -14,7 +14,6 @@ class DictionaryApiFactoryTest extends PHPolyglotTestCase
 {
     public function testIfDictionaryApiFactoryObjectCanBeCreated()
     {
-        $this->markTestSkipped();
         $this->getDictionaryApiFactory();
 
         $this->assertArrayHasKey('YANDEX_DICTIONARY_API_KEY', $_ENV);

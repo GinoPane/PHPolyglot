@@ -4,8 +4,8 @@ namespace GinoPane\PHPolyglot\API\Implementation\Dictionary;
 
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
-use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\NanoRest\Exceptions\TransportException;
+use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;

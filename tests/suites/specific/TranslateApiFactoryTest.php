@@ -3,10 +3,10 @@
 namespace GinoPane\PHPolyglot;
 
 use Exception;
+use GinoPane\PHPolyglot\Exception\InvalidPathException;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
-use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 
 /**
 *  Corresponding class to test TranslateApiFactory class
@@ -17,7 +17,9 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
 {
     public function testIfTranslateApiFactoryThrowsExceptionOnWrongConfigFile()
     {
-        $this->expectException(Exception::class);
+        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
+
+        $this->expectException(InvalidPathException::class);
 
         $stub = $this->getMockBuilder(TranslateApiFactory::class)
             ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
@@ -33,7 +35,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
 
     public function testIfTranslateApiFactoryThrowsExceptionOnWrongEnvFile()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidPathException::class);
 
         $stub = $this->getMockBuilder(TranslateApiFactory::class)
             ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
