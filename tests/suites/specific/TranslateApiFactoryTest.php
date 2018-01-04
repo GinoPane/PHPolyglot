@@ -2,7 +2,6 @@
 
 namespace GinoPane\PHPolyglot;
 
-use Exception;
 use GinoPane\PHPolyglot\Exception\InvalidPathException;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidApiClassException;

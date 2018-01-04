@@ -23,7 +23,6 @@ class DictionaryApiFactoryTest extends PHPolyglotTestCase
 
     public function testIfDictionaryApiFactoryThrowsExceptionOnInvalidClassInConfigFile()
     {
-        $this->markTestSkipped();
         $this->expectException(InvalidApiClassException::class);
 
         $this->setInternalProperty(DictionaryApiFactory::class, 'config', null);
