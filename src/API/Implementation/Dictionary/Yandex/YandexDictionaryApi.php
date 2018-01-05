@@ -8,6 +8,8 @@ use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
+use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 
 /**
  * Class YandexDictionaryApi
@@ -58,8 +60,6 @@ class YandexDictionaryApi extends DictionaryApiAbstract
         'apiKey' => 'YANDEX_DICTIONARY_API_KEY'
     ];
 
-
-
     use YandexApiTrait;
 
     /**
@@ -80,7 +80,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
             ->setRequestParameters(
                 [
                     'lang'  => sprintf("%s-%s", $language, $language),
-                    'flags' => ''
+                    'flags' => self::LOOKUP_MORPHO_FLAG
                 ] + $this->getAuthData()
             )
             ->setData(['text'  => $text])
@@ -104,18 +104,30 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     /**
      * Create request context for get-translate-alternatives request
      *
-     * @param array  $texts
+     * @param string $text
      * @param string $languageTo
      * @param string $languageFrom
+     *
+     * @throws RequestContextException
      *
      * @return RequestContext
      */
     protected function createGetTranslateAlternativesContext(
-        array $texts,
+        string $text,
         string $languageTo,
         string $languageFrom
     ): RequestContext {
-        // TODO: Implement createGetTranslateAlternativesContext() method.
+        $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
+            ->setRequestParameters(
+                [
+                    'lang'  => sprintf("%s-%s", $languageFrom, $languageTo),
+                    'flags' => self::LOOKUP_MORPHO_FLAG
+                ] + $this->getAuthData()
+            )
+            ->setData(['text'  => $text])
+            ->setMethod(RequestContext::METHOD_POST);
+
+        return $this->fillGeneralRequestSettings($requestContext);
     }
 
     /**
@@ -128,5 +140,26 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     protected function prepareGetTranslateAlternativesResponse(ResponseContext $context): DictionaryResponse
     {
         // TODO: Implement prepareGetTranslateAlternativesResponse() method.
+    }
+
+    /**
+     * Filters ResponseContext from common HTTP errors
+     *
+     * @param ResponseContext $responseContext
+     *
+     * @throws InvalidResponseContent
+     * @throws BadResponseContextException
+     */
+    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
+    {
+        $responseArray = $responseContext->getArray();
+
+        $this->filterYandexSpecificErrors($responseArray);
+
+        parent::processApiResponseContextErrors($responseContext);
+
+        if (!isset($responseArray['def'])) {
+            throw new InvalidResponseContent(sprintf('There is no required field "%s" in response', 'def'));
+        }
     }
 }

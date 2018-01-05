@@ -87,6 +87,24 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         $this->assertEquals('text=' . urlencode($translateString), $context->getRequestData());
     }
 
+    public function testIfTranslateApiCreatesValidTranslateRequestContextWithOneLanguageOnly()
+    {
+        $translateApi = $this->getTranslateApiFactory()->getApi();
+
+        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateContext');
+
+        $translateString = 'Hello World!';
+        /** @var RequestContext $context */
+        $context = $createRequestMethod->invoke($translateApi, $translateString, 'en', '');
+
+        $this->assertTrue($context instanceof RequestContext);
+        $this->assertEquals(
+            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en&key=YANDEX_TRANSLATE_TEST_KEY',
+            $context->getRequestUrl()
+        );
+        $this->assertEquals('text=' . urlencode($translateString), $context->getRequestData());
+    }
+
     public function testIfTranslateApiCreatesValidBulkTranslateRequestContext()
     {
         $translateApi = $this->getTranslateApiFactory()->getApi();

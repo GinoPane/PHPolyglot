@@ -72,7 +72,7 @@ class YandexTranslateApi extends TranslateApiAbstract
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::TRANSLATE_API_PATH)))
             ->setRequestParameters(
                 [
-                    'lang'  => sprintf("%s-%s", $languageFrom, $languageTo)
+                    'lang'  => $this->getLanguageString($languageTo, $languageFrom)
                 ] + $this->getAuthData()
             )
             ->setData(['text'  => $text])
@@ -112,7 +112,7 @@ class YandexTranslateApi extends TranslateApiAbstract
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::TRANSLATE_API_PATH)))
             ->setRequestParameters(
                 [
-                    'lang'  => sprintf("%s-%s", $languageFrom, $languageTo)
+                    'lang'  => $this->getLanguageString($languageTo, $languageFrom)
                 ] + $this->getAuthData()
             )
             ->setData(['text'  => $texts])
@@ -179,5 +179,16 @@ class YandexTranslateApi extends TranslateApiAbstract
         }
 
         return $response;
+    }
+
+    /**
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @return string
+     */
+    private function getLanguageString(string $languageTo, string $languageFrom): string
+    {
+        return implode("-", array_filter([$languageFrom, $languageTo]));
     }
 }

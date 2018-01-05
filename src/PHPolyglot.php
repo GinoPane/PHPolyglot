@@ -49,9 +49,9 @@ class PHPolyglot
      *
      * @return TranslateResponse
      */
-    public function translate(string $text, string $languageTo, string $languageFrom): TranslateResponse
+    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        list($languageTo, $languageFrom) = $this->sanitizeLanguages([$languageTo, $languageFrom]);
+        list($languageTo, $languageFrom) = $this->getLanguagesForTranslation($languageTo, $languageFrom);
 
         return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
     }
@@ -66,9 +66,9 @@ class PHPolyglot
      *
      * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $languageTo, string $languageFrom): TranslateResponse
+    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        list($languageTo, $languageFrom) = $this->sanitizeLanguages([$languageTo, $languageFrom]);
+        list($languageTo, $languageFrom) = $this->getLanguagesForTranslation($languageTo, $languageFrom);
 
         return $this->getTranslateApi()->translateBulk($text, $languageTo, $languageFrom);
     }
@@ -128,5 +128,24 @@ class PHPolyglot
                 );
             }
         }
+    }
+
+    /**
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @throws InvalidLanguageCodeException
+     *
+     * @return array
+     */
+    private function getLanguagesForTranslation(string $languageTo, string $languageFrom): array
+    {
+        if (!empty($languageFrom)) {
+            list($languageTo, $languageFrom) = $this->sanitizeLanguages([$languageTo, $languageFrom]);
+        } else {
+            list($languageTo) = $this->sanitizeLanguages([$languageTo]);
+        }
+
+        return array($languageTo, $languageFrom);
     }
 }

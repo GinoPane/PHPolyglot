@@ -91,14 +91,14 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Create request context for get-translate-alternatives request
      *
-     * @param array $texts
+     * @param string $text
      * @param string $languageTo
      * @param string $languageFrom
      *
      * @return RequestContext
      */
     abstract protected function createGetTranslateAlternativesContext(
-        array $texts,
+        string $text,
         string $languageTo,
         string $languageFrom
     ): RequestContext;

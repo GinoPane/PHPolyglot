@@ -81,32 +81,28 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
-            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
+            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-en&flags=4&key=YANDEX_DICTIONARY_TEST_KEY',
             $context->getRequestUrl()
         );
         $this->assertEquals('text=' . urlencode($text), $context->getRequestData());
     }
 
-    public function testIfTranslateApiCreatesValidBulkTranslateRequestContext()
+    public function testIfDictionaryApiCreatesValidGetTranslateAlternativesContext()
     {
-        $this->markTestSkipped();
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
 
-        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateBulkContext');
+        $createRequestMethod = $this->getInternalMethod($dictionaryApi, 'createGetTranslateAlternativesContext');
 
-        $translateStrings = [
-            'Hello',
-            'world'
-        ];
+        $text = 'Hello';
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateStrings, 'en', 'ru');
+        $context = $createRequestMethod->invoke($dictionaryApi, $text, 'ru', 'en');
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
-            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
+            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-ru&flags=4&key=YANDEX_DICTIONARY_TEST_KEY',
             $context->getRequestUrl()
         );
-        $this->assertEquals('text=Hello&text=world', $context->getRequestData());
+        $this->assertEquals('text=' . urlencode($text), $context->getRequestData());
     }
 
     /**
@@ -120,7 +116,6 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
      */
     public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError, int $expectedErrorCode = 0)
     {
-        $this->markTestSkipped();
         $this->expectExceptionCode($expectedErrorCode);
         $this->expectExceptionMessage($expectedError);
 
@@ -130,13 +125,13 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $nanoRest->method('sendRequest')->willReturn($context);
 
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
 
-        $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
+        $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
 
-        $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
+        $callApiMethod = $this->getInternalMethod($dictionaryApi, 'callApi');
 
-        $callApiMethod->invoke($translateApi, 'translate', ['','','']);
+        $callApiMethod->invoke($dictionaryApi, 'getTextAlternatives', ['world','en']);
     }
 
     /**
@@ -275,7 +270,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                 (new JsonResponseContext('{
                     "code": 200
                 }'))->setHttpStatusCode(200),
-                'There is no required field "text" in response',
+                'There is no required field "def" in response',
                 0
             ],
         ];
