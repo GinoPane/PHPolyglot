@@ -70,15 +70,13 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
      * Create request context for get-text-alternatives request
      *
      * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string $language
      *
      * @return RequestContext
      */
     abstract protected function createGetTextAlternativesContext(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        string $language
     ): RequestContext;
 
     /**

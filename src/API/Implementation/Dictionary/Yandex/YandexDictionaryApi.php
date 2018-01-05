@@ -2,10 +2,11 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex;
 
+use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
-use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiErrorsTrait;
+use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
 
 /**
@@ -22,18 +23,31 @@ use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
 class YandexDictionaryApi extends DictionaryApiAbstract
 {
     /**
+     * Family search filter (child-safe)
+     */
+    const LOOKUP_FAMILY_FLAG = 0x1;
+
+    /**
+     * Search by word form
+     */
+    const LOOKUP_MORPHO_FLAG = 0x4;
+
+    /**
+     * Enable a filter that requires matching parts of speech for the search word and translation
+     */
+    const LOOKUP_POS_FILTER_FLAG = 0x8;
+
+    /**
+     * URL path for lookup action
+     */
+    protected const LOOKUP_API_PATH = 'lookup';
+
+    /**
      * Main API endpoint
      *
      * @var string
      */
     protected $apiEndpoint = 'https://dictionary.yandex.net/api/v1/dicservice.json';
-
-    /**
-     * API key required for calls
-     *
-     * @var string
-     */
-    protected $apiKey = '';
 
     /**
      * Mapping of properties to environment variables which must supply these properties
@@ -44,23 +58,35 @@ class YandexDictionaryApi extends DictionaryApiAbstract
         'apiKey' => 'YANDEX_DICTIONARY_API_KEY'
     ];
 
-    use YandexApiErrorsTrait;
+
+
+    use YandexApiTrait;
 
     /**
      * Create request context for get-text-alternatives request
      *
      * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string $language
+     *
+     * @throws RequestContextException
      *
      * @return RequestContext
      */
     protected function createGetTextAlternativesContext(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        string $language
     ): RequestContext {
-        // TODO: Implement createGetTextAlternativesContext() method.
+        $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
+            ->setRequestParameters(
+                [
+                    'lang'  => sprintf("%s-%s", $language, $language),
+                    'flags' => ''
+                ] + $this->getAuthData()
+            )
+            ->setData(['text'  => $text])
+            ->setMethod(RequestContext::METHOD_POST);
+
+        return $this->fillGeneralRequestSettings($requestContext);
     }
 
     /**

@@ -13,7 +13,7 @@ use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
-use GinoPane\PHPolyglot\API\Implementation\Translate\Yandex\YandexTranslateApi;
+use GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex\YandexDictionaryApi;
 
 /**
 *  Corresponding class to test YandexDictionaryApiTest class
@@ -31,27 +31,24 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $this->assertTrue($translateApi instanceof DictionaryApiInterface);
     }
 
-    public function testIfTranslateApiThrowsExceptionWhenPropertyDoesNotExist()
+    public function testIfDictionaryApiThrowsExceptionWhenPropertyDoesNotExist()
     {
-        $this->markTestSkipped();
-
         $this->expectException(InvalidPropertyException::class);
 
-        $stub = $this->getMockBuilder(YandexTranslateApi::class)
+        $stub = $this->getMockBuilder(YandexDictionaryApi::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->setInternalProperty($stub, 'envProperties', ['apiKeys' => 'YANDEX_TRANSLATE_API_KEY']);
+        $this->setInternalProperty($stub, 'envProperties', ['apiKeys' => 'YANDEX_DICTIONARY_API_KEY']);
 
         $stub->__construct();
     }
 
-    public function testIfTranslateApiThrowsExceptionWhenEnvVariableDoesNotExist()
+    public function testIfDictionaryApiThrowsExceptionWhenEnvVariableDoesNotExist()
     {
-        $this->markTestSkipped();
         $this->expectException(InvalidEnvironmentException::class);
 
-        $stub = $this->getMockBuilder(YandexTranslateApi::class)
+        $stub = $this->getMockBuilder(YandexDictionaryApi::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -60,36 +57,34 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $stub->__construct();
     }
 
-    public function testIfTranslateApiThrowsExceptionForNonExistentMethod()
+    public function testIfDictionaryApiThrowsExceptionForNonExistentMethod()
     {
-        $this->markTestSkipped();
         $this->expectException(MethodDoesNotExistException::class);
         $this->expectExceptionMessage('Specified method "createWrongMethodContext" does not exist');
 
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
 
-        $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
+        $callApiMethod = $this->getInternalMethod($dictionaryApi, 'callApi');
 
-        $callApiMethod->invoke($translateApi, 'wrongMethod', []);
+        $callApiMethod->invoke($dictionaryApi, 'wrongMethod', []);
     }
 
-    public function testIfTranslateApiCreatesValidTranslateRequestContext()
+    public function testIfDictionaryApiCreatesValidGetTextAlternativesContext()
     {
-        $this->markTestSkipped();
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
 
-        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateContext');
+        $createContextMethod = $this->getInternalMethod($dictionaryApi, 'createGetTextAlternativesContext');
 
-        $translateString = 'Hello World!';
+        $text = 'Hello';
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateString, 'en', 'ru');
+        $context = $createContextMethod->invoke($dictionaryApi, $text, 'en');
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
             'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
             $context->getRequestUrl()
         );
-        $this->assertEquals('text=' . urlencode($translateString), $context->getRequestData());
+        $this->assertEquals('text=' . urlencode($text), $context->getRequestData());
     }
 
     public function testIfTranslateApiCreatesValidBulkTranslateRequestContext()

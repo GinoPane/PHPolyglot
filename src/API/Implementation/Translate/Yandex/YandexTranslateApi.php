@@ -9,7 +9,7 @@ use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
-use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiErrorsTrait;
+use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
 
 /**
@@ -25,7 +25,10 @@ use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
  */
 class YandexTranslateApi extends TranslateApiAbstract
 {
-    const LANGUAGE_UNDETECTED = 'no';
+    /**
+     * API constant string for undetected language
+     */
+    protected const LANGUAGE_UNDETECTED = 'no';
 
     /**
      * URL path for translate action
@@ -40,13 +43,6 @@ class YandexTranslateApi extends TranslateApiAbstract
     protected $apiEndpoint = 'https://translate.yandex.net/api/v1.5/tr.json';
 
     /**
-     * API key required for calls
-     *
-     * @var string
-     */
-    protected $apiKey = '';
-
-    /**
      * Mapping of properties to environment variables which must supply these properties
      *
      * @var array
@@ -55,7 +51,7 @@ class YandexTranslateApi extends TranslateApiAbstract
         'apiKey' => 'YANDEX_TRANSLATE_API_KEY'
     ];
 
-    use YandexApiErrorsTrait;
+    use YandexApiTrait;
 
     /**
      * Create request context for translate request
@@ -157,32 +153,6 @@ class YandexTranslateApi extends TranslateApiAbstract
         if (empty($responseArray['text'])) {
             throw new InvalidResponseContent(sprintf('There is no required field "%s" in response', 'text'));
         }
-    }
-
-    /**
-     * @param RequestContext $requestContext
-     *
-     * @throws RequestContextException
-     *
-     * @return RequestContext
-     */
-    private function fillGeneralRequestSettings(RequestContext $requestContext): RequestContext
-    {
-        $requestContext
-            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED)
-            ->setResponseContextClass(JsonResponseContext::class);
-
-        return $requestContext;
-    }
-
-    /**
-     * Get auth part of the request data
-     *
-     * @return array
-     */
-    private function getAuthData(): array
-    {
-        return ['key' => $this->apiKey];
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace GinoPane\PHPolyglot\API\Supplemental\Yandex;
 
+use GinoPane\NanoRest\Exceptions\RequestContextException;
+use GinoPane\NanoRest\Request\RequestContext;
+use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 
 /**
@@ -11,8 +14,15 @@ use GinoPane\PHPolyglot\Exception\BadResponseContextException;
  *
  * @author Sergey <Gino Pane> Karavay
  */
-trait YandexApiErrorsTrait
+trait YandexApiTrait
 {
+    /**
+     * API key required for calls
+     *
+     * @var string
+     */
+    protected $apiKey = '';
+
     /**
      * Custom status messages for error statuses
      *
@@ -52,5 +62,31 @@ trait YandexApiErrorsTrait
 
             throw new BadResponseContextException($errorMessage, $responseArray['code']);
         }
+    }
+
+    /**
+     * @param RequestContext $requestContext
+     *
+     * @throws RequestContextException
+     *
+     * @return RequestContext
+     */
+    private function fillGeneralRequestSettings(RequestContext $requestContext): RequestContext
+    {
+        $requestContext
+            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED)
+            ->setResponseContextClass(JsonResponseContext::class);
+
+        return $requestContext;
+    }
+
+    /**
+     * Get auth part of the request data
+     *
+     * @return array
+     */
+    private function getAuthData(): array
+    {
+        return ['key' => $this->apiKey];
     }
 }
