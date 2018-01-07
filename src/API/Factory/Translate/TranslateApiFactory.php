@@ -10,7 +10,7 @@ use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 /**
  * Class TranslateApiFactory
  *
- * @author: Sergey <Gino Pane> Karavay
+ * @author Sergey <Gino Pane> Karavay
  */
 class TranslateApiFactory extends ApiFactoryAbstract
 {

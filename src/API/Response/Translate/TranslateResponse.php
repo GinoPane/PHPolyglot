@@ -7,7 +7,7 @@ use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
 /**
  * Class TranslateResponse
  *
- * @author: Sergey <Gino Pane> Karavay
+ * @author Sergey <Gino Pane> Karavay
  */
 class TranslateResponse extends ApiResponseAbstract
 {

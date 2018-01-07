@@ -7,7 +7,7 @@ namespace GinoPane\PHPolyglot\API\Response\Dictionary\Entry;
  *
  * DictionaryEntry provides detailed information about a word
  *
- * @author: Sergey <Gino Pane> Karavay
+ * @author Sergey <Gino Pane> Karavay
  */
 class DictionaryEntry
 {
@@ -45,6 +45,13 @@ class DictionaryEntry
      * @var string
      */
     private $transcription = '';
+
+    /**
+     * Part of speech of dictionary entry word
+     *
+     * @var string
+     */
+    private $pos = '';
 
     /**
      * An array of synonyms of the source text

@@ -76,15 +76,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
         string $text,
         string $language
     ): RequestContext {
-        $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
-            ->setRequestParameters(
-                [
-                    'lang'  => sprintf("%s-%s", $language, $language),
-                    'flags' => self::LOOKUP_MORPHO_FLAG
-                ] + $this->getAuthData()
-            )
-            ->setData(['text'  => $text])
-            ->setMethod(RequestContext::METHOD_POST);
+        $requestContext = $this->getLookupRequest($text, $language, $language);
 
         return $this->fillGeneralRequestSettings($requestContext);
     }
@@ -117,15 +109,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
         string $languageTo,
         string $languageFrom
     ): RequestContext {
-        $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
-            ->setRequestParameters(
-                [
-                    'lang'  => sprintf("%s-%s", $languageFrom, $languageTo),
-                    'flags' => self::LOOKUP_MORPHO_FLAG
-                ] + $this->getAuthData()
-            )
-            ->setData(['text'  => $text])
-            ->setMethod(RequestContext::METHOD_POST);
+        $requestContext = $this->getLookupRequest($text, $languageTo, $languageFrom);
 
         return $this->fillGeneralRequestSettings($requestContext);
     }
@@ -161,5 +145,28 @@ class YandexDictionaryApi extends DictionaryApiAbstract
         if (!isset($responseArray['def'])) {
             throw new InvalidResponseContent(sprintf('There is no required field "%s" in response', 'def'));
         }
+    }
+
+    /**
+     * @param string $text
+     * @param string $languageTo
+     * @param string $languageFrom
+     *
+     * @return RequestContext
+     * @throws RequestContextException
+     */
+    private function getLookupRequest(string $text, string $languageTo, string $languageFrom): RequestContext
+    {
+        $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
+            ->setRequestParameters(
+                [
+                    'lang' => sprintf("%s-%s", $languageFrom, $languageTo),
+                    'flags' => self::LOOKUP_MORPHO_FLAG
+                ] + $this->getAuthData()
+            )
+            ->setData(['text' => $text])
+            ->setMethod(RequestContext::METHOD_POST);
+
+        return $requestContext;
     }
 }

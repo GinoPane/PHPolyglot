@@ -5,8 +5,11 @@ namespace GinoPane\PHPolyglot\Supplemental;
 /**
  * Interface LanguageInterface
  *
- * Contains all possible language codes built from CLDR v32 data.
+ * Contains all possible language codes available from CLDR data.
  *
+ * CLDR version 32.
+ *
+ * @link http://cldr.unicode.org
  * @link https://github.com/GinoPane/php-open-world
  *
  * @author Sergey <Gino Pane> Karavay
