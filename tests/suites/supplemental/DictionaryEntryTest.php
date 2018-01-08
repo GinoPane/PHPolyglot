@@ -67,8 +67,6 @@ class DictionaryEntryTest extends PHPolyglotTestCase
         return [
             [
                 [
-                    'languageFrom' => 'en',
-                    'languageTo' => 'be',
                     'textFrom' => 'hello',
                     'textTo' => 'прывітанне',
                     'transcription' => 'ˈheˈləʊ',

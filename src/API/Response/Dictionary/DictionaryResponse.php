@@ -36,6 +36,6 @@ class DictionaryResponse extends ApiResponseAbstract
      */
     public function getEntries()
     {
-        return parent::getData();
+        return (array)parent::getData();
     }
 }

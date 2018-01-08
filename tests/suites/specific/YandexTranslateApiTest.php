@@ -259,11 +259,6 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
     {
         return [
             [
-                new JsonResponseContext(),
-                'Response status undefined',
-                0
-            ],
-            [
                 new JsonResponseContext('{
                     "code": 501,
                     "message": "The specified translation direction is not supported"

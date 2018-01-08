@@ -50,17 +50,15 @@ trait YandexApiTrait
      */
     public function filterYandexSpecificErrors(array $responseArray): void
     {
-        if (!isset($responseArray['code'])) {
-            throw new BadResponseContextException('Response status undefined');
-        }
+        if (isset($responseArray['code'])) {
+            if (($responseArray['code'] !== YandexApiStatusesInterface::STATUS_SUCCESS) &&
+                isset(self::$customStatusMessages[$responseArray['code']])
+            ) {
+                $errorMessage = $responseArray['message']
+                    ?? self::$customStatusMessages[$responseArray['code']];
 
-        if (($responseArray['code'] !== YandexApiStatusesInterface::STATUS_SUCCESS) &&
-            isset(self::$customStatusMessages[$responseArray['code']])
-        ) {
-            $errorMessage = $responseArray['message']
-                ?? self::$customStatusMessages[$responseArray['code']];
-
-            throw new BadResponseContextException($errorMessage, $responseArray['code']);
+                throw new BadResponseContextException($errorMessage, $responseArray['code']);
+            }
         }
     }
 

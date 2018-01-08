@@ -6,6 +6,8 @@ use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
+use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\DictionaryEntry;
+use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
 use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
@@ -91,7 +93,76 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      */
     protected function prepareGetTextAlternativesResponse(ResponseContext $context): DictionaryResponse
     {
-        // TODO: Implement prepareGetTextAlternativesResponse() method.
+        $responseArray = $context->getArray()['def'];
+
+        $response = new DictionaryResponse();
+
+        foreach ($responseArray as $sourceTextGroup) {
+            if (empty($sourceTextGroup['text'])) {
+                continue;
+            }
+
+            if (empty($sourceTextGroup['tr']) || !is_array($sourceTextGroup['tr'])) {
+                continue;
+            }
+
+            foreach ($sourceTextGroup['tr'] as $targetTextGroup) {
+                if (empty($targetTextGroup['text'])) {
+                    continue;
+                }
+
+                $entry = new DictionaryEntry();
+
+                $entry->setTextFrom($sourceTextGroup['text']);
+                $entry->setTextTo($targetTextGroup['text']);
+
+                if (!empty($sourceTextGroup['ts'])) {
+                    $entry->setTranscription($sourceTextGroup['ts']);
+                }
+
+                if (!empty($sourceTextGroup['pos'])) {
+                    $entry->setPosFrom(new DictionaryEntryPos($sourceTextGroup['pos']));
+                }
+
+                if (!empty($targetTextGroup['pos'])) {
+                    $entry->setPosTo(new DictionaryEntryPos($targetTextGroup['pos']));
+                }
+
+                if (!empty($targetTextGroup['syn']) && is_array($targetTextGroup['syn'])) {
+                    $synonyms = [];
+
+                    foreach ($targetTextGroup['syn'] as $synonym) {
+                        if (empty($synonym['text'])) {
+                            continue;
+                        }
+
+                        $synonyms[] = $synonym['text'];
+                    }
+
+                    $entry->setSynonyms($synonyms);
+                }
+
+                if (!empty($targetTextGroup['mean']) && is_array($targetTextGroup['mean'])) {
+                    $meanings = [];
+
+                    foreach ($targetTextGroup['mean'] as $meaning) {
+                        if (empty($meaning['text'])) {
+                            continue;
+                        }
+
+                        $meanings[] = $meaning['text'];
+                    }
+
+                    $entry->setMeanings($meanings);
+                }
+
+                $response->addEntry($entry);
+            }
+        }
+
+        var_dump($response->getEntries());
+
+        return $response;
     }
 
     /**

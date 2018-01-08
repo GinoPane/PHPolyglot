@@ -14,20 +14,6 @@ use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
 class DictionaryEntry
 {
     /**
-     * The source language used to build the dictionary entry
-     *
-     * @var string
-     */
-    private $languageFrom = '';
-
-    /**
-     * The target language used to build the dictionary entry
-     *
-     * @var string
-     */
-    private $languageTo = '';
-
-    /**
      * A string containing the source text for current dictionary entry
      *
      * @var string
@@ -86,46 +72,6 @@ class DictionaryEntry
      * @var array
      */
     private $examples = [];
-
-    /**
-     * @return string
-     */
-    public function getLanguageFrom(): string
-    {
-        return $this->languageFrom;
-    }
-
-    /**
-     * @param string $languageFrom
-     *
-     * @return DictionaryEntry
-     */
-    public function setLanguageFrom(string $languageFrom): DictionaryEntry
-    {
-        $this->languageFrom = $languageFrom;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguageTo(): string
-    {
-        return $this->languageTo;
-    }
-
-    /**
-     * @param string $languageTo
-     *
-     * @return DictionaryEntry
-     */
-    public function setLanguageTo(string $languageTo): DictionaryEntry
-    {
-        $this->languageTo = $languageTo;
-
-        return $this;
-    }
 
     /**
      * @return string

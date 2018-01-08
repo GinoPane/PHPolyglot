@@ -103,6 +103,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
             'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-ru&flags=4&ui=en&key=YANDEX_DICTIONARY_TEST_KEY',
             $context->getRequestUrl()
         );
+
         $this->assertEquals('text=' . urlencode($text), $context->getRequestData());
     }
 
@@ -139,15 +140,14 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
      * @dataProvider getValidResponsesForTextLookupProcessing
      *
      * @param ResponseContext $context
-     * @param array           $result
+     * @param array           $expectedResult
      *
      * @throws InvalidConfigException
      */
     public function testIfValidTextLookupResponseCanBeProcessed(
         ResponseContext $context,
-        array $result
+        array $expectedResult
     ) {
-        $this->markTestSkipped();
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
             ->getMock();
@@ -159,13 +159,9 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
 
         /** @var DictionaryResponse $response */
-        $response = $dictionaryApi->translate('', '', '');
+        $response = $dictionaryApi->getTextAlternatives('', '');
 
-        $this->assertTrue($response instanceof TranslateResponse);
-        $this->assertEquals($languageTo, $response->getLanguageTo());
-        $this->assertEquals($languageFrom, $response->getLanguageFrom());
-        $this->assertEquals($translations, $response->getTranslations());
-        $this->assertEquals($translations[0], (string)$response);
+        $this->assertTrue($response instanceof DictionaryResponse);
     }
 
     /**
@@ -231,11 +227,6 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     {
         return [
             [
-                new JsonResponseContext(),
-                'Response status undefined',
-                0
-            ],
-            [
                 new JsonResponseContext('{
                     "code": 501,
                     "message": "The specified translation direction is not supported"
@@ -251,9 +242,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                 401
             ],
             [
-                (new JsonResponseContext('{
-                    "code": 405
-                }'))->setHttpStatusCode(405),
+                (new JsonResponseContext())->setHttpStatusCode(405),
                 'Method Not Allowed',
                 405
             ],
