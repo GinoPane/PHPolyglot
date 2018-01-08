@@ -93,76 +93,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      */
     protected function prepareGetTextAlternativesResponse(ResponseContext $context): DictionaryResponse
     {
-        $responseArray = $context->getArray()['def'];
-
-        $response = new DictionaryResponse();
-
-        foreach ($responseArray as $sourceTextGroup) {
-            if (empty($sourceTextGroup['text'])) {
-                continue;
-            }
-
-            if (empty($sourceTextGroup['tr']) || !is_array($sourceTextGroup['tr'])) {
-                continue;
-            }
-
-            foreach ($sourceTextGroup['tr'] as $targetTextGroup) {
-                if (empty($targetTextGroup['text'])) {
-                    continue;
-                }
-
-                $entry = new DictionaryEntry();
-
-                $entry->setTextFrom($sourceTextGroup['text']);
-                $entry->setTextTo($targetTextGroup['text']);
-
-                if (!empty($sourceTextGroup['ts'])) {
-                    $entry->setTranscription($sourceTextGroup['ts']);
-                }
-
-                if (!empty($sourceTextGroup['pos'])) {
-                    $entry->setPosFrom(new DictionaryEntryPos($sourceTextGroup['pos']));
-                }
-
-                if (!empty($targetTextGroup['pos'])) {
-                    $entry->setPosTo(new DictionaryEntryPos($targetTextGroup['pos']));
-                }
-
-                if (!empty($targetTextGroup['syn']) && is_array($targetTextGroup['syn'])) {
-                    $synonyms = [];
-
-                    foreach ($targetTextGroup['syn'] as $synonym) {
-                        if (empty($synonym['text'])) {
-                            continue;
-                        }
-
-                        $synonyms[] = $synonym['text'];
-                    }
-
-                    $entry->setSynonyms($synonyms);
-                }
-
-                if (!empty($targetTextGroup['mean']) && is_array($targetTextGroup['mean'])) {
-                    $meanings = [];
-
-                    foreach ($targetTextGroup['mean'] as $meaning) {
-                        if (empty($meaning['text'])) {
-                            continue;
-                        }
-
-                        $meanings[] = $meaning['text'];
-                    }
-
-                    $entry->setMeanings($meanings);
-                }
-
-                $response->addEntry($entry);
-            }
-        }
-
-        var_dump($response->getEntries());
-
-        return $response;
+        return $this->processLookupResponse($context);
     }
 
     /**
@@ -195,7 +126,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      */
     protected function prepareGetTranslateAlternativesResponse(ResponseContext $context): DictionaryResponse
     {
-        // TODO: Implement prepareGetTranslateAlternativesResponse() method.
+        return $this->processLookupResponse($context);
     }
 
     /**
@@ -241,5 +172,170 @@ class YandexDictionaryApi extends DictionaryApiAbstract
             ->setMethod(RequestContext::METHOD_POST);
 
         return $requestContext;
+    }
+
+    /**
+     * @param ResponseContext $context
+     *
+     * @return DictionaryResponse
+     */
+    private function processLookupResponse(ResponseContext $context): DictionaryResponse
+    {
+        $responseArray = $context->getArray()['def'];
+
+        $response = new DictionaryResponse();
+
+        foreach ($responseArray as $sourceTextGroup) {
+            if (empty($sourceTextGroup['text'])) {
+                continue;
+            }
+
+            if (empty($sourceTextGroup['tr']) || !is_array($sourceTextGroup['tr'])) {
+                continue;
+            }
+
+            $this->processTextGroup($sourceTextGroup, $response);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param $sourceTextGroup
+     * @param $response
+     *
+     * @return mixed
+     */
+    private function processTextGroup(array $sourceTextGroup, DictionaryResponse $response)
+    {
+        foreach ($sourceTextGroup['tr'] as $targetTextGroup) {
+            if (empty($targetTextGroup['text'])) {
+                continue;
+            }
+
+            $entry = new DictionaryEntry();
+
+            $entry->setTextFrom($sourceTextGroup['text']);
+            $entry->setTextTo($targetTextGroup['text']);
+
+            $this->processTranscription($sourceTextGroup, $entry);
+            $this->processPosFrom($sourceTextGroup, $entry);
+            $this->processPosTo($targetTextGroup, $entry);
+            $this->processSynonyms($targetTextGroup, $entry);
+            $this->processMeanings($targetTextGroup, $entry);
+            $this->processExamples($targetTextGroup, $entry);
+
+            $response->addEntry($entry);
+        }
+
+        return $sourceTextGroup;
+    }
+
+    /**
+     * @param array             $sourceTextGroup
+     * @param DictionaryEntry   $entry
+     *
+     * @return void
+     */
+    private function processTranscription(array $sourceTextGroup, DictionaryEntry $entry): void
+    {
+        if (!empty($sourceTextGroup['ts'])) {
+            $entry->setTranscription($sourceTextGroup['ts']);
+        }
+    }
+
+    /**
+     * @param array             $sourceTextGroup
+     * @param DictionaryEntry   $entry
+     *
+     * @return void
+     */
+    private function processPosFrom(array $sourceTextGroup, DictionaryEntry $entry): void
+    {
+        if (!empty($sourceTextGroup['pos'])) {
+            $entry->setPosFrom(new DictionaryEntryPos($sourceTextGroup['pos']));
+        }
+    }
+
+    /**
+     * @param array             $targetTextGroup
+     * @param DictionaryEntry   $entry
+     *
+     * @return void
+     */
+    private function processPosTo(array $targetTextGroup, DictionaryEntry $entry): void
+    {
+        if (!empty($targetTextGroup['pos'])) {
+            $entry->setPosTo(new DictionaryEntryPos($targetTextGroup['pos']));
+        }
+    }
+
+    /**
+     * @param array             $targetTextGroup
+     * @param DictionaryEntry   $entry
+     *
+     * @return void
+     */
+    private function processSynonyms(array $targetTextGroup, DictionaryEntry $entry): void
+    {
+        if (!empty($targetTextGroup['syn']) && is_array($targetTextGroup['syn'])) {
+            $synonyms = [];
+
+            foreach ($targetTextGroup['syn'] as $synonym) {
+                if (empty($synonym['text'])) {
+                    continue;
+                }
+
+                $synonyms[] = $synonym['text'];
+            }
+
+            $entry->setSynonyms($synonyms);
+        }
+    }
+
+    /**
+     * @param array             $targetTextGroup
+     * @param DictionaryEntry   $entry
+     *
+     * @return void
+     */
+    private function processMeanings(array $targetTextGroup, DictionaryEntry $entry): void
+    {
+        if (!empty($targetTextGroup['mean']) && is_array($targetTextGroup['mean'])) {
+            $meanings = [];
+
+            foreach ($targetTextGroup['mean'] as $meaning) {
+                if (empty($meaning['text'])) {
+                    continue;
+                }
+
+                $meanings[] = $meaning['text'];
+            }
+
+            $entry->setMeanings($meanings);
+        }
+    }
+
+    /**
+     * @param array             $targetTextGroup
+     * @param DictionaryEntry   $entry
+     *
+     * @return void
+     */
+    private function processExamples(array $targetTextGroup, DictionaryEntry $entry): void
+    {
+        if (!empty($targetTextGroup['ex']) && is_array($targetTextGroup['ex'])) {
+            $examples = [];
+
+            foreach ($targetTextGroup['ex'] as $example) {
+                if (empty($example['text']) || empty($example['tr'][0]['text'])) {
+                    continue;
+                }
+
+                $examples[$example['text']] = $example['tr'][0]['text'];
+            }
+
+            $entry->setExamples($examples);
+        }
     }
 }
