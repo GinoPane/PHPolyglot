@@ -1,6 +1,8 @@
 <?php
 
-namespace GinoPane\PHPolyglot\Supplemental;
+namespace GinoPane\PHPolyglot\Supplemental\Language;
+
+use GinoPane\PHPolyglot\Supplemental\GetConstantsTrait;
 
 /**
  * Class Language
@@ -20,6 +22,6 @@ class Language implements LanguageInterface
      */
     public function codeIsValid(string $code): bool
     {
-        return array_search($code, $this->getConstants()) !== false;
+        return $this->constantValueExists($code);
     }
 }

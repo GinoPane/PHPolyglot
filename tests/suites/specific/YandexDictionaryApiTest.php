@@ -82,7 +82,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
-            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-en&flags=4&key=YANDEX_DICTIONARY_TEST_KEY',
+            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-en&flags=4&ui=en&key=YANDEX_DICTIONARY_TEST_KEY',
             $context->getRequestUrl()
         );
         $this->assertEquals('text=' . urlencode($text), $context->getRequestData());
@@ -100,7 +100,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
-            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-ru&flags=4&key=YANDEX_DICTIONARY_TEST_KEY',
+            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?lang=en-ru&flags=4&ui=en&key=YANDEX_DICTIONARY_TEST_KEY',
             $context->getRequestUrl()
         );
         $this->assertEquals('text=' . urlencode($text), $context->getRequestData());
@@ -147,6 +147,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         ResponseContext $context,
         array $result
     ) {
+        $this->markTestSkipped();
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
             ->getMock();
@@ -171,18 +172,13 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
      * @dataProvider getValidResponsesForTextTranslateLookupProcessing
      *
      * @param ResponseContext $context
-     *
-     * @param array           $translations
-     * @param string          $languageFrom
-     * @param string          $languageTo
+     * @param array           $result
      *
      * @throws InvalidConfigException
      */
     public function testIfValidTextTranslateLookupResponseCanBeProcessed(
         ResponseContext $context,
-        array $translations,
-        string $languageFrom,
-        string $languageTo
+        array $result
     ) {
         $this->markTestSkipped();
         $nanoRest = $this->getMockBuilder(NanoRest::class)
@@ -191,7 +187,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $nanoRest->method('sendRequest')->willReturn($context);
 
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $translateApi = $this->getDictionaryApiFactory()->getApi();
 
         $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
 

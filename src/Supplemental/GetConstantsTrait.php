@@ -33,4 +33,16 @@ trait GetConstantsTrait
 
         return self::$constants;
     }
+
+    /**
+     * Fills constants array if it is empty and returns it
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function constantValueExists($value): bool
+    {
+        return array_search($value, $this->getConstants()) !== false;
+    }
 }

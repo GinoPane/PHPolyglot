@@ -2,7 +2,7 @@
 
 namespace GinoPane\PHPolyglot;
 
-use GinoPane\PHPolyglot\Supplemental\Language;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
  * Corresponding class to test Language class
@@ -12,7 +12,7 @@ use GinoPane\PHPolyglot\Supplemental\Language;
 class LanguageTest extends PHPolyglotTestCase
 {
     /**
-     * Just check if the PHPolyglot can be created
+     * Just check if the Language object can be created
      */
     public function testIfRootObjectCanBeCreated()
     {

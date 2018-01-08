@@ -1,6 +1,6 @@
 <?php
 
-namespace GinoPane\PHPolyglot\Supplemental;
+namespace GinoPane\PHPolyglot\Supplemental\Language;
 
 /**
  * Interface LanguageInterface

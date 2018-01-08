@@ -10,6 +10,7 @@ use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
  * Class YandexDictionaryApi
@@ -160,8 +161,9 @@ class YandexDictionaryApi extends DictionaryApiAbstract
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
             ->setRequestParameters(
                 [
-                    'lang' => sprintf("%s-%s", $languageFrom, $languageTo),
-                    'flags' => self::LOOKUP_MORPHO_FLAG
+                    'lang'  => sprintf("%s-%s", $languageFrom, $languageTo),
+                    'flags' => self::LOOKUP_MORPHO_FLAG,
+                    'ui'    => Language::CODE_ENGLISH
                 ] + $this->getAuthData()
             )
             ->setData(['text' => $text])

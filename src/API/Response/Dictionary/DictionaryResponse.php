@@ -3,6 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Response\Dictionary;
 
 use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
+use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\DictionaryEntry;
 
 /**
  * Class DictionaryResponse
@@ -11,5 +12,30 @@ use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
  */
 class DictionaryResponse extends ApiResponseAbstract
 {
-    private $entries = [];
+    /**
+     * @var DictionaryEntry[]
+     */
+    protected $data;
+
+    /**
+     * @param DictionaryEntry $entry
+     *
+     * @return DictionaryResponse
+     */
+    public function addEntry(DictionaryEntry $entry): DictionaryResponse
+    {
+        $this->data[] = $entry;
+
+        return $this;
+    }
+
+    /**
+     * Returns an array of saved entries
+     *
+     * @return DictionaryEntry[]
+     */
+    public function getEntries()
+    {
+        return parent::getData();
+    }
 }

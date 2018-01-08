@@ -2,6 +2,8 @@
 
 namespace GinoPane\PHPolyglot\API\Response\Dictionary\Entry;
 
+use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
+
 /**
  * Class DictionaryEntry
  *
@@ -47,11 +49,18 @@ class DictionaryEntry
     private $transcription = '';
 
     /**
-     * Part of speech of dictionary entry word
+     * Part of speech of dictionary entry source word
      *
-     * @var string
+     * @var DictionaryEntryPos
      */
-    private $pos = '';
+    private $posFrom = null;
+
+    /**
+     * Part of speech of dictionary entry resulting word
+     *
+     * @var DictionaryEntryPos
+     */
+    private $posTo = null;
 
     /**
      * An array of synonyms of the source text
@@ -236,5 +245,55 @@ class DictionaryEntry
         $this->examples = $examples;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPosFrom(): string
+    {
+        return $this->getPosAsString('posFrom');
+    }
+
+    /**
+     * @return string
+     */
+    public function getPosTo(): string
+    {
+        return $this->getPosAsString('posTo');
+    }
+
+    /**
+     * @param DictionaryEntryPos $pos
+     *
+     * @return DictionaryEntry
+     */
+    public function setPosTo(DictionaryEntryPos $pos): DictionaryEntry
+    {
+        $this->posTo = $pos;
+
+        return $this;
+    }
+
+    /**
+     * @param DictionaryEntryPos $pos
+     *
+     * @return DictionaryEntry
+     */
+    public function setPosFrom(DictionaryEntryPos $pos): DictionaryEntry
+    {
+        $this->posFrom = $pos;
+
+        return $this;
+    }
+
+    /**
+     * @param string $posField
+     *
+     * @return string
+     */
+    private function getPosAsString(string $posField): string
+    {
+        return !is_null($this->{$posField}) ? $this->{$posField}->getPos() : DictionaryEntryPos::POS_UNDEFINED;
     }
 }

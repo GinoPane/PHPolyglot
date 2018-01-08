@@ -7,7 +7,7 @@ use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidLanguageCodeException;
-use GinoPane\PHPolyglot\Supplemental\Language;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 
