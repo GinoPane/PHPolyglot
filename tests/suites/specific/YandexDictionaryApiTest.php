@@ -937,13 +937,12 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                         "pos": "adjective",
                                         "syn": [
                                             {
-                                                "text": "бытовой",
                                                 "pos": "adjective"
                                             }
                                         ],
                                         "mean": [
                                             {
-                                                "text": "household"
+                                                "texts": "household"
                                             }
                                         ],
                                         "ex": [
