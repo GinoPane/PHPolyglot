@@ -383,7 +383,6 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                         ]
                                     },
                                     {
-                                        "text": "go out",
                                         "pos": "verb",
                                         "syn": [
                                             {
@@ -947,7 +946,6 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                         ],
                                         "ex": [
                                             {
-                                                "text": "home telephone number",
                                                 "tr": [
                                                     {
                                                         "text": "домашний телефон"
@@ -958,7 +956,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                                 "text": "home computer network",
                                                 "tr": [
                                                     {
-                                                        "text": "домашняя компьютерная сеть"
+                                                        "texts": "домашняя компьютерная сеть"
                                                     }
                                                 ]
                                             },
