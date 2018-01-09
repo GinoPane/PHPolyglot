@@ -8,6 +8,7 @@ use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
+use GinoPane\PHPolyglot\Exception\InvalidLanguageCodeException;
 
 /**
  * Corresponding class to test PHPolyglot class
@@ -32,6 +33,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
      * @param ResponseContext $context
      * @param string          $translation
      *
+     * @throws InvalidLanguageCodeException
      * @throws InvalidConfigException
      */
     public function testIfTranslateWorksCorrectlyForValidInput(
@@ -46,7 +48,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
         /** @var PHPolyglot $phpolyglot */
         $phpolyglot = $this->getMockedPhpolyglot('getTranslateApi', $translateApi);
 
-        $response = $phpolyglot->translate('Прывітанне, Свет!', 'en', 'be');
+        $response = $phpolyglot->translate('Прывітанне, Свет!', 'en');
 
         $this->assertEquals($translation, $response->getTranslations()[0]);
     }
@@ -58,6 +60,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
      * @param array           $translations
      *
      * @throws InvalidConfigException
+     * @throws InvalidLanguageCodeException
      */
     public function testIfTranslateBulkWorksCorrectlyForValidInput(
         ResponseContext $context,
@@ -74,6 +77,19 @@ class PHPolyglotTest extends PHPolyglotTestCase
         $response = $phpolyglot->translateBulk(['Прывітанне', 'Свет'], 'en', 'be');
 
         $this->assertEquals($translations, $response->getTranslations());
+    }
+
+    /**
+     * @throws InvalidLanguageCodeException
+     */
+    public function testIfExceptionIsThrownForInvalidLanguages()
+    {
+        $this->expectException(InvalidLanguageCodeException::class);
+
+        /** @var PHPolyglot $phpolyglot */
+        $phpolyglot = new PHPolyglot();
+
+        $phpolyglot->translateBulk(['Прывітанне', 'Свет'], 'eng', 'bel');
     }
 
     /**

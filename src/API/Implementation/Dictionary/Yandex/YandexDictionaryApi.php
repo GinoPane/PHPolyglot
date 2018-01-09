@@ -2,17 +2,17 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex;
 
-use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
+use GinoPane\NanoRest\Exceptions\RequestContextException;
+use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\DictionaryEntry;
 use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
-use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
-use GinoPane\PHPolyglot\Exception\BadResponseContextException;
-use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
-use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
  * Class YandexDictionaryApi

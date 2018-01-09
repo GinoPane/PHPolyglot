@@ -7,6 +7,7 @@ use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
+use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
@@ -15,6 +16,7 @@ use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex\YandexDictionaryApi;
+use PhpParser\Node\Scalar\Encapsed;
 
 /**
 *  Corresponding class to test YandexDictionaryApiTest class
@@ -137,22 +139,15 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     }
 
     /**
-     * @dataProvider getValidResponsesForTextLookupProcessing
-     *
-     * @param ResponseContext $context
-     * @param array           $expectedResult
-     *
-     * @throws InvalidConfigException
-     */
-    public function testIfValidTextLookupResponseCanBeProcessed(
-        ResponseContext $context,
-        array $expectedResult
-    ) {
+ * @throws InvalidConfigException
+ */
+    public function testIfValidTextLookupResponseCanBeProcessed()
+    {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
             ->getMock();
 
-        $nanoRest->method('sendRequest')->willReturn($context);
+        $nanoRest->method('sendRequest')->willReturn($this->getValidResponseForTextLookupProcessing());
 
         $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
 
@@ -162,25 +157,77 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $response = $dictionaryApi->getTextAlternatives('', '');
 
         $this->assertTrue($response instanceof DictionaryResponse);
+
+        $entries = $response->getEntries();
+
+        $this->assertCount(15, $entries);
+        $this->assertEquals(DictionaryEntryPos::POS_NOUN, $entries[4]->getPosTo());
+        $this->assertEmpty($entries[13]->getSynonyms());
+        $this->assertEmpty($entries[13]->getMeanings());
+        $this->assertEmpty($entries[13]->getExamples());
+        $this->assertCount(7, $entries[3]->getSynonyms());
     }
 
     /**
-     * @dataProvider getValidResponsesForTextTranslateLookupProcessing
-     *
-     * @param ResponseContext $context
-     * @param array           $result
-     *
      * @throws InvalidConfigException
      */
-    public function testIfValidTextTranslateLookupResponseCanBeProcessed(
-        ResponseContext $context,
-        array $result
-    ) {
+    public function testIfEmptyTextLookupResponseCanBeProcessed()
+    {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
             ->getMock();
 
-        $nanoRest->method('sendRequest')->willReturn($context);
+        $nanoRest->method('sendRequest')->willReturn($this->getEmptyResponseForTextLookupProcessing());
+
+        $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
+
+        $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
+
+        /** @var DictionaryResponse $response */
+        $response = $dictionaryApi->getTextAlternatives('', '');
+
+        $this->assertTrue($response instanceof DictionaryResponse);
+        $this->assertEmpty($response->getEntries());
+    }
+
+    /**
+     * @dataProvider getInvalidResponseForTextLookupProcessing
+     *
+     * @param ResponseContext $response
+     *
+     * @throws InvalidConfigException
+     */
+    public function testIfInvalidTextLookupResponseCanBeProcessed(ResponseContext $response)
+    {
+        $nanoRest = $this->getMockBuilder(NanoRest::class)
+            ->setMethods(array('sendRequest'))
+            ->getMock();
+
+        $nanoRest->method('sendRequest')->willReturn($response);
+
+        $dictionaryApi = $this->getDictionaryApiFactory()->getApi();
+
+        $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
+
+        /** @var DictionaryResponse $response */
+        $response = $dictionaryApi->getTextAlternatives('', '');
+
+        $this->assertTrue($response instanceof DictionaryResponse);
+        $this->assertEmpty($response->getEntries());
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function testIfValidTextTranslateLookupResponseCanBeProcessed()
+    {
+        $nanoRest = $this->getMockBuilder(NanoRest::class)
+            ->setMethods(array('sendRequest'))
+            ->getMock();
+
+        $nanoRest->method('sendRequest')->willReturn(
+            $this->getValidResponseForTextTranslateLookupProcessing()
+        );
 
         $translateApi = $this->getDictionaryApiFactory()->getApi();
 
@@ -190,6 +237,15 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $response = $translateApi->getTranslateAlternatives('', '', '');
 
         $this->assertTrue($response instanceof DictionaryResponse);
+
+        $entries = $response->getEntries();
+
+        $this->assertNotEmpty($entries);
+        $this->assertCount(6, $entries);
+        $this->assertCount(3, $entries[0]->getMeanings());
+        $this->assertCount(3, $entries[0]->getExamples());
+        $this->assertCount(8, $entries[0]->getSynonyms());
+        $this->assertEquals("уходить в отпуск", $entries[3]->getExamples()['go on leave']);
     }
 
     /**
@@ -252,380 +308,420 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     }
 
     /**
-     * @return array
+     * @return ResponseContext
      */
-    public function getValidResponsesForTextLookupProcessing(): array
+    public function getValidResponseForTextLookupProcessing(): ResponseContext
     {
-        return [
-            [
-                (
-                    new JsonResponseContext('{
-                        "head": {},
-                        "def": [
-                            {
-                                "text": "go",
-                                "pos": "verb",
-                                "ts": "gəʊ",
-                                "fl": "went, gone",
-                                "tr": [
-                                    {
-                                        "text": "get",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "move",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "take",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "turn",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "pass",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "become",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "fly",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "go up",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "go through",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "jump",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "get out",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "go for",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "click",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "attend",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "last",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "stand",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "agree",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "navigate",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "lead",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "refer",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "take place",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "grow",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "get through",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "pass on",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "fetch",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "pass over",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "pass away",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "elapse",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "come out",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "look out",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "step out",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "emerge",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "come off",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "run",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "start",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "try",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "walk",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "flee",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "proceed",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "continue",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "keep on",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "go away",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "depart",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "leave",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "quit",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "exit",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "retire",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "be off",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "come away",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "travel",
-                                        "pos": "noun",
-                                        "syn": [
-                                            {
-                                                "text": "head",
-                                                "pos": "noun"
-                                            },
-                                            {
-                                                "text": "cross",
-                                                "pos": "noun"
-                                            },
-                                            {
-                                                "text": "course",
-                                                "pos": "noun"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "go over",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "come along",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "come over",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "drive",
-                                        "pos": "noun",
-                                        "syn": [
-                                            {
-                                                "text": "get going",
-                                                "pos": "noun"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "fall",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "descend",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "drop",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "drop in",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "set off",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "set",
-                                                "pos": "verb"
-                                            },
-                                            {
-                                                "text": "set out",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "lie",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "lay",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "fit",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "wear",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "stop by",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "stop in",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "fade",
-                                        "pos": "verb",
-                                        "syn": [
-                                            {
-                                                "text": "vanish",
-                                                "pos": "verb"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "suit",
-                                        "pos": "noun"
-                                    },
-                                    {
-                                        "text": "sink",
-                                        "pos": "noun"
-                                    }
-                                ]
-                            }
-                        ]
-                    }')
-                )->setHttpStatusCode(200),
-                ['Hello World!']
-            ],
-            [
-                (
-                    new JsonResponseContext('{
-                        "head": {},
-                        "def": []
-                    }')
-                )->setHttpStatusCode(200),
-                ['Hello World!']
-            ]
-        ];
+        return (
+                new JsonResponseContext('{
+                    "head": {},
+                    "def": [
+                        {
+                            "text": "go",
+                            "pos": "verb",
+                            "ts": "gəʊ",
+                            "fl": "went, gone",
+                            "tr": [
+                                {
+                                    "text": "get",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "move",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "take",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "turn",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "pass",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "become",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "fly",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "go up",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "go through",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "jump",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "get out",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "go for",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "click",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "attend",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "last",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "stand",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "agree",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "navigate",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "lead",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "refer",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "take place",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "grow",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "get through",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "pass on",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "fetch",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "pass over",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "pass away",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "elapse",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "come out",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "look out",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "step out",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "emerge",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "come off",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "run",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "start",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "try",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "walk",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "flee",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "proceed",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "continue",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "keep on",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "go away",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "depart",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "leave",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "quit",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "exit",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "retire",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "be off",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "come away",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "travel",
+                                    "pos": "noun",
+                                    "syn": [
+                                        {
+                                            "text": "head",
+                                            "pos": "noun"
+                                        },
+                                        {
+                                            "text": "cross",
+                                            "pos": "noun"
+                                        },
+                                        {
+                                            "text": "course",
+                                            "pos": "noun"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "go over",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "come along",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "come over",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "drive",
+                                    "pos": "noun",
+                                    "syn": [
+                                        {
+                                            "text": "get going",
+                                            "pos": "noun"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "fall",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "descend",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "drop",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "drop in",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "set off",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "set",
+                                            "pos": "verb"
+                                        },
+                                        {
+                                            "text": "set out",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "lie",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "lay",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "fit",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "wear",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "stop by",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "stop in",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "fade",
+                                    "pos": "verb",
+                                    "syn": [
+                                        {
+                                            "text": "vanish",
+                                            "pos": "verb"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "text": "suit",
+                                    "pos": "noun"
+                                },
+                                {
+                                    "text": "sink",
+                                    "pos": "noun"
+                                }
+                            ]
+                        }
+                    ]
+                }')
+            )->setHttpStatusCode(200);
     }
 
     /**
      * @return array
      */
-    public function getValidResponsesForTextTranslateLookupProcessing(): array
+    public function getInvalidResponseForTextLookupProcessing(): array
     {
         return [
             [
                 (
+                    new JsonResponseContext('{
+                            "head": {},
+                            "def": [
+                                {
+                                    "tr": []
+                                }
+                            ]
+                        }')
+                )->setHttpStatusCode(200)
+            ],
+            [
+                (
+                    new JsonResponseContext('{
+                            "head": {},
+                            "def": [
+                                {
+                                    "text": "hello"
+                                }
+                            ]
+                        }')
+                )->setHttpStatusCode(200)
+            ],
+            [
+                (
+                    new JsonResponseContext('{
+                            "head": {},
+                            "def": [
+                                {
+                                    "text": "hello",
+                                    "tr": "world"
+                                }
+                            ]
+                        }')
+                )->setHttpStatusCode(200)
+            ]
+        ];
+    }
+
+    public function getEmptyResponseForTextLookupProcessing(): ResponseContext
+    {
+        return (
+            new JsonResponseContext('{
+                        "head": {},
+                        "def": []
+                    }')
+        )->setHttpStatusCode(200);
+    }
+
+    /**
+     * @return ResponseContext
+     */
+    public function getValidResponseForTextTranslateLookupProcessing(): ResponseContext
+    {
+        return (
                     new JsonResponseContext('{
                         "head": {},
                         "def": [
@@ -641,7 +737,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                         "asp": "несов",
                                         "syn": [
                                             {
-                                                "text": "пойти",
+                                                "texts": "пойти",
                                                 "pos": "гл",
                                                 "asp": "сов"
                                             },
@@ -685,7 +781,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                         ],
                                         "mean": [
                                             {
-                                                "text": "come"
+                                                "texts": "come"
                                             },
                                             {
                                                 "text": "walk"
@@ -699,20 +795,15 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                                         ],
                                         "ex": [
                                             {
-                                                "text": "go right ahead",
+                                                "texts": "go right ahead",
                                                 "tr": [
                                                     {
-                                                        "text": "идти прямо вперед"
+                                                        "texts": "идти прямо вперед"
                                                     }
                                                 ]
                                             },
                                             {
-                                                "text": "go south",
-                                                "tr": [
-                                                    {
-                                                        "text": "пойти на юг"
-                                                    }
-                                                ]
+                                                "text": "go south"
                                             },
                                             {
                                                 "text": "go barefoot",
@@ -883,367 +974,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
                             }
                         ]
                     }')
-                )->setHttpStatusCode(200),
-                ['Hello', 'World']
-            ],
-            [
-                (
-                    new JsonResponseContext('{
-                        "head": {},
-                        "def": [
-                            {
-                                "text": "infeasible",
-                                "pos": "adjective",
-                                "ts": "ɪnˈfiːzəbl",
-                                "tr": [
-                                    {
-                                        "text": "невыполнимый",
-                                        "pos": "adjective",
-                                        "mean": [
-                                            {
-                                                "text": "impracticable"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }')
-                )->setHttpStatusCode(200),
-                ['Hello', 'World']
-            ],
-            [
-                (
-                new JsonResponseContext('{
-                        "head": {},
-                        "def": []
-                    }')
-                )->setHttpStatusCode(200),
-                ['Hello', 'World']
-            ],
-            [
-                (
-                    new JsonResponseContext('{
-                        "head": {},
-                        "def": [
-                            {
-                                "text": "home",
-                                "pos": "adjective",
-                                "ts": "həʊm",
-                                "tr": [
-                                    {
-                                        "text": "домашний",
-                                        "pos": "adjective",
-                                        "syn": [
-                                            {
-                                                "pos": "adjective"
-                                            }
-                                        ],
-                                        "mean": [
-                                            {
-                                                "texts": "household"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "tr": [
-                                                    {
-                                                        "text": "домашний телефон"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "text": "home computer network",
-                                                "tr": [
-                                                    {
-                                                        "texts": "домашняя компьютерная сеть"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "text": "home theater system",
-                                                "tr": [
-                                                    {
-                                                        "text": "домашний кинотеатр"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "text": "home appliances",
-                                                "tr": [
-                                                    {
-                                                        "text": "бытовая техника"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "внутренний",
-                                        "pos": "adjective",
-                                        "syn": [
-                                            {
-                                                "text": "отечественный",
-                                                "pos": "adjective"
-                                            }
-                                        ],
-                                        "mean": [
-                                            {
-                                                "text": "internal"
-                                            },
-                                            {
-                                                "text": "domestic"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "text": "minister for home affairs",
-                                                "tr": [
-                                                    {
-                                                        "text": "министр внутренних дел"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "text": "home producer",
-                                                "tr": [
-                                                    {
-                                                        "text": "отечественный производитель"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "родной",
-                                        "pos": "adjective",
-                                        "mean": [
-                                            {
-                                                "text": "native"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "text": "home city",
-                                                "tr": [
-                                                    {
-                                                        "text": "родной город"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "главный",
-                                        "pos": "adjective",
-                                        "mean": [
-                                            {
-                                                "text": "main"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "text": "home office",
-                                                "tr": [
-                                                    {
-                                                        "text": "главный офис"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "text": "home",
-                                "pos": "noun",
-                                "ts": "həʊm",
-                                "tr": [
-                                    {
-                                        "text": "родина",
-                                        "pos": "noun",
-                                        "gen": "ж",
-                                        "mean": [
-                                            {
-                                                "text": "homeland"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "text": "return home",
-                                                "tr": [
-                                                    {
-                                                        "text": "вернуться на родину"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "жилище",
-                                        "pos": "noun",
-                                        "gen": "ср",
-                                        "syn": [
-                                            {
-                                                "text": "жилье",
-                                                "pos": "noun",
-                                                "gen": "ср"
-                                            },
-                                            {
-                                                "text": "проживание",
-                                                "pos": "noun",
-                                                "gen": "ср"
-                                            }
-                                        ],
-                                        "mean": [
-                                            {
-                                                "text": "house"
-                                            },
-                                            {
-                                                "text": "housing"
-                                            },
-                                            {
-                                                "text": "residence"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "text": "humble homes",
-                                                "tr": [
-                                                    {
-                                                        "text": "скромные жилища"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "text": "permanent home",
-                                                "tr": [
-                                                    {
-                                                        "text": "постоянное жилье"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "семья",
-                                        "pos": "noun",
-                                        "gen": "ж",
-                                        "mean": [
-                                            {
-                                                "text": "family"
-                                            }
-                                        ],
-                                        "ex": [
-                                            {
-                                                "text": "broken home",
-                                                "tr": [
-                                                    {
-                                                        "text": "распавшаяся семья"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "домашний очаг",
-                                        "pos": "noun",
-                                        "syn": [
-                                            {
-                                                "text": "родной дом",
-                                                "pos": "noun"
-                                            },
-                                            {
-                                                "text": "родной очаг",
-                                                "pos": "noun"
-                                            }
-                                        ],
-                                        "mean": [
-                                            {
-                                                "text": "hearth"
-                                            },
-                                            {
-                                                "text": "family home"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "дома",
-                                        "pos": "noun",
-                                        "gen": "м",
-                                        "mean": [
-                                            {
-                                                "text": "at home"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "домашние условия",
-                                        "pos": "noun",
-                                        "mean": [
-                                            {
-                                                "text": "home conditions"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "кров",
-                                        "pos": "noun",
-                                        "gen": "м",
-                                        "mean": [
-                                            {
-                                                "text": "shelter"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "text": "home",
-                                "pos": "adverb",
-                                "ts": "həʊm",
-                                "tr": [
-                                    {
-                                        "text": "домой",
-                                        "pos": "adverb",
-                                        "mean": [
-                                            {
-                                                "text": "homeward"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "text": "на родину",
-                                        "pos": "adverb"
-                                    },
-                                    {
-                                        "text": "к себе",
-                                        "pos": "adverb"
-                                    }
-                                ]
-                            },
-                            {
-                                "text": "home",
-                                "pos": "verb",
-                                "ts": "həʊm",
-                                "tr": [
-                                    {
-                                        "text": "возвращаться домой",
-                                        "pos": "verb",
-                                        "mean": [
-                                            {
-                                                "text": "return home"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }')
-                )->setHttpStatusCode(200),
-                ['Hello', 'World']
-            ]
-        ];
+                )->setHttpStatusCode(200);
     }
 }
 

@@ -84,6 +84,8 @@ class PHPolyglot
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * Get Translate API instance
      *
      * @throws InvalidConfigException
