@@ -10,27 +10,27 @@ try {
     $textToLookup = 'Hello!';
 
     $languageFrom = 'en';
+    $languageTo = 'ru';
 
-    $response = $phpolyglot->lookup($textToLookup, $languageFrom)->getEntries();
+    $response = $phpolyglot->lookup($textToLookup, $languageFrom, $languageTo)->getEntries();
 
     if (!$response) {
         throw new Exception('Nothing returned! Maybe API has changed?');
     }
 
-    $synonyms = implode(",", $response[0]->getSynonyms());
+    echo "Word to translate: $textToLookup \n";
 
-    $output = <<<TEXT
-    Initial word: {$response[0]->getTextFrom()}
-  
-    Part of speech: {$response[0]->getPosFrom()}
-    Transcription: {$response[0]->getTranscription()}
-    
-    Main alternative: {$response[0]->getTextTo()}
-    Synonyms: {$synonyms}
+    echo "Translations: \n";
 
-TEXT;
+    foreach ($response as $entry) {
+        echo $entry->getTextTo();
 
-    echo $output;
+        if ($meanings = $entry->getMeanings()) {
+            echo " (" . implode(", ", $meanings) . ")";
+        }
+
+        echo "\n";
+    }
 } catch (Exception $exception) {
     $errorMessage = $exception->getMessage();
 
