@@ -10,7 +10,7 @@ Requirements
 ------------
 
 * PHP >= 7.1;
-* credentials for Yandex Translate API and IBM Watson API.
+* credentials for Yandex Translate API, Yandex Dictionary API and IBM Watson API (depending on what you are going to use).
 
 Features
 --------
