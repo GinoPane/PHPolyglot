@@ -20,6 +20,7 @@ use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
  * API version 1.5
  *
  * @link https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/
+ * @link https://tech.yandex.com/keys/?service=trnsl
  *
  * @author Sergey <Gino Pane> Karavay
  */

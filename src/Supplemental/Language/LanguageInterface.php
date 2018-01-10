@@ -577,13 +577,4 @@ interface LanguageInterface
     const CODE_ZULU = "zu";
     const CODE_ZUNI = "zun";
     const CODE_ZAZA = "zza";
-
-    /**
-     * Checks if code is valid
-     *
-     * @param string $code
-     *
-     * @return bool
-     */
-    public function codeIsValid(string $code): bool;
 }

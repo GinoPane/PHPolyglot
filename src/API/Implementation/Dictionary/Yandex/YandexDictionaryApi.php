@@ -22,6 +22,7 @@ use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
  * API version 1
  *
  * @link https://tech.yandex.com/dictionary/doc/dg/concepts/api-overview-docpage/
+ * @link https://tech.yandex.com/keys/?service=dict
  *
  * @author Sergey <Gino Pane> Karavay
  */

@@ -2,7 +2,10 @@
 
 namespace GinoPane\PHPolyglot;
 
+use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
+use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
+use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
@@ -19,26 +22,6 @@ define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
  */
 class PHPolyglot
 {
-    public function from(string $language): PHPolyglot
-    {
-        return $this;
-    }
-
-    public function to(string $language): PHPolyglot
-    {
-        return $this;
-    }
-
-    public function withLookup(bool $enableLookup): PHPolyglot
-    {
-        return $this;
-    }
-
-    public function usingVoice(string $voice): PHPolyglot
-    {
-        return $this;
-    }
-
     /**
      * @param string $text
      * @param string $languageTo
@@ -51,7 +34,7 @@ class PHPolyglot
      */
     public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        list($languageTo, $languageFrom) = $this->getLanguagesForTranslation($languageTo, $languageFrom);
+        list($languageTo, $languageFrom) =  (new Language())->getLanguagesForTranslation($languageTo, $languageFrom);
 
         return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
     }
@@ -68,17 +51,39 @@ class PHPolyglot
      */
     public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        list($languageTo, $languageFrom) = $this->getLanguagesForTranslation($languageTo, $languageFrom);
+        list($languageTo, $languageFrom) = (new Language())->getLanguagesForTranslation($languageTo, $languageFrom);
 
         return $this->getTranslateApi()->translateBulk($text, $languageTo, $languageFrom);
     }
 
-    public function speak()
+    /**
+     * The most common use of `lookup` is look up of the word in the same language, that's
+     * why the first language parameter of `lookup` method is language-from, language-to is optional,
+     * which differs from the language parameters order for translation
+     *
+     * @param string $text
+     * @param string $languageFrom
+     * @param string $languageTo
+     *
+     * @throws InvalidConfigException
+     * @throws InvalidLanguageCodeException
+     *
+     * @return DictionaryResponse
+     */
+    public function lookup(string $text, string $languageFrom, string $languageTo = ''): DictionaryResponse
     {
+        list($languageFrom, $languageTo) = (new Language())->getLanguagesForTranslation($languageFrom, $languageTo);
 
+        if ($languageTo) {
+            $response = $this->getDictionaryApi()->getTranslateAlternatives($text, $languageTo, $languageFrom);
+        } else {
+            $response = $this->getDictionaryApi()->getTextAlternatives($text, $languageFrom);
+        }
+
+        return $response;
     }
 
-    public function lookup()
+    public function speak()
     {
 
     }
@@ -89,6 +94,7 @@ class PHPolyglot
      * Get Translate API instance
      *
      * @throws InvalidConfigException
+     *
      * @return TranslateApiInterface
      */
     protected function getTranslateApi(): TranslateApiInterface
@@ -97,57 +103,16 @@ class PHPolyglot
     }
 
     /**
-     * Checks that language codes are valid and also transforms them
+     * @codeCoverageIgnore
      *
-     * @param array $languages
+     * Get Translate API instance
      *
-     * @throws InvalidLanguageCodeException
+     * @throws InvalidConfigException
      *
-     * @return array
+     * @return DictionaryApiInterface
      */
-    private function sanitizeLanguages(array $languages): array
+    protected function getDictionaryApi(): DictionaryApiInterface
     {
-        $languages = array_map('strtolower', $languages);
-
-        $this->assertLanguagesAreValid($languages);
-
-        return $languages;
-    }
-
-    /**
-     * Checks that specified language codes are valid
-     *
-     * @param array $languages
-     *
-     * @throws InvalidLanguageCodeException
-     */
-    private function assertLanguagesAreValid(array $languages): void
-    {
-        foreach ($languages as $language) {
-            if (!(new Language())->codeIsValid($language)) {
-                throw new InvalidLanguageCodeException(
-                    sprintf("Language code \"%s\" is invalid", $language)
-                );
-            }
-        }
-    }
-
-    /**
-     * @param string $languageTo
-     * @param string $languageFrom
-     *
-     * @throws InvalidLanguageCodeException
-     *
-     * @return array
-     */
-    private function getLanguagesForTranslation(string $languageTo, string $languageFrom): array
-    {
-        if (!empty($languageFrom)) {
-            list($languageTo, $languageFrom) = $this->sanitizeLanguages([$languageTo, $languageFrom]);
-        } else {
-            list($languageTo) = $this->sanitizeLanguages([$languageTo]);
-        }
-
-        return array($languageTo, $languageFrom);
+        return (new DictionaryApiFactory())->getApi();
     }
 }
