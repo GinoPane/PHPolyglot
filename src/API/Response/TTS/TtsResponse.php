@@ -2,7 +2,14 @@
 
 namespace GinoPane\PHPolyglot\API\Response\TTS;
 
-class TtsResponse
+use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
+
+/**
+ * Class TtsResponse
+ *
+ * @author Sergey <Gino Pane> Karavay
+ */
+class TtsResponse extends ApiResponseAbstract
 {
 
 }
