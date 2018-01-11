@@ -82,7 +82,7 @@ Contributing
 6. Push to the branch (git push origin my-new-feature).
 7. Create new pull request.
 
-Also please refer to [CONTRIBUTION.md](https://github.com/GinoPane/PHPolyglot/blob/master/CONTRIBUTION.md).
+Also please refer to [CONTRIBUTING.md](https://github.com/GinoPane/PHPolyglot/blob/master/CONTRIBUTING.md).
 
 License
 =======
