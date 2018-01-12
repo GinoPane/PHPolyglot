@@ -67,9 +67,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      */
     public function getApi()
     {
-        $this->assertConfigIsValid();
-
-        $apiClass = $this->getFactorySpecificConfig()['class'];
+        $apiClass = $this->getFactorySpecificConfig()['default'];
         
         return new $apiClass();
     }
@@ -93,7 +91,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      */
     protected function assertConfigIsValid(): void
     {
-        if (empty(self::$config[$this->configSectionName]['class'])) {
+        if (empty(self::$config[$this->configSectionName]['default'])) {
             throw new InvalidConfigException(
                 "Config section does not exist or is not filled properly: {$this->configSectionName}"
             );

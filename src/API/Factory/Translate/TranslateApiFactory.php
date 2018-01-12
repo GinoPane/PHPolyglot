@@ -45,7 +45,7 @@ class TranslateApiFactory extends ApiFactoryAbstract
     {
         parent::assertConfigIsValid();
 
-        $apiClass = $this->getFactorySpecificConfig()['class'];
+        $apiClass = $this->getFactorySpecificConfig()['default'];
 
         if (!in_array(
             TranslateApiInterface::class,

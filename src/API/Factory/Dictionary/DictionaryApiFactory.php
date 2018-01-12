@@ -40,7 +40,7 @@ class DictionaryApiFactory extends ApiFactoryAbstract
     {
         parent::assertConfigIsValid();
 
-        $apiClass = $this->getFactorySpecificConfig()['class'];
+        $apiClass = $this->getFactorySpecificConfig()['default'];
 
         if (!in_array(
             DictionaryApiInterface::class,

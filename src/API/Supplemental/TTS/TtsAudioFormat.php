@@ -2,6 +2,8 @@
 
 namespace GinoPane\PHPolyglot\API\Supplemental\TTS;
 
+use GinoPane\PHPolyglot\Supplemental\GetConstantsTrait;
+
 /**
  * Interface TtsAudioFormats
  *
@@ -11,7 +13,7 @@ namespace GinoPane\PHPolyglot\API\Supplemental\TTS;
  *
  * @author Sergey <Gino Pane> Karavay
  */
-interface TtsAudioFormats
+class TtsAudioFormat
 {
     const AUDIO_BASIC       = "basic";
     const AUDIO_FLAC        = "flac";
@@ -26,4 +28,6 @@ interface TtsAudioFormats
     const AUDIO_WEBM        = "webm";
     const AUDIO_WEBM_OPUS   = "webm_opus";
     const AUDIO_WEBM_VORBIS = "webm_vorbis";
+
+    use GetConstantsTrait;
 }
