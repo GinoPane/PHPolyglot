@@ -34,6 +34,11 @@ class DictionaryEntryPos
 
     use GetConstantsTrait;
 
+    /**
+     * DictionaryEntryPos constructor
+     *
+     * @param string $pos
+     */
     public function __construct(string $pos = self::POS_UNDEFINED)
     {
         $pos = strtolower($pos);
