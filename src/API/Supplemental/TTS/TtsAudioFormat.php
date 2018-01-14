@@ -15,19 +15,40 @@ use GinoPane\PHPolyglot\Supplemental\GetConstantsTrait;
  */
 class TtsAudioFormat
 {
-    const AUDIO_BASIC       = "basic";
-    const AUDIO_FLAC        = "flac";
-    const AUDIO_L16         = "l16";
-    const AUDIO_MP3         = "mp3";
-    const AUDIO_MPEG        = "mpeg";
-    const AUDIO_MULAW       = "mulaw";
-    const AUDIO_OGG         = "ogg";
-    const AUDIO_OGG_OPUS    = "ogg_opus";
-    const AUDIO_OGG_VORBIS  = "ogg_vorbis";
-    const AUDIO_WAV         = "wav";
-    const AUDIO_WEBM        = "webm";
-    const AUDIO_WEBM_OPUS   = "webm_opus";
-    const AUDIO_WEBM_VORBIS = "webm_vorbis";
+    const AUDIO_BASIC       = 'basic';
+    const AUDIO_FLAC        = 'flac';
+    const AUDIO_L16         = 'l16';
+    const AUDIO_MP3         = 'mp3';
+    const AUDIO_MPEG        = 'mpeg';
+    const AUDIO_MULAW       = 'mulaw';
+    const AUDIO_OGG         = 'ogg';
+    const AUDIO_OGG_OPUS    = 'ogg_opus';
+    const AUDIO_OGG_VORBIS  = 'ogg_vorbis';
+    const AUDIO_WAV         = 'wav';
+    const AUDIO_WEBM        = 'webm';
+    const AUDIO_WEBM_OPUS   = 'webm_opus';
+    const AUDIO_WEBM_VORBIS = 'webm_vorbis';
+
+    /**
+     * @link https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html
+     *
+     * @var string[]
+     */
+    private static $defaultFileExtensions = [
+        self::AUDIO_BASIC       => 'au',
+        self::AUDIO_FLAC        => 'flac',
+        self::AUDIO_L16         => 'l16',
+        self::AUDIO_MP3         => 'mp3',
+        self::AUDIO_MPEG        => 'mp3',
+        self::AUDIO_MULAW       => 'ulaw',
+        self::AUDIO_OGG         => 'ogg',
+        self::AUDIO_OGG_OPUS    => 'opus',
+        self::AUDIO_OGG_VORBIS  => 'ogg',
+        self::AUDIO_WAV         => 'wav',
+        self::AUDIO_WEBM        => 'webm',
+        self::AUDIO_WEBM_OPUS   => 'webm',
+        self::AUDIO_WEBM_VORBIS => 'webm'
+    ];
 
     /**
      * Stored audio format. Set to mp3 format by default
@@ -60,5 +81,13 @@ class TtsAudioFormat
     public function getFormat(): string
     {
         return $this->format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileExtension(): string
+    {
+        return self::$defaultFileExtensions[$this->format];
     }
 }

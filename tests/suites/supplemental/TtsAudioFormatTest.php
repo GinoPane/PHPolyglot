@@ -27,11 +27,24 @@ class TtsAudioFormatTest extends PHPolyglotTestCase
      * @param string    $format
      * @param string    $expectedFormat
      */
-    public function testIfCodeCheckWorksCorrectly(
+    public function testIfFormatCheckWorksCorrectly(
         string $format,
         string $expectedFormat
     ) {
         $this->assertEquals($expectedFormat, (new TtsAudioFormat($format))->getFormat());
+    }
+
+    /**
+     * @dataProvider getExtensions
+     *
+     * @param string    $format
+     * @param string    $expectedExtension
+     */
+    public function testIfExtensionCheckWorksCorrectly(
+        string $format,
+        string $expectedExtension
+    ) {
+        $this->assertEquals($expectedExtension, (new TtsAudioFormat($format))->getFileExtension());
     }
 
     /**
@@ -45,6 +58,20 @@ class TtsAudioFormatTest extends PHPolyglotTestCase
             ['mpeG', TtsAudioFormat::AUDIO_MPEG],
             ['webm', TtsAudioFormat::AUDIO_WEBM],
             ['some name', TtsAudioFormat::AUDIO_MP3]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtensions(): array
+    {
+        return [
+            ['Basic', 'au'],
+            ['ogg', 'ogg'],
+            ['mpeG', 'mp3'],
+            ['webm', 'webm'],
+            ['some name', 'mp3']
         ];
     }
 }
