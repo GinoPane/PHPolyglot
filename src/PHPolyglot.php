@@ -4,10 +4,14 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
+use GinoPane\PHPolyglot\API\Factory\Translate\TtsApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
+use GinoPane\PHPolyglot\API\Implementation\TtsApiInterface;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
+use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
+use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidLanguageCodeException;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
@@ -83,7 +87,14 @@ class PHPolyglot
         return $response;
     }
 
-    public function speak()
+    /**
+     * @param string $text
+     * @param string $languageFrom
+     * @param string $format
+     *
+     * @return TtsResponse
+     */
+    public function speak(string $text, string $languageFrom, string $format = TtsAudioFormat::AUDIO_MP3): TtsResponse
     {
 
     }
@@ -105,7 +116,7 @@ class PHPolyglot
     /**
      * @codeCoverageIgnore
      *
-     * Get Translate API instance
+     * Get Dictionary API instance
      *
      * @throws InvalidConfigException
      *
@@ -114,5 +125,19 @@ class PHPolyglot
     protected function getDictionaryApi(): DictionaryApiInterface
     {
         return (new DictionaryApiFactory())->getApi();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * Get Tts API instance
+     *
+     * @throws InvalidConfigException
+     *
+     * @return TtsApiInterface
+     */
+    protected function getTtsApi(): TtsApiInterface
+    {
+        return (new TtsApiFactory())->getApi();
     }
 }
