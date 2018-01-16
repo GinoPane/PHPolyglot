@@ -2,7 +2,7 @@
 
 namespace GinoPane\PHPolyglot\API\Response\Dictionary\Entry;
 
-use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
+use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS\DictionaryEntryPos;
 
 /**
  * Class DictionaryEntry

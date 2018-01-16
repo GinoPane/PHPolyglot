@@ -12,7 +12,37 @@ use GinoPane\PHPolyglot\Supplemental\GetConstantsTrait;
  */
 class Language implements LanguageInterface
 {
+    /**
+     * Constant value for undefined language
+     */
+    const CODE_UNDEFINED = '';
+
+    /**
+     * Stored part of speech
+     *
+     * @var string
+     */
+    private $language = self::CODE_UNDEFINED;
+
     use GetConstantsTrait;
+
+    /**
+     * DictionaryEntryPos constructor
+     *
+     * @param string $language
+     *
+     * @throws InvalidLanguageCodeException
+     */
+    public function __construct(string $language = self::CODE_UNDEFINED)
+    {
+        $language = strtolower($language);
+
+        if ($language !== self::CODE_UNDEFINED) {
+            $this->assertLanguageIsValid($language);
+        }
+
+        $this->language = $language;
+    }
 
     /**
      * Checks if code is valid
@@ -24,6 +54,16 @@ class Language implements LanguageInterface
     public function codeIsValid(string $code): bool
     {
         return $this->constantValueExists($code);
+    }
+
+    /**
+     * Returns current language code
+     *
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->language;
     }
 
     /**
@@ -67,20 +107,18 @@ class Language implements LanguageInterface
     }
 
     /**
-     * Checks that specified language codes are valid
+     * Checks that specified language code is valid
      *
-     * @param array $languages
+     * @param string $language
      *
      * @throws InvalidLanguageCodeException
      */
-    private function assertLanguagesAreValid(array $languages): void
+    private function assertLanguageIsValid(string $language): void
     {
-        foreach ($languages as $language) {
-            if (!$this->codeIsValid($language)) {
-                throw new InvalidLanguageCodeException(
-                    sprintf("Language code \"%s\" is invalid", $language)
-                );
-            }
+        if (!$this->codeIsValid($language)) {
+            throw new InvalidLanguageCodeException(
+                sprintf("Language code \"%s\" is invalid", $language)
+            );
         }
     }
 }

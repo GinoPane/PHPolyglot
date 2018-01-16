@@ -8,7 +8,7 @@ use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
-use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
+use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS\DictionaryEntryPos;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidLanguageCodeException;
 

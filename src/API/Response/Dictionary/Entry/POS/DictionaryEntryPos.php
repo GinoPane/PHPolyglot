@@ -1,6 +1,6 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Response\Dictionary\POS;
+namespace GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS;
 
 use GinoPane\PHPolyglot\Supplemental\GetConstantsTrait;
 

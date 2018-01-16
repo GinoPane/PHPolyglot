@@ -7,16 +7,14 @@ use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
-use GinoPane\PHPolyglot\API\Response\Dictionary\POS\DictionaryEntryPos;
+use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS\DictionaryEntryPos;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex\YandexDictionaryApi;
-use PhpParser\Node\Scalar\Encapsed;
 
 /**
 *  Corresponding class to test YandexDictionaryApiTest class

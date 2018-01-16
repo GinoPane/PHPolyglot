@@ -91,11 +91,16 @@ class PHPolyglot
      * @param string $text
      * @param string $languageFrom
      * @param string $format
+     * @param array  $additionalData
      *
      * @return TtsResponse
      */
-    public function speak(string $text, string $languageFrom, string $format = TtsAudioFormat::AUDIO_MP3): TtsResponse
-    {
+    public function speak(
+        string $text,
+        string $languageFrom,
+        string $format = TtsAudioFormat::AUDIO_MP3,
+        array $additionalData = []
+    ): TtsResponse {
 
     }
 
