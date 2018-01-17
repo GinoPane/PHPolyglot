@@ -15,6 +15,7 @@ use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex\YandexDictionaryApi;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
 *  Corresponding class to test YandexDictionaryApiTest class
@@ -78,7 +79,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $text = 'Hello';
         /** @var RequestContext $context */
-        $context = $createContextMethod->invoke($dictionaryApi, $text, 'en');
+        $context = $createContextMethod->invoke($dictionaryApi, $text, new Language('en'));
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
@@ -96,7 +97,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $text = 'Hello';
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($dictionaryApi, $text, 'ru', 'en');
+        $context = $createRequestMethod->invoke($dictionaryApi, $text, new Language('ru'), new Language('en'));
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
@@ -133,7 +134,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
 
         $callApiMethod = $this->getInternalMethod($dictionaryApi, 'callApi');
 
-        $callApiMethod->invoke($dictionaryApi, 'getTextAlternatives', ['world','en']);
+        $callApiMethod->invoke($dictionaryApi, 'getTextAlternatives', ['world', new Language('en')]);
     }
 
     /**
@@ -152,7 +153,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
 
         /** @var DictionaryResponse $response */
-        $response = $dictionaryApi->getTextAlternatives('', '');
+        $response = $dictionaryApi->getTextAlternatives('', new Language());
 
         $this->assertTrue($response instanceof DictionaryResponse);
 
@@ -182,7 +183,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
 
         /** @var DictionaryResponse $response */
-        $response = $dictionaryApi->getTextAlternatives('', '');
+        $response = $dictionaryApi->getTextAlternatives('', new Language());
 
         $this->assertTrue($response instanceof DictionaryResponse);
         $this->assertEmpty($response->getEntries());
@@ -208,7 +209,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($dictionaryApi, 'httpClient', $nanoRest);
 
         /** @var DictionaryResponse $response */
-        $response = $dictionaryApi->getTextAlternatives('', '');
+        $response = $dictionaryApi->getTextAlternatives('', new Language());
 
         $this->assertTrue($response instanceof DictionaryResponse);
         $this->assertEmpty($response->getEntries());
@@ -232,7 +233,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
 
         /** @var DictionaryResponse $response */
-        $response = $translateApi->getTranslateAlternatives('', '', '');
+        $response = $translateApi->getTranslateAlternatives('', new Language(), new Language());
 
         $this->assertTrue($response instanceof DictionaryResponse);
 

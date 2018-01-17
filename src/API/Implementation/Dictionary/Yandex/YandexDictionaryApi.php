@@ -21,8 +21,8 @@ use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiAbstract;
  *
  * API version 1
  *
- * @link https://tech.yandex.com/dictionary/doc/dg/concepts/api-overview-docpage/
- * @link https://tech.yandex.com/keys/?service=dict
+ * @link   https://tech.yandex.com/dictionary/doc/dg/concepts/api-overview-docpage/
+ * @link   https://tech.yandex.com/keys/?service=dict
  *
  * @author Sergey <Gino Pane> Karavay
  */
@@ -69,8 +69,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     /**
      * Create request context for get-text-alternatives request
      *
-     * @param string $text
-     * @param string $language
+     * @param string   $text
+     * @param Language $language
      *
      * @throws RequestContextException
      *
@@ -78,7 +78,7 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      */
     protected function createGetTextAlternativesContext(
         string $text,
-        string $language
+        Language $language
     ): RequestContext {
         $requestContext = $this->getLookupRequest($text, $language, $language);
 
@@ -100,9 +100,9 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     /**
      * Create request context for get-translate-alternatives request
      *
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @throws RequestContextException
      *
@@ -110,8 +110,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
      */
     protected function createGetTranslateAlternativesContext(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): RequestContext {
         $requestContext = $this->getLookupRequest($text, $languageTo, $languageFrom);
 
@@ -152,21 +152,21 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @return RequestContext
      * @throws RequestContextException
      */
-    private function getLookupRequest(string $text, string $languageTo, string $languageFrom): RequestContext
+    private function getLookupRequest(string $text, Language $languageTo, Language $languageFrom): RequestContext
     {
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::LOOKUP_API_PATH)))
             ->setRequestParameters(
                 [
-                    'lang'  => sprintf("%s-%s", $languageFrom, $languageTo),
+                    'lang' => $this->getLanguageString($languageTo, $languageFrom),
                     'flags' => self::LOOKUP_MORPHO_FLAG,
-                    'ui'    => Language::CODE_ENGLISH
+                    'ui' => Language::CODE_ENGLISH
                 ] + $this->getAuthData()
             )
             ->setData(['text' => $text])
@@ -233,8 +233,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param array             $sourceTextGroup
-     * @param DictionaryEntry   $entry
+     * @param array           $sourceTextGroup
+     * @param DictionaryEntry $entry
      *
      * @return void
      */
@@ -246,8 +246,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param array             $sourceTextGroup
-     * @param DictionaryEntry   $entry
+     * @param array           $sourceTextGroup
+     * @param DictionaryEntry $entry
      *
      * @return void
      */
@@ -259,8 +259,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param array             $targetTextGroup
-     * @param DictionaryEntry   $entry
+     * @param array           $targetTextGroup
+     * @param DictionaryEntry $entry
      *
      * @return void
      */
@@ -272,8 +272,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param array             $targetTextGroup
-     * @param DictionaryEntry   $entry
+     * @param array           $targetTextGroup
+     * @param DictionaryEntry $entry
      *
      * @return void
      */
@@ -295,8 +295,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param array             $targetTextGroup
-     * @param DictionaryEntry   $entry
+     * @param array           $targetTextGroup
+     * @param DictionaryEntry $entry
      *
      * @return void
      */
@@ -318,8 +318,8 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param array             $targetTextGroup
-     * @param DictionaryEntry   $entry
+     * @param array           $targetTextGroup
+     * @param DictionaryEntry $entry
      *
      * @return void
      */

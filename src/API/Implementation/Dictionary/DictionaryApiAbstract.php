@@ -6,6 +6,7 @@ use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
@@ -21,8 +22,8 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Gets text alternatives
      *
-     * @param string $text
-     * @param string $language
+     * @param string   $text
+     * @param Language $language
      *
      * @throws TransportException
      * @throws ResponseContextException
@@ -33,7 +34,7 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
      */
     public function getTextAlternatives(
         string $text,
-        string $language
+        Language $language
     ): DictionaryResponse {
         /** @var DictionaryResponse $response */
         $response = $this->callApi(__FUNCTION__, func_get_args());
@@ -44,9 +45,9 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Gets text translate alternatives
      *
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @throws TransportException
      * @throws ResponseContextException
@@ -57,8 +58,8 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
      */
     public function getTranslateAlternatives(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): DictionaryResponse {
         /** @var DictionaryResponse $response */
         $response = $this->callApi(__FUNCTION__, func_get_args());
@@ -69,14 +70,14 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Create request context for get-text-alternatives request
      *
-     * @param string $text
-     * @param string $language
+     * @param string   $text
+     * @param Language $language
      *
      * @return RequestContext
      */
     abstract protected function createGetTextAlternativesContext(
         string $text,
-        string $language
+        Language $language
     ): RequestContext;
 
     /**
@@ -91,16 +92,16 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Create request context for get-translate-alternatives request
      *
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @return RequestContext
      */
     abstract protected function createGetTranslateAlternativesContext(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): RequestContext;
 
     /**

@@ -4,12 +4,12 @@ namespace GinoPane\PHPolyglot\API\Implementation\Translate\Yandex;
 
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
-use GinoPane\NanoRest\Response\JsonResponseContext;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Supplemental\Yandex\YandexApiTrait;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
 
 /**
@@ -19,8 +19,8 @@ use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiAbstract;
  *
  * API version 1.5
  *
- * @link https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/
- * @link https://tech.yandex.com/keys/?service=trnsl
+ * @link   https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/
+ * @link   https://tech.yandex.com/keys/?service=trnsl
  *
  * @author Sergey <Gino Pane> Karavay
  */
@@ -57,9 +57,9 @@ class YandexTranslateApi extends TranslateApiAbstract
     /**
      * Create request context for translate request
      *
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @throws RequestContextException
      *
@@ -67,16 +67,16 @@ class YandexTranslateApi extends TranslateApiAbstract
      */
     protected function createTranslateContext(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): RequestContext {
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::TRANSLATE_API_PATH)))
             ->setRequestParameters(
                 [
-                    'lang'  => $this->getLanguageString($languageTo, $languageFrom)
+                    'lang' => $this->getLanguageString($languageTo, $languageFrom)
                 ] + $this->getAuthData()
             )
-            ->setData(['text'  => $text])
+            ->setData(['text' => $text])
             ->setMethod(RequestContext::METHOD_POST);
 
         return $this->fillGeneralRequestSettings($requestContext);
@@ -97,9 +97,9 @@ class YandexTranslateApi extends TranslateApiAbstract
     /**
      * Create request context for bulk translate request
      *
-     * @param array  $texts
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param array    $texts
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @throws RequestContextException
      *
@@ -107,16 +107,16 @@ class YandexTranslateApi extends TranslateApiAbstract
      */
     protected function createTranslateBulkContext(
         array $texts,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): RequestContext {
         $requestContext = (new RequestContext(sprintf("%s/%s", $this->apiEndpoint, self::TRANSLATE_API_PATH)))
             ->setRequestParameters(
                 [
-                    'lang'  => $this->getLanguageString($languageTo, $languageFrom)
+                    'lang' => $this->getLanguageString($languageTo, $languageFrom)
                 ] + $this->getAuthData()
             )
-            ->setData(['text'  => $texts])
+            ->setData(['text' => $texts])
             ->setMethod(RequestContext::METHOD_POST)
             ->setEncodeArraysUsingDuplication(true);
 
@@ -180,16 +180,5 @@ class YandexTranslateApi extends TranslateApiAbstract
         }
 
         return $response;
-    }
-
-    /**
-     * @param string $languageTo
-     * @param string $languageFrom
-     *
-     * @return string
-     */
-    private function getLanguageString(string $languageTo, string $languageFrom): string
-    {
-        return implode("-", array_filter([$languageFrom, $languageTo]));
     }
 }

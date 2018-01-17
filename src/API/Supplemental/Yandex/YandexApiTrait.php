@@ -2,9 +2,10 @@
 
 namespace GinoPane\PHPolyglot\API\Supplemental\Yandex;
 
-use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 
 /**
@@ -86,5 +87,16 @@ trait YandexApiTrait
     private function getAuthData(): array
     {
         return ['key' => $this->apiKey];
+    }
+
+    /**
+     * @param Language $languageTo
+     * @param Language $languageFrom
+     *
+     * @return string
+     */
+    private function getLanguageString(Language $languageTo, Language $languageFrom): string
+    {
+        return implode("-", array_filter([$languageFrom->getCode(), $languageTo->getCode()]));
     }
 }

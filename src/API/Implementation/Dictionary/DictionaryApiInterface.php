@@ -2,6 +2,7 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\Dictionary;
 
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 
 /**
@@ -14,28 +15,28 @@ interface DictionaryApiInterface
     /**
      * Gets text alternatives
      *
-     * @param string $text
-     * @param string $language
+     * @param string   $text
+     * @param Language $language
      *
      * @return DictionaryResponse
      */
     public function getTextAlternatives(
         string $text,
-        string $language
+        Language $language
     ): DictionaryResponse;
 
     /**
      * Gets text translate alternatives
      *
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @return DictionaryResponse
      */
     public function getTranslateAlternatives(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): DictionaryResponse;
 }

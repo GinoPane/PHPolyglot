@@ -38,9 +38,7 @@ class PHPolyglot
      */
     public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        list($languageTo, $languageFrom) =  (new Language())->getLanguagesForTranslation($languageTo, $languageFrom);
-
-        return $this->getTranslateApi()->translate($text, $languageTo, $languageFrom);
+        return $this->getTranslateApi()->translate($text, new Language($languageTo), new Language($languageFrom));
     }
 
     /**
@@ -55,9 +53,7 @@ class PHPolyglot
      */
     public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
     {
-        list($languageTo, $languageFrom) = (new Language())->getLanguagesForTranslation($languageTo, $languageFrom);
-
-        return $this->getTranslateApi()->translateBulk($text, $languageTo, $languageFrom);
+        return $this->getTranslateApi()->translateBulk($text, new Language($languageTo), new Language($languageFrom));
     }
 
     /**
@@ -76,12 +72,14 @@ class PHPolyglot
      */
     public function lookup(string $text, string $languageFrom, string $languageTo = ''): DictionaryResponse
     {
-        list($languageFrom, $languageTo) = (new Language())->getLanguagesForTranslation($languageFrom, $languageTo);
-
         if ($languageTo) {
-            $response = $this->getDictionaryApi()->getTranslateAlternatives($text, $languageTo, $languageFrom);
+            $response = $this->getDictionaryApi()->getTranslateAlternatives(
+                $text,
+                new Language($languageTo),
+                new Language($languageFrom)
+            );
         } else {
-            $response = $this->getDictionaryApi()->getTextAlternatives($text, $languageFrom);
+            $response = $this->getDictionaryApi()->getTextAlternatives($text, new Language($languageFrom));
         }
 
         return $response;

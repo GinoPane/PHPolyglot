@@ -14,6 +14,7 @@ use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Translate\Yandex\YandexTranslateApi;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
 *  Corresponding class to test YandexTranslateApiTest class
@@ -77,7 +78,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
 
         $translateString = 'Hello World!';
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateString, 'en', 'ru');
+        $context = $createRequestMethod->invoke($translateApi, $translateString, new Language('en'), new Language('ru'));
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
@@ -95,7 +96,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
 
         $translateString = 'Hello World!';
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateString, 'en', '');
+        $context = $createRequestMethod->invoke($translateApi, $translateString, new Language('en'), new Language());
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
@@ -116,7 +117,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
             'world'
         ];
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateStrings, 'en', 'ru');
+        $context = $createRequestMethod->invoke($translateApi, $translateStrings, new Language('en'), new Language('ru'));
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
@@ -152,7 +153,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
 
         $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
 
-        $callApiMethod->invoke($translateApi, 'translate', ['','','']);
+        $callApiMethod->invoke($translateApi, 'translate', ['', new Language(), new Language()]);
     }
 
     /**
@@ -183,7 +184,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
 
         /** @var TranslateResponse $response */
-        $response = $translateApi->translate('', '', '');
+        $response = $translateApi->translate('', new Language(''), new Language(''));
 
         $this->assertTrue($response instanceof TranslateResponse);
         $this->assertEquals($languageTo, $response->getLanguageTo());
@@ -220,7 +221,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
 
         /** @var TranslateResponse $response */
-        $response = $translateApi->translateBulk([], '', '');
+        $response = $translateApi->translateBulk([], new Language(''), new Language(''));
 
         $this->assertTrue($response instanceof TranslateResponse);
         $this->assertEquals($languageTo, $response->getLanguageTo());

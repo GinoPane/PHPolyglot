@@ -6,6 +6,7 @@ use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
@@ -19,9 +20,9 @@ use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiInterface
 {
     /**
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @throws TransportException
      * @throws ResponseContextException
@@ -30,7 +31,7 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      *
      * @return TranslateResponse
      */
-    public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
+    public function translate(string $text, Language $languageTo, Language $languageFrom): TranslateResponse
     {
         /** @var TranslateResponse $response */
         $response = $this->callApi(__FUNCTION__, func_get_args());
@@ -39,9 +40,9 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     }
 
     /**
-     * @param array  $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param array    $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @throws TransportException
      * @throws ResponseContextException
@@ -50,7 +51,7 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
      *
      * @return TranslateResponse
      */
-    public function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
+    public function translateBulk(array $text, Language $languageTo, Language $languageFrom): TranslateResponse
     {
         /** @var TranslateResponse $response */
         $response = $this->callApi(__FUNCTION__, func_get_args());
@@ -61,16 +62,16 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     /**
      * Create request context for translate request
      *
-     * @param string $text
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param string   $text
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @return RequestContext
      */
     abstract protected function createTranslateContext(
         string $text,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): RequestContext;
 
     /**
@@ -85,16 +86,16 @@ abstract class TranslateApiAbstract extends ApiAbstract implements TranslateApiI
     /**
      * Create request context for bulk translate request
      *
-     * @param array $texts
-     * @param string $languageTo
-     * @param string $languageFrom
+     * @param array    $texts
+     * @param Language $languageTo
+     * @param Language $languageFrom
      *
      * @return RequestContext
      */
     abstract protected function createTranslateBulkContext(
         array $texts,
-        string $languageTo,
-        string $languageFrom
+        Language $languageTo,
+        Language $languageFrom
     ): RequestContext;
 
     /**
