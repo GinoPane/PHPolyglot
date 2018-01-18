@@ -99,7 +99,9 @@ class PHPolyglot
         string $format = TtsAudioFormat::AUDIO_MP3,
         array $additionalData = []
     ): TtsResponse {
+        $languageFrom = new Language($languageFrom);
 
+        return $this->getTtsApi()->textToSpeech($text, new Language($languageFrom), new TtsAudioFormat($format), $additionalData);
     }
 
     /**

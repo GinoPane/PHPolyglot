@@ -7,4 +7,7 @@ return [
     'dictionaryApi' => [
         'default' => \GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex\YandexDictionaryApi::class
     ],
+    'ttsApi' => [
+        'default' => \GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\IbmWatsonTtsApi::class
+    ],
 ];

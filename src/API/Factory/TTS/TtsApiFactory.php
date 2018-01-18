@@ -1,11 +1,11 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Factory\Translate;
+namespace GinoPane\PHPolyglot\API\Factory\TTS;
 
 use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
-use GinoPane\PHPolyglot\API\Implementation\TtsApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
+use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
 
 class TtsApiFactory extends ApiFactoryAbstract
 {

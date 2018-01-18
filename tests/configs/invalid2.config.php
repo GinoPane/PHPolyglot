@@ -6,5 +6,8 @@ return [
     ],
     'dictionaryApi' => [
         'default' => \GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory::class
-    ]
+    ],
+    'ttsApi' => [
+        'default' => \GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory::class
+    ],
 ];

@@ -1,12 +1,15 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Implementation;
+namespace GinoPane\PHPolyglot\API\Implementation\TTS;
 
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
+use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
+use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
 use GinoPane\PHPolyglot\Exception\MethodDoesNotExistException;
 
@@ -20,8 +23,10 @@ abstract class TtsApiAbstract extends ApiAbstract implements TtsApiInterface
     /**
      * Gets TTS raw data, that can be saved afterwards
      *
-     * @param string $text
-     * @param string $language
+     * @param string         $text
+     * @param Language       $language
+     * @param TtsAudioFormat $format
+     * @param array          $additionalData
      *
      * @throws TransportException
      * @throws ResponseContextException
@@ -30,8 +35,12 @@ abstract class TtsApiAbstract extends ApiAbstract implements TtsApiInterface
      *
      * @return TtsResponse
      */
-    public function textToSpeech(string $text, string $language): TtsResponse
-    {
+    public function textToSpeech(
+        string $text,
+        Language $language,
+        TtsAudioFormat $format,
+        array $additionalData = []
+    ): TtsResponse {
         /** @var TtsResponse $response */
         $response = $this->callApi(__FUNCTION__, func_get_args());
 
@@ -41,14 +50,18 @@ abstract class TtsApiAbstract extends ApiAbstract implements TtsApiInterface
     /**
      * Create request context for text-to-speech request
      *
-     * @param string $text
-     * @param string $language
+     * @param string         $text
+     * @param Language       $language
+     * @param TtsAudioFormat $format
+     * @param array          $additionalData
      *
      * @return RequestContext
      */
     abstract protected function createTextToSpeechContext(
         string $text,
-        string $language
+        Language $language,
+        TtsAudioFormat $format,
+        array $additionalData = []
     ): RequestContext;
 
     /**
