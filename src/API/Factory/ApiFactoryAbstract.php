@@ -61,15 +61,15 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     /**
      * Gets necessary API object
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return mixed
      */
-    public function getApi()
+    public function getApi(array $parameters = [])
     {
         $apiClass = $this->getFactorySpecificConfig()['default'];
         
-        return new $apiClass();
+        return new $apiClass($parameters);
     }
 
     /**

@@ -50,10 +50,12 @@ abstract class ApiAbstract
     /**
      * ApiAbstract constructor
      *
-     * @throws InvalidPropertyException
+     * @param array $parameters
+     *
      * @throws InvalidEnvironmentException
+     * @throws InvalidPropertyException
      */
-    public function __construct()
+    public function __construct(array $parameters = [])
     {
         $this->httpClient = new NanoRest();
 

@@ -20,13 +20,13 @@ class TtsApiFactory extends ApiFactoryAbstract
     /**
      * Gets necessary Dictionary API object
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return TtsApiInterface
      */
-    public function getApi(): TtsApiInterface
+    public function getApi(array $parameters = []): TtsApiInterface
     {
-        return parent::getApi();
+        return parent::getApi($parameters);
     }
 
     /**

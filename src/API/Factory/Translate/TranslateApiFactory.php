@@ -25,13 +25,13 @@ class TranslateApiFactory extends ApiFactoryAbstract
     /**
      * Gets necessary Translate API object
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return TranslateApiInterface
      */
-    public function getApi(): TranslateApiInterface
+    public function getApi(array $parameters = []): TranslateApiInterface
     {
-        return parent::getApi();
+        return parent::getApi($parameters);
     }
 
     /**

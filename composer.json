@@ -5,12 +5,13 @@
     "keywords": [
         "translation",
         "spelling",
+        "spelling correction",
         "text-to-speech",
-        "TTS",
-        "yandex-api",
-        "yandex-translate-api",
-        "IBM-Watson-API",
-        "IBM-Watson-TTS"
+        "tts",
+        "yandex api",
+        "yandex translate api",
+        "ibm watson api",
+        "ibm watson tts"
     ],
     "license": "MIT",
     "authors": [

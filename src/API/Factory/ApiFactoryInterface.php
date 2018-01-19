@@ -14,7 +14,9 @@ interface ApiFactoryInterface
     /**
      * Gets necessary API object
      *
+     * @param array $parameters
+     *
      * @return mixed
      */
-    public function getApi();
+    public function getApi(array $parameters = []);
 }

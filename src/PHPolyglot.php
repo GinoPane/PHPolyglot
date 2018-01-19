@@ -4,9 +4,9 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
-use GinoPane\PHPolyglot\API\Factory\Translate\TtsApiFactory;
+use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
-use GinoPane\PHPolyglot\API\Implementation\TtsApiInterface;
+use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
@@ -31,9 +31,6 @@ class PHPolyglot
      * @param string $languageTo
      * @param string $languageFrom
      *
-     * @throws InvalidConfigException
-     * @throws InvalidLanguageCodeException
-     *
      * @return TranslateResponse
      */
     public function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
@@ -45,9 +42,6 @@ class PHPolyglot
      * @param array  $text
      * @param string $languageTo
      * @param string $languageFrom
-     *
-     * @throws InvalidConfigException
-     * @throws InvalidLanguageCodeException
      *
      * @return TranslateResponse
      */
@@ -64,9 +58,6 @@ class PHPolyglot
      * @param string $text
      * @param string $languageFrom
      * @param string $languageTo
-     *
-     * @throws InvalidConfigException
-     * @throws InvalidLanguageCodeException
      *
      * @return DictionaryResponse
      */
@@ -101,7 +92,9 @@ class PHPolyglot
     ): TtsResponse {
         $languageFrom = new Language($languageFrom);
 
-        return $this->getTtsApi()->textToSpeech($text, new Language($languageFrom), new TtsAudioFormat($format), $additionalData);
+        return $this
+            ->getTtsApi($additionalData)
+            ->textToSpeech($text, new Language($languageFrom), new TtsAudioFormat($format), $additionalData);
     }
 
     /**
@@ -109,13 +102,13 @@ class PHPolyglot
      *
      * Get Translate API instance
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return TranslateApiInterface
      */
-    protected function getTranslateApi(): TranslateApiInterface
+    protected function getTranslateApi(array $parameters = []): TranslateApiInterface
     {
-        return (new TranslateApiFactory())->getApi();
+        return (new TranslateApiFactory())->getApi($parameters);
     }
 
     /**
@@ -123,13 +116,13 @@ class PHPolyglot
      *
      * Get Dictionary API instance
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return DictionaryApiInterface
      */
-    protected function getDictionaryApi(): DictionaryApiInterface
+    protected function getDictionaryApi(array $parameters = []): DictionaryApiInterface
     {
-        return (new DictionaryApiFactory())->getApi();
+        return (new DictionaryApiFactory())->getApi($parameters);
     }
 
     /**
@@ -137,12 +130,12 @@ class PHPolyglot
      *
      * Get Tts API instance
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return TtsApiInterface
      */
-    protected function getTtsApi(): TtsApiInterface
+    protected function getTtsApi(array $parameters = []): TtsApiInterface
     {
-        return (new TtsApiFactory())->getApi();
+        return (new TtsApiFactory())->getApi($parameters);
     }
 }

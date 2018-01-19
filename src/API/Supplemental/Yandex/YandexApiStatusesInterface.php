@@ -5,6 +5,8 @@ namespace GinoPane\PHPolyglot\API\Supplemental\Yandex;
 /**
  * Interface YandexApiErrorsInterface
  *
+ * Contains general error list that can be explicitly returned by API calls
+ *
  * @author Sergey <Gino Pane> Karavay
  */
 interface YandexApiStatusesInterface

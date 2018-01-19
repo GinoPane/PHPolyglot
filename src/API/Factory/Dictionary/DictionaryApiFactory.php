@@ -20,13 +20,13 @@ class DictionaryApiFactory extends ApiFactoryAbstract
     /**
      * Gets necessary Dictionary API object
      *
-     * @throws InvalidConfigException
+     * @param array $parameters
      *
      * @return DictionaryApiInterface
      */
-    public function getApi(): DictionaryApiInterface
+    public function getApi(array $parameters = []): DictionaryApiInterface
     {
-        return parent::getApi();
+        return parent::getApi($parameters);
     }
 
     /**
