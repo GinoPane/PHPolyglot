@@ -7,21 +7,21 @@ use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 /**
  * Trait IbmWatsonAudioFormatsTrait
  *
- * @link https://console.bluemix.net/docs/services/text-to-speech/http.html#voices
+ * @link https://console.bluemix.net/docs/services/text-to-speech/http.html#format
  *
  * @author Sergey <Gino Pane> Karavay
  */
 trait IbmWatsonAudioFormatsTrait
 {
     private $formatToAcceptMapping = [
-        TtsAudioFormat::AUDIO_BASIC => '',
-        TtsAudioFormat::AUDIO_FLAC  => '',
-        TtsAudioFormat::AUDIO_L16   => '',
-        TtsAudioFormat::AUDIO_MP3   => '',
-        TtsAudioFormat::AUDIO_MPEG  => '',
-        TtsAudioFormat::AUDIO_MULAW => '',
-        TtsAudioFormat::AUDIO_OGG   => '',
-        TtsAudioFormat::AUDIO_WAV   => '',
-        TtsAudioFormat::AUDIO_WEBM  => ''
+        TtsAudioFormat::AUDIO_BASIC => 'audio/basic',
+        TtsAudioFormat::AUDIO_FLAC  => 'audio/flac',
+        TtsAudioFormat::AUDIO_L16   => 'audio/l16',
+        TtsAudioFormat::AUDIO_MP3   => 'audio/mp3',
+        TtsAudioFormat::AUDIO_MPEG  => 'audio/mpeg',
+        TtsAudioFormat::AUDIO_MULAW => 'audio/mulaw',
+        TtsAudioFormat::AUDIO_OGG   => 'audio/ogg',
+        TtsAudioFormat::AUDIO_WAV   => 'audio/wav',
+        TtsAudioFormat::AUDIO_WEBM  => 'audio/webm'
     ];
 }
