@@ -22,12 +22,8 @@ class TtsAudioFormat
     const AUDIO_MPEG        = 'mpeg';
     const AUDIO_MULAW       = 'mulaw';
     const AUDIO_OGG         = 'ogg';
-    const AUDIO_OGG_OPUS    = 'ogg_opus';
-    const AUDIO_OGG_VORBIS  = 'ogg_vorbis';
     const AUDIO_WAV         = 'wav';
     const AUDIO_WEBM        = 'webm';
-    const AUDIO_WEBM_OPUS   = 'webm_opus';
-    const AUDIO_WEBM_VORBIS = 'webm_vorbis';
 
     /**
      * @link https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html
@@ -42,12 +38,8 @@ class TtsAudioFormat
         self::AUDIO_MPEG        => 'mp3',
         self::AUDIO_MULAW       => 'ulaw',
         self::AUDIO_OGG         => 'ogg',
-        self::AUDIO_OGG_OPUS    => 'opus',
-        self::AUDIO_OGG_VORBIS  => 'ogg',
         self::AUDIO_WAV         => 'wav',
-        self::AUDIO_WEBM        => 'webm',
-        self::AUDIO_WEBM_OPUS   => 'webm',
-        self::AUDIO_WEBM_VORBIS => 'webm'
+        self::AUDIO_WEBM        => 'webm'
     ];
 
     /**

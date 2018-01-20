@@ -82,7 +82,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
                     ]
                 )
             )
-            ->setData(json_decode(['text' => $text]))
+            ->setData(json_encode(['text' => $text]))
             ->setMethod(RequestContext::METHOD_POST);
 
         return $this->fillGeneralRequestSettings($requestContext);

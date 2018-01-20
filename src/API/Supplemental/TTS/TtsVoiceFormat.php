@@ -45,6 +45,22 @@ class TtsVoiceFormat
     }
 
     /**
+     * @return Language
+     */
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender(): string
+    {
+        return $this->gender;
+    }
+
+    /**
      * @param string $gender
      *
      * @throws InvalidGenderCodeException
