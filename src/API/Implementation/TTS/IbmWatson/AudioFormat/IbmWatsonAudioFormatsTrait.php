@@ -24,4 +24,15 @@ trait IbmWatsonAudioFormatsTrait
         TtsAudioFormat::AUDIO_WAV   => 'audio/wav',
         TtsAudioFormat::AUDIO_WEBM  => 'audio/webm'
     ];
+
+    /**
+     * @param TtsAudioFormat $format
+     * @param array          $additionalData
+     *
+     * @return string
+     */
+    public function getAcceptParameter(TtsAudioFormat $format, array $additionalData = []): string
+    {
+
+    }
 }

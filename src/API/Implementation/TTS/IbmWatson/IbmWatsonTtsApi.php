@@ -5,6 +5,8 @@ namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice\IbmWatsonAudioFormatsTrait;
+use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice\IbmWatsonVoicesTrait;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
@@ -19,6 +21,9 @@ use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiAbstract;
  */
 class IbmWatsonTtsApi extends TtsApiAbstract
 {
+    use IbmWatsonVoicesTrait;
+    use IbmWatsonAudioFormatsTrait;
+
     /**
      * URL path for text-to-speech action
      */
@@ -77,15 +82,15 @@ class IbmWatsonTtsApi extends TtsApiAbstract
             ->setRequestParameters(
                 array_filter(
                     [
-                        'accept' => '',
-                        'voice' => ''
+                        'accept' => $this->getAcceptParameter($format, $additionalData),
+                        'voice' => $this->getVoiceParameter($language, $additionalData)
                     ]
                 )
             )
             ->setData(json_encode(['text' => $text]))
             ->setMethod(RequestContext::METHOD_POST);
 
-        return $this->fillGeneralRequestSettings($requestContext);
+        return $this->authorizeRequest($requestContext);
     }
 
     /**
@@ -98,5 +103,16 @@ class IbmWatsonTtsApi extends TtsApiAbstract
     protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse
     {
         // TODO: Implement prepareTextToSpeechResponse() method.
+    }
+
+    /**
+     * @param RequestContext $context
+     *
+     * @return RequestContext
+     * @throws RequestContextException
+     */
+    private function authorizeRequest(RequestContext $context): RequestContext
+    {
+        $context->setCurlOption(CURLOPT_USERPWD, "{$this->username}:{$this->password}");
     }
 }

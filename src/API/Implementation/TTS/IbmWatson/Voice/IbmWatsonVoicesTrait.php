@@ -78,4 +78,15 @@ trait IbmWatsonVoicesTrait
             ),
         ];
     }
+
+    /**
+     * @param Language $language
+     * @param array    $additionalData
+     *
+     * @return string
+     */
+    public function getVoiceParameter(Language $language, array $additionalData = []): string
+    {
+
+    }
 }
