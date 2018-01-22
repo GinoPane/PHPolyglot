@@ -3,6 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\AudioFormat;
 
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
+use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
 
 /**
  * Trait IbmWatsonAudioFormatsTrait
@@ -13,7 +14,7 @@ use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
  */
 trait IbmWatsonAudioFormatsTrait
 {
-    private $formatToAcceptMapping = [
+    private $formatMapping = [
         TtsAudioFormat::AUDIO_BASIC => 'audio/basic',
         TtsAudioFormat::AUDIO_FLAC  => 'audio/flac',
         TtsAudioFormat::AUDIO_L16   => 'audio/l16',
@@ -29,11 +30,17 @@ trait IbmWatsonAudioFormatsTrait
      * @param TtsAudioFormat $format
      * @param array          $additionalData
      *
+     * @throws InvalidAudioFormatCodeException
+     *
      * @return string
      */
     public function getAcceptParameter(TtsAudioFormat $format, array $additionalData = []): string
     {
-        $accept = '';
+        $accept = $formatMapping[$format] ?? '';
+
+        if (empty($accept)) {
+            throw new InvalidAudioFormatCodeException($format->getFormat());
+        }
 
         return $accept;
     }

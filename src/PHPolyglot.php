@@ -79,7 +79,7 @@ class PHPolyglot
     /**
      * @param string $text
      * @param string $languageFrom
-     * @param string $format
+     * @param string $audioFormat
      * @param array  $additionalData
      *
      * @return TtsResponse
@@ -87,14 +87,14 @@ class PHPolyglot
     public function speak(
         string $text,
         string $languageFrom,
-        string $format = TtsAudioFormat::AUDIO_MP3,
+        string $audioFormat = TtsAudioFormat::AUDIO_MP3,
         array $additionalData = []
     ): TtsResponse {
         $languageFrom = new Language($languageFrom);
 
         return $this
             ->getTtsApi($additionalData)
-            ->textToSpeech($text, new Language($languageFrom), new TtsAudioFormat($format), $additionalData);
+            ->textToSpeech($text, new Language($languageFrom), new TtsAudioFormat($audioFormat), $additionalData);
     }
 
     /**

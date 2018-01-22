@@ -35,10 +35,16 @@ The main endpoint is `PHPolyglot`'s `speak` method:
 public function speak(
     string $text,
     string $languageFrom,
-    string $format = TtsAudioFormat::AUDIO_MP3,
+    string $audioFormat = TtsAudioFormat::AUDIO_MP3,
     array $additionalData = []
 ): TtsResponse
 ``` 
+    
+Only two parameters are required - text for synthesis `$text` and its source language `$languageFrom`. 
+
+Optional parameters `$audioFormat` and `$additionalData` may be omitted. Audio format allows to explicitly specify the required audio format of returned audio. Additional data allows to set API specific parameters for more precise results. 
+
+### IBM Watson Text-to-Speech
     
 Possible ToDos
 ==============

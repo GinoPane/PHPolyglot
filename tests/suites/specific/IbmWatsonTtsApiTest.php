@@ -59,19 +59,37 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
         $stub->__construct();
     }
 
-    public function testIfTtsApiCreatesValidTextToSpeechRequestContext()
-    {
+    /**
+     * @dataProvider getDataForTtsContext
+     *
+     * @param string $language
+     * @param string $audio
+     * @param array  $additional
+     * @param string $expected
+     */
+    public function testIfTtsApiCreatesValidTextToSpeechRequestContext(
+        string $language,
+        string $audio,
+        array $additional,
+        $expected
+    ) {
         $ttsApi = $this->getTtsApiFactory()->getApi();
 
         $createRequestMethod = $this->getInternalMethod($ttsApi, 'createTextToSpeechContext');
 
         $textString = 'Hello World!';
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($ttsApi, $textString, new Language('en'), new TtsAudioFormat());
+        $context = $createRequestMethod->invoke(
+            $ttsApi,
+            $textString,
+            new Language($language),
+            new TtsAudioFormat($audio),
+            $additional
+        );
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
-            'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize',
+            $expected,
             $context->getRequestUrl()
         );
         $this->assertEquals(json_encode(['text' => $textString]), $context->getRequestData());
@@ -185,6 +203,39 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
         $this->assertEquals($languageFrom, $response->getLanguageFrom());
         $this->assertEquals($translations, $response->getTranslations());
         $this->assertEquals($translations[0], (string)$response);
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataForTtsContext(): array
+    {
+        return [
+            [
+                'en',
+                '',
+                [],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=en-US_AllisonVoice'
+            ],
+            [
+                'en',
+                '',
+                ['voice' => 'en-US_LisaVoice'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=en-US_LisaVoice'
+            ],
+            [
+                'de',
+                '',
+                ['gender' => 'm'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=de-DE_DieterVoice'
+            ],
+            [
+                'de',
+                '',
+                ['gender' => 'f'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=de-DE_BirgitVoice'
+            ]
+        ];
     }
 
     /**

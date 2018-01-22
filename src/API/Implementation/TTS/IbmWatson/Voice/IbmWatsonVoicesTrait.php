@@ -92,16 +92,11 @@ trait IbmWatsonVoicesTrait
      */
     public function getVoiceParameter(Language $language, array $additionalData = []): string
     {
-        $voice = '';
         $voiceConstraints = $this->getVoiceConstraints();
 
-        if (isset($additionalData['voice']) && $voice = $additionalData['voice']) {
-            if (empty($voiceConstraints[$voice])) {
-                throw new InvalidVoiceCodeException($voice);
-            }
-
-            $voiceConstraint = $voiceConstraints[$voice];
-        }
+        /** @var string $voice */
+        /** @var TtsVoiceFormat $voiceConstraint */
+        list($voice, $voiceConstraint) = $this->extractVoiceConstraint($voiceConstraints, $additionalData);
 
         if (!empty($voiceConstraint)) {
             if ($voiceConstraint->getLanguage()->getCode() == $language->getCode()) {
@@ -139,8 +134,31 @@ trait IbmWatsonVoicesTrait
             );
         }
 
+        /** @var string[] $voices */
         $voices = array_keys($voiceConstraints);
+        $voice = array_shift($voices);
 
-        return array_shift($voices);
+        return $voice;
+    }
+
+    /**
+     * @param       $voiceConstraints
+     * @param array $additionalData
+     *
+     * @throws InvalidVoiceCodeException
+     *
+     * @return array
+     */
+    private function extractVoiceConstraint(array $voiceConstraints, array $additionalData): array
+    {
+        if (isset($additionalData['voice']) && $voice = $additionalData['voice']) {
+            if (empty($voiceConstraints[$voice])) {
+                throw new InvalidVoiceCodeException($voice);
+            }
+
+            $voiceConstraint = $voiceConstraints[$voice];
+        }
+
+        return [$voice, $voiceConstraint];
     }
 }
