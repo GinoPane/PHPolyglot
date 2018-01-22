@@ -67,6 +67,18 @@ class Language implements LanguageInterface
     }
 
     /**
+     * Alias for Language::getCode
+     *
+     * @see Language::getCode()
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getCode();
+    }
+
+    /**
      * Checks that specified language code is valid
      *
      * @param string $language

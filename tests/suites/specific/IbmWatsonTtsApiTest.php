@@ -24,9 +24,6 @@ use GinoPane\PHPolyglot\Supplemental\Language\Language;
 */
 class IbmWatsonTtsApiTest extends PHPolyglotTestCase
 {
-    /**
-     * @throws InvalidConfigException
-     */
     public function testIfTtsApiCanBeCreatedByFactory()
     {
         $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
@@ -74,10 +71,11 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
 
         $this->assertTrue($context instanceof RequestContext);
         $this->assertEquals(
-            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
+            'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize',
             $context->getRequestUrl()
         );
-        $this->assertEquals('text=' . urlencode($textString), $context->getRequestData());
+        $this->assertEquals(json_encode(['text' => $textString]), $context->getRequestData());
+        $this->assertEquals($context->getCurlOptions()[CURLOPT_USERPWD], 'IBM_WATSON_TTS_API_TEST_USERNAME:IBM_WATSON_TTS_API_TEST_PASSWORD');
     }
 
     public function testIfTranslateApiCreatesValidTranslateRequestContextWithOneLanguageOnly()

@@ -2,15 +2,15 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson;
 
-use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
-use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice\IbmWatsonAudioFormatsTrait;
-use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice\IbmWatsonVoicesTrait;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiAbstract;
+use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice\IbmWatsonVoicesTrait;
+use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\AudioFormat\IbmWatsonAudioFormatsTrait;
 
 /**
  * Class IbmWatsonTtsApi
@@ -34,7 +34,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      *
      * @var string
      */
-    protected $apiEndpoint = 'https://stream.watsonplatform.net/text-to-speech/api/v1/';
+    protected $apiEndpoint = 'https://stream.watsonplatform.net/text-to-speech/api/v1';
 
     /**
      * API username required for authorisation
@@ -114,5 +114,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
     private function authorizeRequest(RequestContext $context): RequestContext
     {
         $context->setCurlOption(CURLOPT_USERPWD, "{$this->username}:{$this->password}");
+
+        return $context;
     }
 }

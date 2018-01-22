@@ -70,9 +70,7 @@ class TtsVoiceFormat
         $gender = strtolower($gender);
 
         if (!in_array($gender, [self::GENDER_MALE, self::GENDER_FEMALE])) {
-            throw new InvalidGenderCodeException(
-                sprintf("Gender code \"%s\" is invalid", $gender)
-            );
+            throw new InvalidGenderCodeException($gender);
         }
 
         $this->gender = $gender;

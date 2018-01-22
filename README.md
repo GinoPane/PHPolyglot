@@ -20,11 +20,33 @@ Installation
 
     composer require gino-pane/phpolyglot
     
-Possible To Do
+Basic Usage
+===========
+
+Text Translation
+----------------
+
+Speech Synthesis
+----------------
+
+The main endpoint is `PHPolyglot`'s `speak` method:
+
+```
+public function speak(
+    string $text,
+    string $languageFrom,
+    string $format = TtsAudioFormat::AUDIO_MP3,
+    array $additionalData = []
+): TtsResponse
+``` 
+    
+Possible ToDos
 ==============
 * transcribe words;
 * get synonyms, antonyms, derivatives;
-* detect language of text.
+* detect text language;
+* add more configuration flexibility (choose api based on config constraints, like different APIs for different languages);
+* pass config override into root constructor.
     
 Useful Tools
 ============

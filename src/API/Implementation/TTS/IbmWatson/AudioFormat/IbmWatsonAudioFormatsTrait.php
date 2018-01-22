@@ -1,6 +1,6 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice;
+namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\AudioFormat;
 
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 
@@ -33,6 +33,8 @@ trait IbmWatsonAudioFormatsTrait
      */
     public function getAcceptParameter(TtsAudioFormat $format, array $additionalData = []): string
     {
+        $accept = '';
 
+        return $accept;
     }
 }

@@ -9,5 +9,13 @@ namespace GinoPane\PHPolyglot\Exception;
  */
 class InvalidGenderCodeException extends \Exception
 {
-
+    /**
+     * InvalidGenderCodeException constructor
+     *
+     * @param string $genderCode
+     */
+    public function __construct(string $genderCode)
+    {
+        parent::__construct(sprintf("Gender code \"%s\" is invalid", $genderCode));
+    }
 }
