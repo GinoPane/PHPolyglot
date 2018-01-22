@@ -14,7 +14,7 @@ use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
  */
 trait IbmWatsonAudioFormatsTrait
 {
-    private $formatMapping = [
+    private static $formatMapping = [
         TtsAudioFormat::AUDIO_BASIC => 'audio/basic',
         TtsAudioFormat::AUDIO_FLAC  => 'audio/flac',
         TtsAudioFormat::AUDIO_L16   => 'audio/l16',
@@ -36,7 +36,7 @@ trait IbmWatsonAudioFormatsTrait
      */
     public function getAcceptParameter(TtsAudioFormat $format, array $additionalData = []): string
     {
-        $accept = $formatMapping[$format] ?? '';
+        $accept = self::$formatMapping[$format->getFormat()] ?? '';
 
         if (empty($accept)) {
             throw new InvalidAudioFormatCodeException($format->getFormat());
