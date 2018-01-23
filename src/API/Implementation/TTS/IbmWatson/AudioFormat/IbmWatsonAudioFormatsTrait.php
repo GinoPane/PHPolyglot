@@ -14,6 +14,11 @@ use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
  */
 trait IbmWatsonAudioFormatsTrait
 {
+    /**
+     * TTS audio format codes to IBM-Watson-specific codes mapping
+     *
+     * @var array
+     */
     private static $formatMapping = [
         TtsAudioFormat::AUDIO_BASIC => 'audio/basic',
         TtsAudioFormat::AUDIO_FLAC  => 'audio/flac',
@@ -27,6 +32,9 @@ trait IbmWatsonAudioFormatsTrait
     ];
 
     /**
+     * Returns the string containing the accept parameter required for TTS.
+     * It specifies audio format, sample rate and additional params if any
+     *
      * @param TtsAudioFormat $format
      * @param array          $additionalData
      *
@@ -36,12 +44,27 @@ trait IbmWatsonAudioFormatsTrait
      */
     public function getAcceptParameter(TtsAudioFormat $format, array $additionalData = []): string
     {
-        $accept = self::$formatMapping[$format->getFormat()] ?? '';
+        $accept[] = self::$formatMapping[$format->getFormat()] ?? '';
 
         if (empty($accept)) {
             throw new InvalidAudioFormatCodeException($format->getFormat());
         }
 
-        return $accept;
+        $accept = array_merge($accept, $this->processAdditionalParameters($format, $additionalData));
+
+        return implode(";", $accept);
+    }
+
+    /**
+     * @param TtsAudioFormat $format
+     * @param array          $additionalData
+     *
+     * @return array
+     */
+    private function processAdditionalParameters(TtsAudioFormat $format, array $additionalData = []): array
+    {
+        switch ($format->getFormat()) {
+
+        }
     }
 }
