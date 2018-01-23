@@ -63,8 +63,25 @@ trait IbmWatsonAudioFormatsTrait
      */
     private function processAdditionalParameters(TtsAudioFormat $format, array $additionalData = []): array
     {
-        switch ($format->getFormat()) {
+        $additional = [];
 
+        switch ($format->getFormat()) {
+            case TtsAudioFormat::AUDIO_FLAC:
+            case TtsAudioFormat::AUDIO_MP3:
+            case TtsAudioFormat::AUDIO_MPEG:
+            case TtsAudioFormat::AUDIO_OGG:
+            case TtsAudioFormat::AUDIO_WAV:
+                $additional[] = $this->processOptionalParameter('rate', $additionalData);
+                break;
+            case TtsAudioFormat::AUDIO_L16:
+                $additional[] = $this->processRequiredParameter('rate', $additionalData);
+                break;
+            case TtsAudioFormat::AUDIO_MULAW:
+                break;
+            case TtsAudioFormat::AUDIO_WEBM:
+                break;
         }
+
+        return $additional;
     }
 }
