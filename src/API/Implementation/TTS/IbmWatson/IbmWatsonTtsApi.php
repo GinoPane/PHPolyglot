@@ -5,6 +5,7 @@ namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
+use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
 use GinoPane\PHPolyglot\Exception\InvalidVoiceCodeException;
 use GinoPane\PHPolyglot\Exception\InvalidVoiceParametersException;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
@@ -73,6 +74,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      * @throws RequestContextException
      * @throws InvalidVoiceCodeException
      * @throws InvalidVoiceParametersException
+     * @throws InvalidAudioFormatCodeException
      *
      * @return RequestContext
      */

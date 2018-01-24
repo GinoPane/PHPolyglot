@@ -20,15 +20,15 @@ trait IbmWatsonAudioFormatsTrait
      * @var array
      */
     private static $formatMapping = [
-        TtsAudioFormat::AUDIO_BASIC => 'audio/basic',
-        TtsAudioFormat::AUDIO_FLAC  => 'audio/flac',
-        TtsAudioFormat::AUDIO_L16   => 'audio/l16',
-        TtsAudioFormat::AUDIO_MP3   => 'audio/mp3',
-        TtsAudioFormat::AUDIO_MPEG  => 'audio/mpeg',
-        TtsAudioFormat::AUDIO_MULAW => 'audio/mulaw',
-        TtsAudioFormat::AUDIO_OGG   => 'audio/ogg',
-        TtsAudioFormat::AUDIO_WAV   => 'audio/wav',
-        TtsAudioFormat::AUDIO_WEBM  => 'audio/webm'
+        TtsAudioFormat::AUDIO_BASIC => IbmWatsonAudioFormatsInterface::AUDIO_BASIC,
+        TtsAudioFormat::AUDIO_FLAC  => IbmWatsonAudioFormatsInterface::AUDIO_FLAC,
+        TtsAudioFormat::AUDIO_L16   => IbmWatsonAudioFormatsInterface::AUDIO_L16,
+        TtsAudioFormat::AUDIO_MP3   => IbmWatsonAudioFormatsInterface::AUDIO_MP3,
+        TtsAudioFormat::AUDIO_MPEG  => IbmWatsonAudioFormatsInterface::AUDIO_MPEG,
+        TtsAudioFormat::AUDIO_MULAW => IbmWatsonAudioFormatsInterface::AUDIO_MULAW,
+        TtsAudioFormat::AUDIO_OGG   => IbmWatsonAudioFormatsInterface::AUDIO_OGG,
+        TtsAudioFormat::AUDIO_WAV   => IbmWatsonAudioFormatsInterface::AUDIO_WAV,
+        TtsAudioFormat::AUDIO_WEBM  => IbmWatsonAudioFormatsInterface::AUDIO_WEBM
     ];
 
     /**
@@ -77,6 +77,7 @@ trait IbmWatsonAudioFormatsTrait
                 $additional[] = $this->processRequiredParameter('rate', $additionalData);
                 break;
             case TtsAudioFormat::AUDIO_MULAW:
+                $additional[] = $this->processRequiredParameter('rate', $additionalData);
                 break;
             case TtsAudioFormat::AUDIO_WEBM:
                 break;
