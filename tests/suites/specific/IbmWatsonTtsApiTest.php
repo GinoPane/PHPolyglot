@@ -4,17 +4,21 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
+use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\IbmWatsonTtsApi;
 use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
-use GinoPane\PHPolyglot\Exception\InvalidConfigException;
+use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
+use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
+use GinoPane\PHPolyglot\Exception\InvalidVoiceCodeException;
+use GinoPane\PHPolyglot\Exception\InvalidVoiceParametersException;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
@@ -96,47 +100,42 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
         $this->assertEquals($context->getCurlOptions()[CURLOPT_USERPWD], 'IBM_WATSON_TTS_API_TEST_USERNAME:IBM_WATSON_TTS_API_TEST_PASSWORD');
     }
 
-    public function testIfTranslateApiCreatesValidTranslateRequestContextWithOneLanguageOnly()
-    {
-        $this->markTestSkipped();
+    /**
+     * @dataProvider getInvalidDataForTtsContext
+     *
+     * @param string $language
+     * @param string $audio
+     * @param array  $additional
+     * @param string $expectedException
+     * @param string $expectedExceptionMessage
+     */
+    public function testIfTtsApiThrowsExceptionsForInvalidTextToSpeechRequestContextData(
+        string $language,
+        string $audio,
+        array $additional,
+        string $expectedException,
+        string $expectedExceptionMessage
+    ) {
+        $this->expectException($expectedException);
+        $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $ttsApi = $this->getTtsApiFactory()->getApi();
 
-        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateContext');
+        $createRequestMethod = $this->getInternalMethod($ttsApi, 'createTextToSpeechContext');
 
-        $translateString = 'Hello World!';
+        $textString = 'Hello World!';
+
+        $format = new TtsAudioFormat();
+        $this->setInternalProperty($format, 'format', $audio);
+
         /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateString, new Language('en'), new Language());
-
-        $this->assertTrue($context instanceof RequestContext);
-        $this->assertEquals(
-            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en&key=YANDEX_TRANSLATE_TEST_KEY',
-            $context->getRequestUrl()
+        $createRequestMethod->invoke(
+            $ttsApi,
+            $textString,
+            new Language($language),
+            $format,
+            $additional
         );
-        $this->assertEquals('text=' . urlencode($translateString), $context->getRequestData());
-    }
-
-    public function testIfTranslateApiCreatesValidBulkTranslateRequestContext()
-    {
-        $this->markTestSkipped();
-
-        $translateApi = $this->getTranslateApiFactory()->getApi();
-
-        $createRequestMethod = $this->getInternalMethod($translateApi, 'createTranslateBulkContext');
-
-        $translateStrings = [
-            'Hello',
-            'world'
-        ];
-        /** @var RequestContext $context */
-        $context = $createRequestMethod->invoke($translateApi, $translateStrings, new Language('en'), new Language('ru'));
-
-        $this->assertTrue($context instanceof RequestContext);
-        $this->assertEquals(
-            'https://translate.yandex.net/api/v1.5/tr.json/translate?lang=ru-en&key=YANDEX_TRANSLATE_TEST_KEY',
-            $context->getRequestUrl()
-        );
-        $this->assertEquals('text=Hello&text=world', $context->getRequestData());
     }
 
     /**
@@ -146,10 +145,11 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
      * @param string          $expectedError
      * @param int             $expectedErrorCode
      */
-    public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError, int $expectedErrorCode = 0)
+    public function testIfProcessApiErrorsWorksCorrectly(
+        ResponseContext $context,
+        string $expectedError,
+        int $expectedErrorCode = 0)
     {
-        $this->markTestSkipped();
-
         $this->expectExceptionCode($expectedErrorCode);
         $this->expectExceptionMessage($expectedError);
 
@@ -159,13 +159,11 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
 
         $nanoRest->method('sendRequest')->willReturn($context);
 
-        $translateApi = $this->getTranslateApiFactory()->getApi();
+        $ttsApi = $this->getTtsApiFactory()->getApi();
 
-        $this->setInternalProperty($translateApi, 'httpClient', $nanoRest);
+        $this->setInternalProperty($ttsApi, 'httpClient', $nanoRest);
 
-        $callApiMethod = $this->getInternalMethod($translateApi, 'callApi');
-
-        $callApiMethod->invoke($translateApi, 'translate', ['', new Language(), new Language()]);
+        $ttsApi->textToSpeech('Hello world', new Language('en'), new TtsAudioFormat());
     }
 
     /**
@@ -215,25 +213,107 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
                 'en',
                 '',
                 [],
-                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=en-US_AllisonVoice'
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fmp3&voice=en-US_AllisonVoice'
             ],
             [
                 'en',
-                '',
+                TtsAudioFormat::AUDIO_MPEG,
                 ['voice' => 'en-US_LisaVoice'],
-                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=en-US_LisaVoice'
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fmpeg&voice=en-US_LisaVoice'
             ],
             [
                 'de',
-                '',
+                TtsAudioFormat::AUDIO_WAV,
+                ['gender' => 'm', 'rate' => 8000],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fwav%3Brate%3D8000&voice=de-DE_DieterVoice'
+            ],
+            [
+                'de',
+                TtsAudioFormat::AUDIO_OGG,
+                ['gender' => 'f', 'rate' => 'foo', 'codec' => 'vorbis'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fogg%3Bcodecs%3Dvorbis&voice=de-DE_BirgitVoice'
+            ],
+            [
+                'es',
+                TtsAudioFormat::AUDIO_OGG,
+                ['gender' => 'f', 'rate' => '22050', 'codec' => 'opus'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fogg%3Brate%3D22050%3Bcodecs%3Dopus&voice=es-ES_LauraVoice'
+            ],
+            [
+                'it',
+                TtsAudioFormat::AUDIO_WEBM,
+                ['gender' => 'f', 'rate' => '22050', 'codec' => 'opus'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fwebm%3Bcodecs%3Dopus&voice=it-IT_FrancescaVoice'
+            ],
+            [
+                'it',
+                TtsAudioFormat::AUDIO_WEBM,
+                ['gender' => 'f', 'rate' => '22050', 'codec' => 'vorbis'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fwebm%3Brate%3D22050%3Bcodecs%3Dvorbis&voice=it-IT_FrancescaVoice'
+            ],
+            [
+                'it',
+                TtsAudioFormat::AUDIO_MULAW,
+                ['gender' => 'f', 'rate' => '22050', 'codec' => 'vorbis'],
+                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?accept=audio%2Fmulaw%3Brate%3D22050&voice=it-IT_FrancescaVoice'
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidDataForTtsContext(): array
+    {
+        return [
+            [
+                'it',
+                'mp3',
                 ['gender' => 'm'],
-                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=de-DE_DieterVoice'
+                InvalidVoiceParametersException::class,
+                "Couldn't find the voice for requested language \"it\" and gender \"m\""
             ],
             [
-                'de',
-                '',
-                ['gender' => 'f'],
-                'https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=de-DE_BirgitVoice'
+                'it',
+                'mp13',
+                [],
+                InvalidAudioFormatCodeException::class,
+                'Audio format "mp13" is invalid'
+            ],
+            [
+                'it',
+                'ogg',
+                ['codec' => 'popus'],
+                InvalidAudioFormatParameterException::class,
+                'Specified codec "popus" is invalid'
+            ],
+            [
+                'it',
+                'ogg',
+                ['codec' => 'popus'],
+                InvalidAudioFormatParameterException::class,
+                'Specified codec "popus" is invalid'
+            ],
+            [
+                'it',
+                'mulaw',
+                ['codec' => 'popus'],
+                InvalidAudioFormatParameterException::class,
+                'Parameter "rate" is required'
+            ],
+            [
+                'it',
+                'mp3',
+                ['voice' => 'en'],
+                InvalidVoiceCodeException::class,
+                'Voice code "en" is invalid'
+            ],
+            [
+                'it',
+                'mp3',
+                ['voice' => 'de-DE_DieterVoice'],
+                InvalidVoiceParametersException::class,
+                'The requested language "it" is not compatible with the requested voice "de-DE_DieterVoice"'
             ]
         ];
     }
@@ -266,34 +346,33 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     {
         return [
             [
-                new JsonResponseContext('{
-                    "code": 501,
-                    "message": "The specified translation direction is not supported"
-                }'),
-                'The specified translation direction is not supported',
+                (new DummyResponseContext())->setHttpStatusCode(501),
+                'Not Implemented',
                 501
             ],
             [
-                new JsonResponseContext('{
-                    "code": 401
-                }'),
-                'Invalid API key',
-                401
+                (new DummyResponseContext())->setHttpStatusCode(400),
+                'Bad Request',
+                400
             ],
             [
-                (new JsonResponseContext('{
-                    "code": 405
-                }'))->setHttpStatusCode(405),
-                'Method Not Allowed',
-                405
+                (new DummyResponseContext('{
+                    "code_description": "Not Acceptable",
+                    "code": 406,
+                    "error": "Unsupported mimetype.  Supported mimetypes are: [\'application/json\', \'audio/basic\', \'audio/flac\', \'audio/l16\', \'audio/l16; rate=22050\', \'audio/mp3\', \'audio/mpeg\', \'audio/ogg\', \'audio/ogg;codecs=opus\', \'audio/wav\', \'audio/webm\']"
+                }'))->setHttpStatusCode(406),
+                "Not Acceptable: Unsupported mimetype.  Supported mimetypes are: ['application/json', 'audio/basic', 'audio/flac', 'audio/l16', 'audio/l16; rate=22050', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/ogg;codecs=opus', 'audio/wav', 'audio/webm']",
+                406
             ],
             [
-                (new JsonResponseContext('{
-                    "code": 200
-                }'))->setHttpStatusCode(200),
-                'There is no required field "text" in response',
-                0
-            ],
+                (new DummyResponseContext('{
+                    "code_description": "Not Found",
+                    "code": 404,
+                    "error": "Model es-ES_LauraVoic not found"
+                }'))->setHttpStatusCode(404),
+                "Not Found: Model es-ES_LauraVoic not found",
+                404
+            ]
         ];
     }
 

@@ -3,15 +3,20 @@
 namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson;
 
 use GinoPane\NanoRest\Request\RequestContext;
+use GinoPane\NanoRest\Response\DummyResponseContext;
+use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
-use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
-use GinoPane\PHPolyglot\Exception\InvalidVoiceCodeException;
-use GinoPane\PHPolyglot\Exception\InvalidVoiceParametersException;
+use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
+use GinoPane\PHPolyglot\Exception\InvalidVoiceCodeException;
 use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiAbstract;
+use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
+use GinoPane\PHPolyglot\Exception\InvalidVoiceParametersException;
+use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
 use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\Voice\IbmWatsonVoicesTrait;
 use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\AudioFormat\IbmWatsonAudioFormatsTrait;
 
@@ -71,12 +76,13 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      * @param TtsAudioFormat $format
      * @param array          $additionalData
      *
+     * @return RequestContext
+     *
      * @throws RequestContextException
      * @throws InvalidVoiceCodeException
-     * @throws InvalidVoiceParametersException
      * @throws InvalidAudioFormatCodeException
-     *
-     * @return RequestContext
+     * @throws InvalidVoiceParametersException
+     * @throws InvalidAudioFormatParameterException
      */
     protected function createTextToSpeechContext(
         string $text,
@@ -94,7 +100,9 @@ class IbmWatsonTtsApi extends TtsApiAbstract
                 )
             )
             ->setData(json_encode(['text' => $text]))
-            ->setMethod(RequestContext::METHOD_POST);
+            ->setMethod(RequestContext::METHOD_POST)
+            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED)
+            ->setResponseContextClass(DummyResponseContext::class);
 
         return $this->authorizeRequest($requestContext);
     }
@@ -108,7 +116,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      */
     protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse
     {
-        // TODO: Implement prepareTextToSpeechResponse() method.
+        return new TtsResponse();
     }
 
     /**
@@ -122,5 +130,42 @@ class IbmWatsonTtsApi extends TtsApiAbstract
         $context->setCurlOption(CURLOPT_USERPWD, "{$this->username}:{$this->password}");
 
         return $context;
+    }
+
+    /**
+     * Filters ResponseContext from common HTTP errors
+     *
+     * @param ResponseContext $responseContext
+     *
+     * @throws InvalidResponseContent
+     * @throws BadResponseContextException
+     */
+    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
+    {
+        if ($responseContext->hasHttpError()) {
+            $jsonResponse = new JsonResponseContext($responseContext->getRaw());
+
+            $responseArray = $jsonResponse->getArray();
+
+            $this->filterIbmWatsonSpecificErrors($responseArray);
+        }
+
+        parent::processApiResponseContextErrors($responseContext);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @throws BadResponseContextException
+     */
+    private function filterIbmWatsonSpecificErrors(array $data)
+    {
+        if (isset($data['error']) && $error = $data['error']) {
+            if (!empty($data['code_description'])) {
+                $error = "{$data['code_description']}: $error";
+            }
+
+            throw new BadResponseContextException($error, $data['code'] ?? '');
+        }
     }
 }
