@@ -119,11 +119,12 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      */
     protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse
     {
-        if (is_null($context->headers()->getHeader('content-type'))) {
-            throw new InvalidContentTypeException("Response content-type is invalid or empty");
-        }
+        $response = new TtsResponse();
 
-        return new TtsResponse();
+        $response->setAudioFormat($this->getAudioFormatByContentTypeHeader($context->headers()));
+        $response->setAudioContent($context->getRaw());
+
+        return $response;
     }
 
     /**

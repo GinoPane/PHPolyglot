@@ -36,7 +36,7 @@ class TranslateResponse extends ApiResponseAbstract
      *
      * @param string[] $translations
      */
-    public function setTranslations(array $translations)
+    public function setTranslations(array $translations): void
     {
         $this->setData($translations);
     }
@@ -56,7 +56,7 @@ class TranslateResponse extends ApiResponseAbstract
      *
      * @param string $languageFrom
      */
-    public function setLanguageFrom(string $languageFrom)
+    public function setLanguageFrom(string $languageFrom): void
     {
         $this->languageFrom = $languageFrom;
     }
@@ -76,7 +76,7 @@ class TranslateResponse extends ApiResponseAbstract
      *
      * @param string $languageTo
      */
-    public function setLanguageTo(string $languageTo)
+    public function setLanguageTo(string $languageTo): void
     {
         $this->languageTo = $languageTo;
     }

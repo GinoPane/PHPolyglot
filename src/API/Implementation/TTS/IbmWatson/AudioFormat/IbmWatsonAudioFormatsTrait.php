@@ -2,9 +2,11 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\AudioFormat;
 
+use GinoPane\NanoRest\Supplemental\Headers;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
+use GinoPane\PHPolyglot\Exception\InvalidContentTypeException;
 
 /**
  * Trait IbmWatsonAudioFormatsTrait
@@ -57,13 +59,26 @@ trait IbmWatsonAudioFormatsTrait
         return implode(";", $accept);
     }
 
-    public function getAudioFormatByAcceptHeader(string $header): TtsAudioFormat
+    /**
+     * @param Headers $headers
+     *
+     * @return TtsAudioFormat
+     *
+     * @throws InvalidContentTypeException
+     */
+    public function getAudioFormatByContentTypeHeader(Headers $headers): TtsAudioFormat
     {
+        if (is_null($header = $headers->getHeader('content-type'))) {
+            throw new InvalidContentTypeException("Response content-type is invalid or empty");
+        }
+
         preg_match('/([^;]+);/', $header, $matches);
 
-        var_dump($matches);
+        if (empty($matches[1]) || !in_array($matches[1], self::$formatMapping)) {
+            throw new InvalidContentTypeException(sprintf("Cannot extract audio format from content type: \"%s\"", $header));
+        }
 
-        new TtsAudioFormat();
+        return new TtsAudioFormat(array_search($matches[1], self::$formatMapping));
     }
 
     /**

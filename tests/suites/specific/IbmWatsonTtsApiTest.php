@@ -353,8 +353,28 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
             "
         );
 
-        $responseContextWithInvalidAudioFormat = (new DummyResponseContext())->setHttpStatusCode(200);
-        $responseContextWithInvalidAudioFormat->headers()->setHeadersFromString(
+        $responseContextWithInvalidAudioFormat1 = (new DummyResponseContext())->setHttpStatusCode(200);
+        $responseContextWithInvalidAudioFormat1->headers()->setHeadersFromString(
+            "
+                Connection: Keep-Alive
+                Content-Disposition: inline; filename=\"result.ogg\"
+                Content-Type: audio/unknown codecs=opus
+                Date: Fri, 26 Jan 2018 18:32:09 GMT
+                Server: -
+                Session-Name: WESRPCEYYYLEEULR-en-US_MichaelVoice
+                Strict-Transport-Security: max-age=31536000;
+                Transfer-Encoding: chunked
+                Via: 1.1 f72ecb6, 1.1 71c3449, HTTP/1.1 e82057a
+                X-Backside-Transport: OK OK
+                X-Content-Type-Options: nosniff
+                X-DP-Watson-Tran-ID: stream01-665565077
+                X-Global-Transaction-ID: f257b1145a6b742927abb795
+                X-XSS-Protection: 1
+            "
+        );
+
+        $responseContextWithInvalidAudioFormat2 = (new DummyResponseContext())->setHttpStatusCode(200);
+        $responseContextWithInvalidAudioFormat2->headers()->setHeadersFromString(
             "
                 Connection: Keep-Alive
                 Content-Disposition: inline; filename=\"result.ogg\"
@@ -408,8 +428,13 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
                 0
             ],
             [
-                $responseContextWithInvalidAudioFormat,
-                "Not Found: Model es-ES_LauraVoic not found",
+                $responseContextWithInvalidAudioFormat1,
+                'Cannot extract audio format from content type: "audio/unknown codecs=opus"',
+                0
+            ],
+            [
+                $responseContextWithInvalidAudioFormat2,
+                'Cannot extract audio format from content type: "audio/unknown; codecs=opus"',
                 0
             ]
         ];
