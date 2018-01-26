@@ -12,13 +12,19 @@ use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
  */
 class TtsResponse extends ApiResponseAbstract
 {
+    /**
+     * @param TtsAudioFormat $format
+     */
     public function setAudioFormat(TtsAudioFormat $format): void
     {
         $this->format = $format;
     }
 
+    /**
+     * @param string $content
+     */
     public function setAudioContent(string $content): void
     {
-
+        $this->setData($content);
     }
 }
