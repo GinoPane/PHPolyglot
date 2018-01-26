@@ -57,6 +57,15 @@ trait IbmWatsonAudioFormatsTrait
         return implode(";", $accept);
     }
 
+    public function getAudioFormatByAcceptHeader(string $header): TtsAudioFormat
+    {
+        preg_match('/([^;]+);/', $header, $matches);
+
+        var_dump($matches);
+
+        new TtsAudioFormat();
+    }
+
     /**
      * @param TtsAudioFormat $format
      * @param array          $additionalData

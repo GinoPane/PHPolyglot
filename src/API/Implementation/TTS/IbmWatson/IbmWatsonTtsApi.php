@@ -8,6 +8,7 @@ use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\Exception\InvalidContentTypeException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
@@ -101,7 +102,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
             )
             ->setData(json_encode(['text' => $text]))
             ->setMethod(RequestContext::METHOD_POST)
-            ->setContentType(RequestContext::CONTENT_TYPE_FORM_URLENCODED)
+            ->setContentType(RequestContext::CONTENT_TYPE_JSON)
             ->setResponseContextClass(DummyResponseContext::class);
 
         return $this->authorizeRequest($requestContext);
@@ -112,10 +113,16 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      *
      * @param ResponseContext $context
      *
+     * @throws InvalidContentTypeException
+     *
      * @return TtsResponse
      */
     protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse
     {
+        if (is_null($context->headers()->getHeader('content-type'))) {
+            throw new InvalidContentTypeException("Response content-type is invalid or empty");
+        }
+
         return new TtsResponse();
     }
 
