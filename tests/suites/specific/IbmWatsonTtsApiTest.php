@@ -14,6 +14,8 @@ use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
+use GinoPane\PHPolyglot\Exception\InvalidIoException;
+use GinoPane\PHPolyglot\Exception\InvalidPathException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
@@ -33,9 +35,9 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     {
         $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
 
-        $translateApi = $this->getTtsApiFactory()->getApi();
+        $ttsApi = $this->getTtsApiFactory()->getApi();
 
-        $this->assertTrue($translateApi instanceof TtsApiInterface);
+        $this->assertTrue($ttsApi instanceof TtsApiInterface);
     }
 
     public function testIfTtsApiThrowsExceptionWhenPropertyDoesNotExist()
@@ -171,11 +173,12 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
      * @dataProvider getValidResponsesForResponseProcessing
      *
      * @param ResponseContext $context
-     * @param string          $expected
+     *
+     * @throws InvalidIoException
+     * @throws InvalidPathException
      */
     public function testIfValidResponseCanBeProcessed(
-        ResponseContext $context,
-        string $expected
+        ResponseContext $context
     ) {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
@@ -187,10 +190,52 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
 
         $this->setInternalProperty($ttsApi, 'httpClient', $nanoRest);
 
-        /** @var TranslateResponse $response */
+        /** @var TtsResponse $response */
         $response = $ttsApi->textToSpeech('Hello world', new Language('en'), new TtsAudioFormat());
 
         $this->assertTrue($response instanceof TtsResponse);
+    }
+
+    /**
+     * @dataProvider getValidResponsesForResponseProcessing
+     *
+     * @param ResponseContext $context
+     * @param string          $expected
+     */
+    public function testIfValidResponseCanBeProcessedByTtsResponse(
+        ResponseContext $context,
+        string $expected
+    ) {
+        $api = $this->getTtsApiFactory()->getApi();
+        $getAudioFormatByContentTypeHeader = $this->getInternalMethod($api, 'getAudioFormatByContentTypeHeader');
+
+        /** @var TtsResponse $stub */
+        $stub = $this->getMockBuilder(TtsResponse::class)
+            ->setMethods(array('getTtsApiFactory'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getTtsApiFactory')->willReturn($this->getTtsApiFactory());
+
+        $stub->__construct(
+            $context->getRaw(),
+            $getAudioFormatByContentTypeHeader->invoke($api, $context->headers()),
+            json_decode($context->getRequestContext()->getData(), true)['text']
+        );
+
+        $file = $stub->storeFile();
+
+        $this->assertEquals(md5('hello world').".ogg", $file);
+        $this->assertEquals($expected, file_get_contents($this->getTtsApiFactory()->getTargetDirectory() . DIRECTORY_SEPARATOR . $file));
+
+        $directory = TEST_ROOT . DIRECTORY_SEPARATOR . 'media_test';
+        $file = $stub->storeFile('hello world', 'ogg', $directory);
+
+        $this->assertEquals('hello world.ogg', $file);
+        $this->assertEquals(
+            $expected,
+            file_get_contents($directory . DIRECTORY_SEPARATOR . $file)
+        );
     }
 
     /**
@@ -309,7 +354,7 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     }
 
     /**
-     * Get stubbed version of DictionaryApiFactory
+     * Get stubbed version of TtsApiFactory
      *
      * @return TtsApiFactory|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -445,44 +490,10 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
      */
     public function getValidResponsesForResponseProcessing(): array
     {
-        $fileContents = <<<'FILE'
-OggS         ��t�    6Xk�OpusHead� �]     OggS          ��t�   i��>OpusTags
-   Lavf57.71.100      encoder=Lavc57.89.100 libopusOggS ؗ      ��t�   Qs�-�\e������϶�������� �	҂�'������y������K_���C�f\f�'a�Z�j��v*a U$�sᎫ��4�{�`$�֕g��X'	�7L�����������v~��Qn�A�:���Q���A��|�9Y�YP&�<��蝈�.h�E	�*\v��B*��檷MBӸ?�}��j�E����\/��+���a�Y���l
-���\e�8I�Kp�O�z\v���\�a��̭^�o0)�zo�mP��\v�G'�c�!QpE�⹑E+�y\e��dR]���5y>	7�w�Mܲ]S�QEY�&����$�$���>�� 7�
-vP�~{��Y���dL�BF�#\bq�E��ge�/�:8klOr�}jw�	j�m�Ұ�cӜ�+
-Ϳ\v�\f���=y֫�Ys�2h���O�Rh��U1k��˻p�L�bOE?)��=N9���w���8z�4�1J��%��'� ��)�f�\6�bm��\v��8)���~E�n���XQ*�%����K�m^sPS�L-Ӟ�ʞN�X�.��TQ�\f����E�㞞紭��#�Fݏ���c=�Fg���j�l�v��?j���z����(�VU))��E����N�\bC\";�cJ�iu�6ن^��<M�\"I_�-{3�1+?Ӑ1��\v4���$�?��\f�s���\e(\bˋ�h�j���}^M�9h�<��Hm(�p�;A5�E�m·s����U��-^���8&_tl�أw�����C��N���vr�s=ÆX��s��v�B?F�frѴH�g���n�$ ��k�kBz>=�ï�uZU~��*�et��$e]�@~>p:�>uw���
-�+����^�rKf	#ώ�Uo�*AC��;Гi����Z��K�:�$b���@��<@�69	@�
-g!�mQ�Zq�G;\"��*<�C��bL\"<�Ձ��z�B���I�[��#��\eDo�6P]U�X\fJ��,в�j���
-���U;�:��hU��w�AVum
-�H�&�}�fY�����3�Ƀ�eG��K��ԂuckXu@Ɖ�m�Jqx	���d��+QR��7�L�~c���\"�[��67�0�!�W1�F�mF� Q[[�΂L�s��m�V�5�>^-W��,�ث[�Q$��>�퐍cc(��h�Ҍ�*��Ğ��B\f3\���ǧ&�f�Q�µ�\v ��:G6y�Ɔ(\b�D���oJ �y��y$�E��,/�������n�\D\"3އM�P �#z��.â ���#��8?ntU��O���s~�c�B�<} ta)L|Lt�5�퀞L�z*���ŵl��r\e0�؍W������:�=�|��w�\E�7YQ'�?� �MB\��XU 5l���;��XY\"p�q��X�x�����(o��!P��N�9rp��-����� G�̢�*
-���դn���Lv����d��-��Ӹ�wK�6d#��0aDyk��@G�\b��hWr���c�'��19��
-�%��]\���9ٶ��	����{>W�#.�ث�Z���Gu�e�5M�����{�^y�I���­�C��I0\"�}��!7�f���������SNcg��\f�\b���p%/�Xe�Q�GuU�H:
-��uuz���ͩ�[��D`q7	n.���.� �^S����g�$wP
-<j@<>/���\e�Ƚ�u[�ugH�����!K�����p�OQ�V��/d�@j���/W��%��`�[K*�ث;���)*� V�~5=��Bf��ZZ���:k�f��
-:�S��h�\�c�xl�fπWF3װ�u¼����ȝ��@�z��>�rx.�>[4�N��}�}%�7�iB<#$M��32G��C�q���L����ޤOmx��<���/q���1k:��I#\e���-hM9�1����,~���u�|�sr\e(���ĮhW��kg�M�U�b.��H|{iHČ��ti�c7w�n?�����8(�g��cr�N&5��f^�͌<�����4�S�Vs����S�)@ٝ�Xn\/�w��DE���\fU@P��A�'O#K7IU�s�3$2��Fw�d)lr^�@�A�����?�U��@��ى��a��{vc%(����\e��ҐC,���i�_���q^�e�����H߳y�J�٭5S����� ��^�b������~�4���\b�*#����y!2i�Nov�K�>��UtQ��&V�0\e�!�s�NY�,\b��v�c�͟�[����hc#c��Q�˥�%���T�;�Y=P�v��{�L�h^������~�J�e���Bp9�Iu�<yO���W����8�F�&�\e'h)���d�U8�� 
-8��wAؗ�������o���Ã�)�B�I5i1�R�R��\�x��=�
-U��b u	�}�n\v�Έ\e�!�(��;��؈*C\f��m���?���\"y0�#�GX�u<\e�9�%�SW�����$�r��}E�|g���Nd����1\f���W�%B�b���\b��(�
-���F��'\f�#��f�Q�4�ߩ������ϥ��`�J����t��/-Kg'�\eP��9Y�[�L�Eo�&z���H���ln�h����Y��Q��:�pC���3�J
-��G����hm[�N�,J���a4 
-�Z���oZq����r�`���/��\e�:'�\�\v2�δĠ�$0�B�����^]�	��ղCr㨙g8cYC{!�\"�����L�ȷd�wE?4��%��L���Q���M��\f:u6�\b�9�n΍T*�:���Q�8pn���/��}��uqK[�4k����B�2�2�#���Ƞ�.��)�L����-��0����J�^�����|J�$��/	�<x3�5���GOT�^�;�d�d\"[���X�!k��;c+@����|���Y`vK$�E��m��/�����Gؙ��d��Z�6XR9?����a&ۑ�0ש5]
-�F`�I=XI��Ϡ�w�r7���w�i��ԣ�:������]������اl��h���5,�[[�qo@�G^��ޕe�,x8�;�l~1~���7�wD�gj��z>�?g�d��Y衏_�>[��(�y\f�D �X�c��cQ�r����>��'�
-닋��=x7,f�c@Ȼڜ\e`,����Xo��o;�y��0�  ������`��ע�@p�� �s�ֵ[���&Y%DX��a�I�I�����\f��l��%>˔!G��o��%��L�xZƣ�l�1�Ľmc�2U*���XO��	y�v�P���t)��Ѹ�ϯFg��2�K/����r\f\�3����\b��ѡu�X3�EO9��KB��t���C�E�g����\"X6�AF����\"�x;\f0\b-�,�.���Um2!Z�����WD�|^�|B#�n�(5��͢]��1� ��@)J>�#o��q}�t���-���1Rb��F�AC�`�+B�l�
-�Uҍ�U��0\v37��s�F�䝐�_z�c6jiD�gv�U��J�w��+z����i����+п@X�_d'W�&tv
-��6�ӄhdc{v�u�����D�eǎ��pt�E���D���RE���|C�(Z�F���y\e�Js�l���\v�B�\"�PV@\e��j8�_�,�����*7&�������<�'RO�=_����o�.�\"��Et>���lIA��zh�zt4\f�vbA�����M��nq��Y�z�d�6�1�m+ۮ\b������Ұf ������L bhE���]�oP��R�#��'|6���ǌ���=R=@V\�E?�+��M�pI�g#�&Ɉ���D3�� �t��p!ˌo�v�1ل5!qKh�L/
-����y[�#�����<����I�E �����S��Q�*� G^ 1^��U(ZRd4���7�kۈ�hY�	#OCZ�=�{
-����#sf[>�%\vK�w�o$(<W�^�w����s|[
-a.rp� D� ;̨�קǪ��k��H��Ƀ�6^��g�XȌ+mhT��,}�����Xx�������y�z3��շ���٢5�Z�++���q<��A@�9�� �i�ǻ�eg`>�[�L��H:<Z�[,���:ߡH�����-o5/���*g��]�z� 	f`���Y���L\e���-����?�S�.Y�m5���a˼�����9�dDώ̢8X��5��t���ې��\b>��U�\v �w�n��S�D�@��Z>s�Iߧ\f��֊!<��{5��]�����6��	[�^xRQ\b��j�|��ƞÒp�����[.l���US<���X��pa�^�xLv��u)�e
-;�����?~�\b@�i�[��&�]c�������\f                                        `���\fL4���
-W��3�v6[���8��dˏ���r�}5��
-]���K�a�BC�ˈ���|6�~߄AcY��y07\"��aO`�L�~>�؞����?��5?o/f=�j�)�P%��2��AY�ސ�v�;6R�,�ۥu�>�H��!
-ݠ��p�a�\bT!�R���%�Z$<�c���r8�ѕ]p�oA��q�@���4%T:���������zȆ4��  �j���س�;wQs�Dǉ��)�2���u�N]�>ir����tRię�0d�Pgh@�,�ӆǲ߰�a�\bSo�5y�������9`�.�1�#0���������{y9�Ýhmœ,�K7�\b7��W�*ԕ�6\v�>����س�;wp�5󁞚��;��
-8tM!i\_����MY�A|].=�aK������!��	)�Kc�o�Z0�*Y�u�۫��!����s��p�#�����H���&�<�Џטhm�|G�94����Q�KU����S�qb�F�ob�����������s�#S���V�n����4�����@�
-���']��$[�^Nb���w;n�e��h���f¥g\"���H���㒊�	���
-�
-��u��m�FhG��
-CX+=F�\
-��6[4���$��-��z��o��2���\b��o��Q���h�n�b&�s�[��$wO�uu�o���h��R�*�4���BeW�-}�,�T�R��r�������QQy���� ��,��R}��Fa�Gŏ�?0[�\f�W���^�x�_�r�nq������������������������������������������������
-FILE;
+        $requestContext = (new RequestContext())
+            ->setData(json_encode(['text' => 'hello world']));
+
+        $fileContents = file_get_contents(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'audio.ogg');
 
         $responseContext = (new DummyResponseContext($fileContents))->setHttpStatusCode(200);
         $responseContext->headers()->setHeadersFromString(
@@ -503,6 +514,8 @@ FILE;
                 X-XSS-Protection: 1
             "
         );
+
+        $responseContext->setRequestContext($requestContext);
 
         return [
             [

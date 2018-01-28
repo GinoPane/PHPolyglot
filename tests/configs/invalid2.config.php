@@ -8,6 +8,7 @@ return [
         'default' => \GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory::class
     ],
     'ttsApi' => [
-        'default' => \GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory::class
+        'default' => \GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory::class,
+        'directory' => 'media'
     ],
 ];

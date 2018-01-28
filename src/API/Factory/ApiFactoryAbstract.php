@@ -43,6 +43,15 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     protected static $env = null;
 
     /**
+     * Config properties that must exist for valid config
+     *
+     * @var array
+     */
+    protected $configProperties = [
+        'default'
+    ];
+
+    /**
      * ApiFactoryAbstract constructor
      *
      * @throws InvalidPathException
@@ -91,10 +100,16 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      */
     protected function assertConfigIsValid(): void
     {
-        if (empty(self::$config[$this->configSectionName]['default'])) {
-            throw new InvalidConfigException(
-                "Config section does not exist or is not filled properly: {$this->configSectionName}"
-            );
+        foreach ($this->configProperties as $property) {
+            if (empty(self::$config[$this->configSectionName][$property])) {
+                throw new InvalidConfigException(
+                    sprintf(
+                        "Config section does not exist or is not filled properly: %s (required parameter \"%s\" is missing)",
+                        $this->configSectionName,
+                        $property
+                    )
+                );
+            }
         }
     }
 
@@ -105,7 +120,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      */
     protected function initEnvironment(): void
     {
-        $envFile = $this->getRootDirectory() . DIRECTORY_SEPARATOR . $this->getEnvFileName();
+        $envFile = $this->getRootRelatedPath($this->getEnvFileName());
 
         $this->assertFileIsReadable($envFile);
 
@@ -119,11 +134,21 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      */
     protected function initConfig(): void
     {
-        $configFile = $this->getRootDirectory() . DIRECTORY_SEPARATOR . $this->getConfigFileName();
+        $configFile = $this->getRootRelatedPath($this->getConfigFileName());
 
         $this->assertFileIsReadable($configFile);
 
         self::$config = (array)(include $configFile);
+    }
+
+    /**
+     * @param string $filePath
+     *
+     * @return string
+     */
+    protected function getRootRelatedPath(string $filePath): string
+    {
+        return $this->getRootDirectory() . DIRECTORY_SEPARATOR . trim($filePath, DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -169,10 +194,24 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      *
      * @throws InvalidPathException
      */
-    private function assertFileIsReadable(string $fileName): void
+    protected function assertFileIsReadable(string $fileName): void
     {
         if (!is_file($fileName) || !is_readable($fileName)) {
             throw new InvalidPathException(sprintf('Unable to read the file at %s', $fileName));
+        }
+    }
+
+    /**
+     * A simple check that file exists and is readable
+     *
+     * @param string $directoryName
+     *
+     * @throws InvalidPathException
+     */
+    protected function assertDirectoryIsWriteable(string $directoryName): void
+    {
+        if (!is_dir($directoryName) || !is_writable($directoryName)) {
+            throw new InvalidPathException(sprintf('Unable to write to the directory at "%s"', $directoryName));
         }
     }
 }

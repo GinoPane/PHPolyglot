@@ -119,10 +119,11 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      */
     protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse
     {
-        $response = new TtsResponse();
-
-        $response->setAudioFormat($this->getAudioFormatByContentTypeHeader($context->headers()));
-        $response->setAudioContent($context->getRaw());
+        $response = new TtsResponse(
+            $context->getRaw(),
+            $this->getAudioFormatByContentTypeHeader($context->headers()),
+            json_decode($context->getRequestContext()->getData(), true)['text']
+        );
 
         return $response;
     }
