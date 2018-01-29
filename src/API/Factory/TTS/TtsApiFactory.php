@@ -3,10 +3,8 @@
 namespace GinoPane\PHPolyglot\API\Factory\TTS;
 
 use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
-use GinoPane\PHPolyglot\Exception\InvalidConfigException;
-use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
-use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
 use GinoPane\PHPolyglot\Exception\InvalidPathException;
+use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
 
 class TtsApiFactory extends ApiFactoryAbstract
 {
@@ -17,6 +15,13 @@ class TtsApiFactory extends ApiFactoryAbstract
      * @var string
      */
     protected $configSectionName = 'ttsApi';
+
+    /**
+     * API interface that must be implemented by API class
+     *
+     * @var string
+     */
+    protected $apiInterface = TtsApiInterface::class;
 
     /**
      * Config properties that must exist for valid config
@@ -52,28 +57,5 @@ class TtsApiFactory extends ApiFactoryAbstract
         $this->assertDirectoryIsWriteable($directoryName);
 
         return $directoryName;
-    }
-
-    /**
-     * Performs basic validation of config for Tts API
-     *
-     * @throws InvalidConfigException
-     *
-     * @throws InvalidApiClassException
-     */
-    protected function assertConfigIsValid(): void
-    {
-        parent::assertConfigIsValid();
-
-        $apiClass = $this->getFactorySpecificConfig()['default'];
-
-        if (!in_array(
-            TtsApiInterface::class,
-            class_implements($apiClass, true)
-        )) {
-            throw new InvalidApiClassException(
-                sprintf("Class %s must implement %s interface", $apiClass, TtsApiInterface::class)
-            );
-        }
     }
 }

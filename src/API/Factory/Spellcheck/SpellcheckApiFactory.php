@@ -1,17 +1,35 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Factory\Translate;
+namespace GinoPane\PHPolyglot\API\Factory\Specllcheck;
 
-use GinoPane\PHPolyglot\API\Factory\ApiFactoryInterface;
-use GinoPane\PHPolyglot\API\Implementation\SpellcheckApiInterface;
+use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
 
-class SpellcheckApiFactory implements ApiFactoryInterface
+class SpecllcheckApiFactory extends ApiFactoryAbstract
 {
     /**
-     * @return SpellcheckApiInterface
+     * Config section name that is being checked for existence. API-specific properties must
+     * be located under that section
+     *
+     * @var string
      */
-    public function getApi(): SpellcheckApiInterface
-    {
+    protected $configSectionName = 'specllcheckApi';
 
+    /**
+     * API interface that must be implemented by API class
+     *
+     * @var string
+     */
+    protected $apiInterface = SpecllcheckApiInterface::class;
+
+    /**
+     * Gets necessary Specllcheck API object
+     *
+     * @param array $parameters
+     *
+     * @return SpecllcheckApiInterface
+     */
+    public function getApi(array $parameters = []): SpecllcheckApiInterface
+    {
+        return parent::getApi($parameters);
     }
 }

@@ -33,8 +33,6 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
 {
     public function testIfTtsApiCanBeCreatedByFactory()
     {
-        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
-
         $ttsApi = $this->getTtsApiFactory()->getApi();
 
         $this->assertTrue($ttsApi instanceof TtsApiInterface);
@@ -64,6 +62,28 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
         $this->setInternalProperty($stub, 'envProperties', ['username' => 'WRONG_VARIABLE']);
 
         $stub->__construct();
+    }
+
+    public function testIfTtsApiThrowsExceptionWhenDirectoryIsInvalid()
+    {
+        $this->expectException(InvalidPathException::class);
+        $this->expectExceptionMessage(sprintf('Unable to write to the directory at "%s/media"', TEST_ROOT . DIRECTORY_SEPARATOR . 'configs'));
+
+        $this->setInternalProperty(TtsApiFactory::class, 'config', null);
+
+        $stub = $this->getMockBuilder(TtsApiFactory::class)
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
+        $stub->method('getConfigFileName')->willReturn('invalid3.config.php');
+        $stub->method('getEnvFileName')->willReturn('test.env');
+
+        /** @var TtsApiFactory $stub */
+        $stub->__construct();
+
+        $stub->getTargetDirectory();
     }
 
     /**
@@ -241,9 +261,6 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidResponsesForResponseProcessing
      *
-     * @param ResponseContext $context
-     * @param string          $expected
-     *
      * @throws InvalidIoException
      * @throws InvalidPathException
      */
@@ -389,6 +406,8 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
      */
     private function getTtsApiFactory()
     {
+        $this->setInternalProperty(TtsApiFactory::class, 'config', null);
+
         $stub = $this->getMockBuilder(TtsApiFactory::class)
             ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
             ->disableOriginalConstructor()

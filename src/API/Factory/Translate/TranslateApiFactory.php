@@ -3,9 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Factory\Translate;
 
 use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
-use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
-use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 
 /**
  * Class TranslateApiFactory
@@ -23,6 +21,13 @@ class TranslateApiFactory extends ApiFactoryAbstract
     protected $configSectionName = 'translateApi';
 
     /**
+     * API interface that must be implemented by API class
+     *
+     * @var string
+     */
+    protected $apiInterface = TranslateApiInterface::class;
+
+    /**
      * Gets necessary Translate API object
      *
      * @param array $parameters
@@ -32,28 +37,5 @@ class TranslateApiFactory extends ApiFactoryAbstract
     public function getApi(array $parameters = []): TranslateApiInterface
     {
         return parent::getApi($parameters);
-    }
-
-    /**
-     * Performs basic validation of config for Translate API
-     *
-     * @throws InvalidConfigException
-     *
-     * @throws InvalidApiClassException
-     */
-    protected function assertConfigIsValid(): void
-    {
-        parent::assertConfigIsValid();
-
-        $apiClass = $this->getFactorySpecificConfig()['default'];
-
-        if (!in_array(
-            TranslateApiInterface::class,
-            class_implements($apiClass, true)
-        )) {
-            throw new InvalidApiClassException(
-                sprintf("Class %s must implement %s interface", $apiClass, TranslateApiInterface::class)
-            );
-        }
     }
 }

@@ -3,6 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Factory;
 
 use Dotenv\Dotenv;
+use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\Exception\InvalidPathException;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 
@@ -50,6 +51,13 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     protected $configProperties = [
         'default'
     ];
+
+    /**
+     * API interface that must be implemented by API class
+     *
+     * @var string
+     */
+    protected $apiInterface = "";
 
     /**
      * ApiFactoryAbstract constructor
@@ -110,6 +118,27 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
                     )
                 );
             }
+        }
+
+        $this->assertApiClassImplementsInterface($this->apiInterface);
+    }
+
+    /**
+     * @param string $interface
+     *
+     * @throws InvalidApiClassException
+     */
+    protected function assertApiClassImplementsInterface(string $interface): void
+    {
+        $apiClass = $this->getFactorySpecificConfig()['default'];
+
+        if (!in_array(
+            $interface,
+            class_implements($apiClass, true)
+        )) {
+            throw new InvalidApiClassException(
+                sprintf("Class %s must implement %s interface", $apiClass, $interface)
+            );
         }
     }
 

@@ -3,10 +3,13 @@
 namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
+use GinoPane\NanoRest\Request\RequestContext;
+use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
+use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS\DictionaryEntryPos;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
@@ -143,6 +146,32 @@ class PHPolyglotTest extends PHPolyglotTestCase
         $this->assertEquals('ˈheˈləʊ', $entries[0]->getTranscription());
         $this->assertCount(2, $entries[0]->getSynonyms());
         $this->assertCount(2, $entries[0]->getMeanings());
+    }
+
+    /**
+     * @throws InvalidLanguageCodeException
+     * @throws InvalidConfigException
+     */
+    public function testIfSpeakWorksCorrectlyForValidInput()
+    {
+        $ttsApi = $this->getApiFactoryWithMockedHttpClient(
+            $this->getValidTtsResponse(),
+            $this->getTtsApiFactory()->getApi()
+        );
+
+        /** @var PHPolyglot $phpolyglot */
+        $phpolyglot = $this->getMockedPhpolyglot('getTtsApi', $ttsApi);
+
+        $response = $phpolyglot->speak('Hello world', 'en');
+
+        $directory = TEST_ROOT . DIRECTORY_SEPARATOR . 'media_test';
+        $file = $response->storeFile('', '', $directory);
+
+        $this->assertEquals(md5('hello world').".ogg", $file);
+        $this->assertEquals(
+            file_get_contents(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'audio.ogg'),
+            file_get_contents($directory . DIRECTORY_SEPARATOR . $file)
+        );
     }
 
     /**
@@ -285,7 +314,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
     }
 
     /**
-     * @return JsonResponseContext
+     * @return ResponseContext
      */
     public function getValidTranslateAlternativesResponse(): ResponseContext
     {
@@ -412,6 +441,41 @@ class PHPolyglotTest extends PHPolyglotTestCase
     }
 
     /**
+     * @return ResponseContext
+     */
+    public function getValidTtsResponse(): ResponseContext
+    {
+        $requestContext = (new RequestContext())
+            ->setData(json_encode(['text' => 'hello world']));
+
+        $fileContents = file_get_contents(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'audio.ogg');
+
+        $responseContext = (new DummyResponseContext($fileContents))->setHttpStatusCode(200);
+        $responseContext->headers()->setHeadersFromString(
+            "
+                Connection: Keep-Alive
+                Content-Disposition: inline; filename=\"result.ogg\"
+                Content-Type: audio/ogg; codecs=opus
+                Date: Fri, 26 Jan 2018 18:32:09 GMT
+                Server: -
+                Session-Name: WESRPCEYYYLEEULR-en-US_MichaelVoice
+                Strict-Transport-Security: max-age=31536000;
+                Transfer-Encoding: chunked
+                Via: 1.1 f72ecb6, 1.1 71c3449, HTTP/1.1 e82057a
+                X-Backside-Transport: OK OK
+                X-Content-Type-Options: nosniff
+                X-DP-Watson-Tran-ID: stream01-665565077
+                X-Global-Transaction-ID: f257b1145a6b742927abb795
+                X-XSS-Protection: 1
+            "
+        );
+
+        $responseContext->setRequestContext($requestContext);
+
+        return $responseContext;
+    }
+
+    /**
      * @param string    $method
      * @param mixed     $returnValue
      *
@@ -482,6 +546,29 @@ class PHPolyglotTest extends PHPolyglotTestCase
     private function getDictionaryApiFactory(array $methods = [])
     {
         $stub = $this->getMockBuilder(DictionaryApiFactory::class)
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory') + $methods)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
+        $stub->method('getConfigFileName')->willReturn('test.config.php');
+        $stub->method('getEnvFileName')->willReturn('test.env');
+
+        $stub->__construct();
+
+        return $stub;
+    }
+
+    /**
+     * Get stubbed version of TtsApiFactory
+     *
+     * @param array $methods
+     *
+     * @return TtsApiFactory|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private function getTtsApiFactory(array $methods = [])
+    {
+        $stub = $this->getMockBuilder(TtsApiFactory::class)
             ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory') + $methods)
             ->disableOriginalConstructor()
             ->getMock();

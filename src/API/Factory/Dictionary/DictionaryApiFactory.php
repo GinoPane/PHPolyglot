@@ -3,8 +3,6 @@
 namespace GinoPane\PHPolyglot\API\Factory\Dictionary;
 
 use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
-use GinoPane\PHPolyglot\Exception\InvalidConfigException;
-use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
 
 class DictionaryApiFactory extends ApiFactoryAbstract
@@ -18,6 +16,13 @@ class DictionaryApiFactory extends ApiFactoryAbstract
     protected $configSectionName = 'dictionaryApi';
 
     /**
+     * API interface that must be implemented by API class
+     *
+     * @var string
+     */
+    protected $apiInterface = DictionaryApiInterface::class;
+
+    /**
      * Gets necessary Dictionary API object
      *
      * @param array $parameters
@@ -27,28 +32,5 @@ class DictionaryApiFactory extends ApiFactoryAbstract
     public function getApi(array $parameters = []): DictionaryApiInterface
     {
         return parent::getApi($parameters);
-    }
-
-    /**
-     * Performs basic validation of config for Dictionary API
-     *
-     * @throws InvalidConfigException
-     *
-     * @throws InvalidApiClassException
-     */
-    protected function assertConfigIsValid(): void
-    {
-        parent::assertConfigIsValid();
-
-        $apiClass = $this->getFactorySpecificConfig()['default'];
-
-        if (!in_array(
-            DictionaryApiInterface::class,
-            class_implements($apiClass, true)
-        )) {
-            throw new InvalidApiClassException(
-                sprintf("Class %s must implement %s interface", $apiClass, DictionaryApiInterface::class)
-            );
-        }
     }
 }
