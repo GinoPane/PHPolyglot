@@ -2,11 +2,11 @@
 
 namespace GinoPane\PHPolyglot\API\Response\TTS;
 
+use GinoPane\PHPolyglot\Exception\InvalidIoException;
 use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
+use GinoPane\PHPolyglot\Exception\InvalidPathException;
 use GinoPane\PHPolyglot\API\Response\ApiResponseAbstract;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
-use GinoPane\PHPolyglot\Exception\InvalidIoException;
-use GinoPane\PHPolyglot\Exception\InvalidPathException;
 
 /**
  * Class TtsResponse
@@ -73,7 +73,7 @@ class TtsResponse extends ApiResponseAbstract
             throw new InvalidIoException(
                 sprintf(
                     'Failed to write the file "%s" to the directory "%s"',
-                    $fileName,
+                    $fileName, //@codeCoverageIgnore
                     $directory
                 )
             );
@@ -90,7 +90,7 @@ class TtsResponse extends ApiResponseAbstract
      */
     protected function filePutContents(string $fileName, string $data): bool
     {
-        return (bool)file_put_contents($fileName, $data);
+        return (bool)@file_put_contents($fileName, $data);
     }
 
     /**

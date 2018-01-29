@@ -151,8 +151,8 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     public function testIfProcessApiErrorsWorksCorrectly(
         ResponseContext $context,
         string $expectedError,
-        int $expectedErrorCode = 0)
-    {
+        int $expectedErrorCode = 0
+    ) {
         $this->expectExceptionCode($expectedErrorCode);
         $this->expectExceptionMessage($expectedError);
 
@@ -173,9 +173,6 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
      * @dataProvider getValidResponsesForResponseProcessing
      *
      * @param ResponseContext $context
-     *
-     * @throws InvalidIoException
-     * @throws InvalidPathException
      */
     public function testIfValidResponseCanBeProcessed(
         ResponseContext $context
@@ -201,6 +198,9 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
      *
      * @param ResponseContext $context
      * @param string          $expected
+     *
+     * @throws InvalidIoException
+     * @throws InvalidPathException
      */
     public function testIfValidResponseCanBeProcessedByTtsResponse(
         ResponseContext $context,
@@ -236,6 +236,35 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
             $expected,
             file_get_contents($directory . DIRECTORY_SEPARATOR . $file)
         );
+    }
+
+    /**
+     * @dataProvider getValidResponsesForResponseProcessing
+     *
+     * @param ResponseContext $context
+     * @param string          $expected
+     *
+     * @throws InvalidIoException
+     * @throws InvalidPathException
+     */
+    public function testIfTtsResponseFailsForInvalidIoData()
+    {
+        $this->expectException(InvalidIoException::class);
+        $this->expectExceptionMessage('Failed to write the file "hello world" to the directory "somewhere"');
+
+        /** @var TtsResponse $stub */
+        $stub = $this->getMockBuilder(TtsResponse::class)
+            ->setMethods(array('getTtsApiFactory'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->__construct(
+            'data',
+            new TtsAudioFormat(),
+            'text'
+        );
+
+        $stub->storeFile('hello world', 'ogg', 'somewhere');
     }
 
     /**

@@ -4,9 +4,9 @@ namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\AudioFormat;
 
 use GinoPane\NanoRest\Supplemental\Headers;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
+use GinoPane\PHPolyglot\Exception\InvalidContentTypeException;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
-use GinoPane\PHPolyglot\Exception\InvalidContentTypeException;
 
 /**
  * Trait IbmWatsonAudioFormatsTrait
@@ -134,7 +134,7 @@ trait IbmWatsonAudioFormatsTrait
     private function codecIsValid(string $codec): bool
     {
         return in_array(
-            $codec,
+            $codec, //@codeCoverageIgnore
             [
                 IbmWatsonAudioFormatsInterface::CODEC_OPUS,
                 IbmWatsonAudioFormatsInterface::CODEC_VORBIS

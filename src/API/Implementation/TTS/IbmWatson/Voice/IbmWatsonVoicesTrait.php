@@ -106,7 +106,7 @@ trait IbmWatsonVoicesTrait
             throw new InvalidVoiceParametersException(
                 sprintf(
                     "The requested language \"%s\" is not compatible with the requested voice \"%s\"",
-                    $language,
+                    $language, //@codeCoverageIgnore
                     $voice
                 )
             );
@@ -116,7 +116,7 @@ trait IbmWatsonVoicesTrait
         $genderCode = $additionalData['gender'] ?? null;
 
         $voiceConstraints = array_filter(
-            $voiceConstraints,
+            $voiceConstraints, //@codeCoverageIgnore
             function (TtsVoiceFormat $item) use ($languageCode, $genderCode) {
                 return
                     ($item->getLanguage()->getCode() == $languageCode) &&
@@ -128,7 +128,7 @@ trait IbmWatsonVoicesTrait
             throw new InvalidVoiceParametersException(
                 sprintf(
                     "Couldn't find the voice for requested language \"%s\" and gender \"%s\"",
-                    $language,
+                    $language, //@codeCoverageIgnore
                     $genderCode ?? 'no gender'
                 )
             );
@@ -159,6 +159,6 @@ trait IbmWatsonVoicesTrait
             $voiceConstraint = $voiceConstraints[$voice];
         }
 
-        return [$voice, $voiceConstraint];
+        return [$voice ?? null, $voiceConstraint ?? null];
     }
 }
