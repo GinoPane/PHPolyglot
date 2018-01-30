@@ -34,6 +34,7 @@ class TtsResponse extends ApiResponseAbstract
      *
      * @param string         $content
      * @param TtsAudioFormat $format
+     * @param string         $text
      */
     public function __construct(string $content, TtsAudioFormat $format, string $text)
     {

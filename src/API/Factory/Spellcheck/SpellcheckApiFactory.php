@@ -1,10 +1,11 @@
 <?php
 
-namespace GinoPane\PHPolyglot\API\Factory\Specllcheck;
+namespace GinoPane\PHPolyglot\API\Factory\SpellCheck;
 
 use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
+use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiInterface;
 
-class SpecllcheckApiFactory extends ApiFactoryAbstract
+class SpellCheckApiFactory extends ApiFactoryAbstract
 {
     /**
      * Config section name that is being checked for existence. API-specific properties must
@@ -12,23 +13,23 @@ class SpecllcheckApiFactory extends ApiFactoryAbstract
      *
      * @var string
      */
-    protected $configSectionName = 'specllcheckApi';
+    protected $configSectionName = 'spellCheckApi';
 
     /**
      * API interface that must be implemented by API class
      *
      * @var string
      */
-    protected $apiInterface = SpecllcheckApiInterface::class;
+    protected $apiInterface = SpellCheckApiInterface::class;
 
     /**
-     * Gets necessary Specllcheck API object
+     * Gets necessary SpellCheck API object
      *
      * @param array $parameters
      *
-     * @return SpecllcheckApiInterface
+     * @return SpellCheckApiInterface
      */
-    public function getApi(array $parameters = []): SpecllcheckApiInterface
+    public function getApi(array $parameters = []): SpellCheckApiInterface
     {
         return parent::getApi($parameters);
     }

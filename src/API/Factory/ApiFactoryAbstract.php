@@ -132,9 +132,15 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     {
         $apiClass = $this->getFactorySpecificConfig()['default'];
 
+        if (false === ($interfaces = @class_implements($apiClass, true))) {
+            throw new InvalidApiClassException(
+                sprintf("Class %s is invalid", $apiClass)
+            );
+        }
+
         if (!in_array(
             $interface,
-            class_implements($apiClass, true)
+            $interfaces
         )) {
             throw new InvalidApiClassException(
                 sprintf("Class %s must implement %s interface", $apiClass, $interface)

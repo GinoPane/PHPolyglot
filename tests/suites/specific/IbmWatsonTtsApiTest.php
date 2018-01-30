@@ -214,6 +214,30 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     }
 
     /**
+     * @dataProvider getValidResponseWithSingleContentTypeForResponseProcessing
+     *
+     * @param ResponseContext $context
+     */
+    public function testIfValidResponseWIthSingleContentTypeCanBeProcessed(
+        ResponseContext $context
+    ) {
+        $nanoRest = $this->getMockBuilder(NanoRest::class)
+            ->setMethods(array('sendRequest'))
+            ->getMock();
+
+        $nanoRest->method('sendRequest')->willReturn($context);
+
+        $ttsApi = $this->getTtsApiFactory()->getApi();
+
+        $this->setInternalProperty($ttsApi, 'httpClient', $nanoRest);
+
+        /** @var TtsResponse $response */
+        $response = $ttsApi->textToSpeech('Hello world', new Language('en'), new TtsAudioFormat());
+
+        $this->assertTrue($response instanceof TtsResponse);
+    }
+
+    /**
      * @dataProvider getValidResponsesForResponseProcessing
      *
      * @param ResponseContext $context
@@ -549,6 +573,46 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
                 Connection: Keep-Alive
                 Content-Disposition: inline; filename=\"result.ogg\"
                 Content-Type: audio/ogg; codecs=opus
+                Date: Fri, 26 Jan 2018 18:32:09 GMT
+                Server: -
+                Session-Name: WESRPCEYYYLEEULR-en-US_MichaelVoice
+                Strict-Transport-Security: max-age=31536000;
+                Transfer-Encoding: chunked
+                Via: 1.1 f72ecb6, 1.1 71c3449, HTTP/1.1 e82057a
+                X-Backside-Transport: OK OK
+                X-Content-Type-Options: nosniff
+                X-DP-Watson-Tran-ID: stream01-665565077
+                X-Global-Transaction-ID: f257b1145a6b742927abb795
+                X-XSS-Protection: 1
+            "
+        );
+
+        $responseContext->setRequestContext($requestContext);
+
+        return [
+            [
+                $responseContext,
+                $fileContents
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidResponseWithSingleContentTypeForResponseProcessing(): array
+    {
+        $requestContext = (new RequestContext())
+            ->setData(json_encode(['text' => 'hello world']));
+
+        $fileContents = file_get_contents(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'audio.ogg');
+
+        $responseContext = (new DummyResponseContext($fileContents))->setHttpStatusCode(200);
+        $responseContext->headers()->setHeadersFromString(
+            "
+                Connection: Keep-Alive
+                Content-Disposition: inline; filename=\"result.ogg\"
+                Content-Type: audio/mpeg
                 Date: Fri, 26 Jan 2018 18:32:09 GMT
                 Server: -
                 Session-Name: WESRPCEYYYLEEULR-en-US_MichaelVoice

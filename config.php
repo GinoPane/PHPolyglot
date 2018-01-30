@@ -9,6 +9,9 @@ return [
     ],
     'ttsApi' => [
         'default' => \GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\IbmWatsonTtsApi::class,
-        'directory' => '../media'
+        'directory' => 'media'
     ],
+    'spellCheckApi' => [
+        'default' => \GinoPane\PHPolyglot\API\Implementation\SpellCheck\Yandex\YandexSpellCheckApi::class
+    ]
 ];

@@ -146,7 +146,6 @@ class IbmWatsonTtsApi extends TtsApiAbstract
      *
      * @param ResponseContext $responseContext
      *
-     * @throws InvalidResponseContent
      * @throws BadResponseContextException
      */
     protected function processApiResponseContextErrors(ResponseContext $responseContext): void

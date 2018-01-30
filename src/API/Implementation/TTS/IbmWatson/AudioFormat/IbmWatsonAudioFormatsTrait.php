@@ -72,10 +72,12 @@ trait IbmWatsonAudioFormatsTrait
             throw new InvalidContentTypeException("Response content-type is invalid or empty");
         }
 
-        preg_match('/([^;]+);/', $header, $matches);
+        preg_match('/([^;]+)[;]?/', $header, $matches);
 
         if (empty($matches[1]) || !in_array($matches[1], self::$formatMapping)) {
-            throw new InvalidContentTypeException(sprintf("Cannot extract audio format from content type: \"%s\"", $header));
+            throw new InvalidContentTypeException(
+                sprintf("Cannot extract audio format from content type: \"%s\"", $header)
+            );
         }
 
         return new TtsAudioFormat(array_search($matches[1], self::$formatMapping));
