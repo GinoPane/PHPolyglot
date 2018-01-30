@@ -13,7 +13,17 @@ try {
 
     $corrections = $phpolyglot->spellCheckTexts($textsToCheck, $languageFrom)->getCorrections();
 
-    print_r($corrections);
+    $correctionsCount = count($corrections);
+
+    for ($i = 0; $i < count($corrections); $i++) {
+        printf("Errors in \"%s\":\n", $textsToCheck[$i]);
+
+        foreach ($corrections[$i] as $invalidWord => $correctedWords) {
+            printf("\t%s - %s;\n", $invalidWord, implode(',', $correctedWords));
+        }
+
+        echo "\n";
+    }
 } catch (Exception $exception) {
     $errorMessage = $exception->getMessage();
 

@@ -95,6 +95,24 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
         $stub->__construct();
     }
 
+    public function testIfTranslateApiFactoryThrowsExceptionOnNonExistingClassInConfigFile()
+    {
+        $this->expectException(InvalidApiClassException::class);
+
+        $this->setInternalProperty(TranslateApiFactory::class, 'config', null);
+
+        $stub = $this->getMockBuilder(TranslateApiFactory::class)
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
+        $stub->method('getConfigFileName')->willReturn('invalid3.config.php');
+        $stub->method('getEnvFileName')->willReturn('test.env');
+
+        $stub->__construct();
+    }
+
     /**
      * Get stubbed version of TranslateApiFactory
      *

@@ -8,10 +8,12 @@ use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
+use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS\DictionaryEntryPos;
+use GinoPane\PHPolyglot\API\Response\SpellCheck\SpellCheckResponse;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidLanguageCodeException;
 
@@ -172,6 +174,65 @@ class PHPolyglotTest extends PHPolyglotTestCase
             file_get_contents(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'audio.ogg'),
             file_get_contents($directory . DIRECTORY_SEPARATOR . $file)
         );
+    }
+
+    /**
+     * @throws InvalidLanguageCodeException
+     * @throws InvalidConfigException
+     */
+    public function testIfSpellCheckWorksCorrectlyForValidInput()
+    {
+        $spellCheckApi = $this->getApiFactoryWithMockedHttpClient(
+            $this->getValidSpellCheckResponse(),
+            $this->getSpellCheckApiFactory()->getApi()
+        );
+
+        /** @var PHPolyglot $phpolyglot */
+        $phpolyglot = $this->getMockedPhpolyglot('getSpellCheckApi', $spellCheckApi);
+
+        $response = $phpolyglot->spellCheckText('Hello world', 'en');
+
+        $this->assertTrue($response instanceof SpellCheckResponse);
+        $this->assertEquals([
+            [
+                'Helo' =>
+                    [
+                        'Hello',
+                    ],
+            ],
+            [
+                'Thanxs' =>
+                    [
+                        'Thanks',
+                    ],
+                'api' =>
+                    [
+                        'API',
+                    ],
+            ],
+        ], $response->getCorrections());
+
+        $response = $phpolyglot->spellCheckTexts(['Hello world'], 'en');
+
+        $this->assertTrue($response instanceof SpellCheckResponse);
+        $this->assertEquals([
+            [
+                'Helo' =>
+                    [
+                        'Hello',
+                    ],
+            ],
+            [
+                'Thanxs' =>
+                    [
+                        'Thanks',
+                    ],
+                'api' =>
+                    [
+                        'API',
+                    ],
+            ],
+        ], $response->getCorrections());
     }
 
     /**
@@ -440,6 +501,73 @@ class PHPolyglotTest extends PHPolyglotTestCase
         )->setHttpStatusCode(200);
     }
 
+    private function getValidSpellCheckResponse(): ResponseContext
+    {
+        $context = new JsonResponseContext();
+
+        $context->setContent('[
+            [
+                {
+                    "code": 1,
+                    "pos": 0,
+                    "row": 0,
+                    "col": 0,
+                    "len": 4,
+                    "word": "Helo",
+                    "s": [
+                        "Hello"
+                    ]
+                },
+                {
+                    "code": 1,
+                    "pos": 5,
+                    "row": 0,
+                    "col": 5,
+                    "len": 5,
+                    "word": "werld",
+                    "s": []
+                }
+            ],
+            [
+                {
+                    "code": 1,
+                    "pos": 0,
+                    "row": 0,
+                    "col": 0,
+                    "len": 6,
+                    "word": "Thanxs",
+                    "s": [
+                        "Thanks"
+                    ]
+                },
+                {
+                    "code": 1,
+                    "pos": 11,
+                    "row": 0,
+                    "col": 11,
+                    "len": 7,
+                    "s": [
+                        "using"
+                    ]
+                },
+                {
+                    "code": 3,
+                    "pos": 24,
+                    "row": 0,
+                    "col": 24,
+                    "len": 3,
+                    "word": "api",
+                    "s": [
+                        "API"
+                    ]
+                }
+            ]
+        ]');
+        $context->setHttpStatusCode(200);
+
+        return $context;
+    }
+
     /**
      * @return ResponseContext
      */
@@ -570,6 +698,29 @@ class PHPolyglotTest extends PHPolyglotTestCase
     {
         $stub = $this->getMockBuilder(TtsApiFactory::class)
             ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory') + $methods)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub->method('getRootDirectory')->willReturn(TEST_ROOT . DIRECTORY_SEPARATOR . 'configs');
+        $stub->method('getConfigFileName')->willReturn('test.config.php');
+        $stub->method('getEnvFileName')->willReturn('test.env');
+
+        $stub->__construct();
+
+        return $stub;
+    }
+
+    /**
+     * Get stubbed version of SpellCheckApiFactory
+     *
+     * @return SpellCheckApiFactory|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private function getSpellCheckApiFactory()
+    {
+        $this->setInternalProperty(SpellCheckApiFactory::class, 'config', null);
+
+        $stub = $this->getMockBuilder(SpellCheckApiFactory::class)
+            ->setMethods(array('getConfigFileName', 'getEnvFileName', 'getRootDirectory'))
             ->disableOriginalConstructor()
             ->getMock();
 

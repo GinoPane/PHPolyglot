@@ -4,10 +4,9 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
 use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
-use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 
 /**
-*  Corresponding class to test DictionaryApiFactoryTest class
+*  Corresponding class to test TtsApiFactory class
 *
 *  @author Sergey <Gino Pane> Karavay
 */

@@ -138,10 +138,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
             );
         }
 
-        if (!in_array(
-            $interface,
-            $interfaces
-        )) {
+        if (!in_array($interface, $interfaces)) {
             throw new InvalidApiClassException(
                 sprintf("Class %s must implement %s interface", $apiClass, $interface)
             );

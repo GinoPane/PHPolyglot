@@ -6,6 +6,7 @@ use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
@@ -14,10 +15,9 @@ use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
 use GinoPane\PHPolyglot\API\Implementation\Translate\Yandex\YandexTranslateApi;
-use GinoPane\PHPolyglot\Supplemental\Language\Language;
 
 /**
-*  Corresponding class to test YandexTranslateApiTest class
+*  Corresponding class to test YandexTranslateApi class
 *
 *  @author Sergey <Gino Pane> Karavay
 */

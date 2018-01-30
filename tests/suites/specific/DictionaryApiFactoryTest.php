@@ -6,7 +6,7 @@ use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 
 /**
-*  Corresponding class to test DictionaryApiFactoryTest class
+*  Corresponding class to test DictionaryApiFactory class
 *
 *  @author Sergey <Gino Pane> Karavay
 */
