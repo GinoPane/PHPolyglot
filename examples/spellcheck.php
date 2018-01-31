@@ -11,7 +11,7 @@ try {
 
     $languageFrom = 'en';
 
-    $corrections = $phpolyglot->spellCheckTexts($textsToCheck, $languageFrom)->getCorrections();
+    $corrections = $phpolyglot->spellCheckBulk($textsToCheck, $languageFrom)->getCorrections();
 
     $correctionsCount = count($corrections);
 

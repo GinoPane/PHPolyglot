@@ -13,7 +13,7 @@ try {
 
     $response = $phpolyglot->lookup($textToLookup, $languageFrom)->getEntries();
 
-    if (!$response) {
+    if (empty($response)) {
         throw new Exception('Nothing returned! Maybe API has changed?');
     }
 
