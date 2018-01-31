@@ -218,7 +218,7 @@ Only two parameters are required - text for synthesis `$text` and its source lan
 
 Optional parameters `$audioFormat` and `$additionalData` may be omitted. Audio format allows to explicitly specify the required audio format of returned audio. Additional data allows to set API specific parameters for more precise results (voice, pitch, speed, etc.).
 
-The list of audio format that are currently recognized:
+The list of audio formats which are currently recognized:
 
 * TtsAudioFormat::AUDIO_BASIC
 * TtsAudioFormat::AUDIO_FLAC
