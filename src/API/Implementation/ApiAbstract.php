@@ -176,8 +176,8 @@ abstract class ApiAbstract
     /**
      * Prepares API response by processing ResponseContext
      *
-     * @param string $apiClassMethod
      * @param ResponseContext $responseContext
+     * @param string $apiClassMethod
      *
      * @throws MethodDoesNotExistException
      *

@@ -13,7 +13,6 @@ use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiAbstract;
 /**
  * Class YandexSpellCheckApi
  *
- * @link https://tech.yandex.ru/speller/
  * @link https://tech.yandex.ru/speller/doc/dg/concepts/About-docpage/
  *
  * @author Sergey <Gino Pane> Karavay
