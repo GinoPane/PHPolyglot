@@ -2,20 +2,20 @@
 
 namespace GinoPane\PHPolyglot;
 
-use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
-use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
-use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
+use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
-use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
-use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiInterface;
+use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
+use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
+use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Response\SpellCheck\SpellCheckResponse;
-use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
+use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
+use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
-use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
-use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
-use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
+use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiInterface;
 
 define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 
@@ -66,7 +66,7 @@ class PHPolyglot
     {
         if ($languageTo) {
             $response = $this->getDictionaryApi()->getTranslateAlternatives(
-                $text,
+                $text, //@codeCoverageIgnore
                 new Language($languageTo),
                 new Language($languageFrom)
             );
@@ -104,7 +104,7 @@ class PHPolyglot
      *
      * @return SpellCheckResponse
      */
-    public function spellCheckText(string $text, string $languageFrom = ''): SpellCheckResponse
+    public function spellCheck(string $text, string $languageFrom = ''): SpellCheckResponse
     {
         return $this->getSpellCheckApi()->checkTexts([$text], new Language($languageFrom));
     }
@@ -115,7 +115,7 @@ class PHPolyglot
      *
      * @return SpellCheckResponse
      */
-    public function spellCheckTexts(array $texts, string $languageFrom = ''): SpellCheckResponse
+    public function spellCheckBulk(array $texts, string $languageFrom = ''): SpellCheckResponse
     {
         return $this->getSpellCheckApi()->checkTexts($texts, new Language($languageFrom));
     }

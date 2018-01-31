@@ -159,13 +159,13 @@ Spelling Check
 There are two endpoints. For a single string:
 
 ```
-function spellCheckText(string $text, string $languageFrom = ''): SpellCheckResponse
+function spellCheck(string $text, string $languageFrom = ''): SpellCheckResponse
 ```
 
 and for multiple strings:
 
 ```
-function spellCheckTexts(array $texts, string $languageFrom = ''): SpellCheckResponse
+function spellCheckBulk(array $texts, string $languageFrom = ''): SpellCheckResponse
 ```
 
 As a minimum example you can pass only a text to check:

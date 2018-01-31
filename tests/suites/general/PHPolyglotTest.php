@@ -190,7 +190,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
         /** @var PHPolyglot $phpolyglot */
         $phpolyglot = $this->getMockedPhpolyglot('getSpellCheckApi', $spellCheckApi);
 
-        $response = $phpolyglot->spellCheckText('Hello world', 'en');
+        $response = $phpolyglot->spellCheck('Hello world', 'en');
 
         $this->assertTrue($response instanceof SpellCheckResponse);
         $this->assertEquals([
@@ -212,7 +212,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
             ],
         ], $response->getCorrections());
 
-        $response = $phpolyglot->spellCheckTexts(['Hello world'], 'en');
+        $response = $phpolyglot->spellCheckBulk(['Hello world'], 'en');
 
         $this->assertTrue($response instanceof SpellCheckResponse);
         $this->assertEquals([
