@@ -108,7 +108,7 @@ For a lookup within the same language (get word forms):
 function lookup(string $text, string $languageFrom): DictionaryResponse
 ```
 
-and for translation-with-lookup strings (get multiple translations and additional information including word forms, examples, meanings, synonyms, transcription, etc.):
+and for translation-with-lookup (get multiple translations and additional information including word forms, examples, meanings, synonyms, transcription, etc.):
 
 ```
 function lookup(string $text, string $languageFrom, string $languageTo): DictionaryResponse
