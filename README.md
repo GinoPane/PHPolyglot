@@ -119,7 +119,7 @@ As a minimum example you can pass text and its source language:
 ```
 $response = (new PHPolyglot)->lookup('Hello', 'en)->getEntries();
 
-$synonyms = implode(",", $response[0]->getSynonyms());
+$synonyms = implode(", ", $response[0]->getSynonyms());
 
 $output = <<<TEXT
 Initial word: {$response[0]->getTextFrom()}
@@ -140,7 +140,7 @@ Part of speech: noun
 Transcription: ˈheˈləʊ
 
 Main alternative: hi
-Synonyms: hallo,salut
+Synonyms: hallo, salut
 */
 ```
 

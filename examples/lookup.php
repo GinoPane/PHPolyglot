@@ -17,7 +17,7 @@ try {
         throw new Exception('Nothing returned! Maybe API has changed?');
     }
 
-    $synonyms = implode(",", $response[0]->getSynonyms());
+    $synonyms = implode(", ", $response[0]->getSynonyms());
 
     $output = <<<TEXT
     Initial word: {$response[0]->getTextFrom()}
