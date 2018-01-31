@@ -94,7 +94,7 @@ Supported languages may vary depending on third-party API.
 ### Yandex Translate API
 
 Please check the [list of supported languages](https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/#languages).
-[Yandex Translate API](https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/) is free to use with [limitations](https://translate.yandex.com/developers/prices)(1000 000 characters per day, up to 10 000 000 per month). If you want you can get a paid plan of course. The API won't let you to get into paid plan automatically, it will simply return an error when the limit is reached.
+[Yandex Translate API](https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage/) is free to use with [limitations](https://translate.yandex.com/developers/prices) (1000 000 characters per day, up to 10 000 000 per month). If you want you can get a paid plan of course. The API won't let you to get into paid plan automatically, it will simply return an error when the limit is reached.
 In order to use the API you need to get the valid [API key](https://tech.yandex.com/keys/?service=trnsl).
 
 Dictionary Lookup
@@ -149,7 +149,7 @@ Supported languages may vary depending on third-party API.
 ### Yandex Dictionary API
 
 Please check the [list of supported languages](https://tech.yandex.com/dictionary/doc/dg/reference/getLangs-docpage/).
-[Yandex Dictionary API](https://tech.yandex.com/dictionary/doc/dg/concepts/api-overview-docpage/) is free to use with [limitations](https://yandex.com/legal/dictionary_api/?lang=en)(10 000 references per day).
+[Yandex Dictionary API](https://tech.yandex.com/dictionary/doc/dg/concepts/api-overview-docpage/) is free to use with [limitations](https://yandex.com/legal/dictionary_api/?lang=en) (up to 10 000 references per day).
 In order to use the API you need to get the valid [API key](https://tech.yandex.com/keys/?service=dict).
 
 
@@ -198,7 +198,7 @@ Supported languages may vary depending on third-party API.
 ### Yandex Speller API
 
 Please check the [list of supported languages](https://tech.yandex.ru/speller/doc/dg/concepts/speller-overview-docpage/) (basically, only English, Russian and Ukrainian are supported at the moment).
-[Yandex Speller API](https://tech.yandex.ru/speller/doc/dg/concepts/api-overview-docpage/) is free to use with [limitations](https://yandex.ru/legal/speller_api/)(up to 10 000 calls/10 000 000 characters per day). No keys are required.
+[Yandex Speller API](https://tech.yandex.ru/speller/doc/dg/concepts/api-overview-docpage/) is free to use with [limitations](https://yandex.ru/legal/speller_api/) (up to 10 000 calls/10 000 000 characters per day). No keys are required.
 
 Speech Synthesis
 ----------------
@@ -247,7 +247,7 @@ By default the file name is a simple `md5` hash of `$text` that wa used for TTS,
 ### IBM Watson Text-to-Speech
 
 Please check the [list of supported languages and voices](https://console.bluemix.net/docs/services/text-to-speech/http.html#voices).
-IBM Watson TTS requires API credentials for authorization. Create your TTS project [there](https://www.ibm.com/watson/services/text-to-speech/) and get your API-specific credentials. API is free to use with limitations (10 000 characters per month).
+IBM Watson TTS requires API credentials for authorization. Create your TTS project [there](https://www.ibm.com/watson/services/text-to-speech/) and get your API-specific credentials. API is free to use with limitations (up to 10 000 characters per month).
 
 Possible ToDos
 ==============
