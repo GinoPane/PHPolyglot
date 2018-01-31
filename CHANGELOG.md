@@ -16,9 +16,18 @@ Types of changes
 
 ## [Unreleased]
 
+## 1.0.0 - 2017-01-31
+
+### Features
+* The first major release;
+* Yandex Translate API implemented;
+* Yandex Dictionary API implemented;
+* Yandex Speller API implemented;
+* IBM Watson TTS API implemented.
+
 ## 0.1.0 - 2017-12-02
 
 ### Features
-* The initial release after clean installation from composer-package-template
+* The initial release after clean installation from composer-package-template.
 
-[Unreleased]: https://github.com/GinoPane/composer-package-template/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/GinoPane/composer-package-template/compare/v1.0.0...HEAD
