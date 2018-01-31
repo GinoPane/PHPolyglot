@@ -6,7 +6,7 @@ PHPolyglot
 [![composer.lock](https://poser.pugx.org/gino-pane/phpolyglot/composerlock)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![Total Downloads](https://poser.pugx.org/gino-pane/phpolyglot/downloads)](https://packagist.org/packages/gino-pane/phpolyglot)
 
-Combining and featuring different APIs for language translation, dictionary lookup, spelling correction and speech synthesis in an easy to use and extend way.
+Combining and featuring different APIs for language translation, dictionary lookup, spelling correction and speech synthesis (TTS) in an easy to use and extend way.
 
 Table of Contents
 -----------------
