@@ -6,10 +6,12 @@
         "translation",
         "spelling",
         "spelling correction",
+        "grammar correction",
         "text-to-speech",
         "tts",
         "yandex api",
         "yandex translate api",
+        "yandex dictionary api",
         "ibm watson api",
         "ibm watson tts"
     ],
