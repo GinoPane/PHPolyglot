@@ -10,7 +10,7 @@ Combining and featuring different APIs for language translation, dictionary look
 
 Table of Contents
 -----------------
-* General Information
+* [General Information](#phpolyglot)
     * [Features](#features)
     * [Requirements](#requirements)
     * [Installation](#installation)
