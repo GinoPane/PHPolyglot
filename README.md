@@ -238,7 +238,7 @@ The TTS method returns `TtsResponse` which has `storeFile` method to store gener
 function storeFile(string $fileName = '', string $extension = '', string $directory = ''): string
 ```
 
-By default the file name is a simple `md5` hash of `$text` that wa used for TTS, `$extension` is being populated based on `content-type` header (at least, for IBM Watson API), `$directory` is based on config setting.
+By default the file name is a simple `md5` hash of `$text` that was used for TTS, `$extension` is being populated based on `content-type` header (at least, for IBM Watson API), `$directory` is based on config setting.
 
 ```
 (new PHPolyglot())->speak('Hello world', 'en')->storeFile(); // stores 3e25960a79dbc69b674cd4ec67a72c62.mp3
@@ -254,7 +254,7 @@ Possible ToDos
 * transcribe words;
 * get synonyms, antonyms, derivatives;
 * detect text language;
-* add more configuration flexibility (choose api based on config constraints, like different APIs for different languages);
+* add more configuration flexibility (choose API based on config constraints, like different APIs for different languages);
 * pass config override into root constructor.
     
 Useful Tools
@@ -305,12 +305,12 @@ To keep track, please refer to [CHANGELOG.md](https://github.com/GinoPane/PHPoly
 Contributing
 ============
 
-1. Fork it.
-2. Create your feature branch (git checkout -b my-new-feature).
-3. Make your changes.
-4. Run the tests, adding new ones for your own code if necessary (phpunit).
-5. Commit your changes (git commit -am 'Added some feature').
-6. Push to the branch (git push origin my-new-feature).
+1. Fork it;
+2. Create your feature branch (git checkout -b my-new-feature);
+3. Make your changes;
+4. Run the tests, adding new ones for your own code if necessary (phpunit);
+5. Commit your changes (git commit -am 'Added some feature');
+6. Push to the branch (git push origin my-new-feature);
 7. Create new pull request.
 
 Also please refer to [CONTRIBUTING.md](https://github.com/GinoPane/PHPolyglot/blob/master/CONTRIBUTING.md).
@@ -319,9 +319,9 @@ License
 =======
 
 Please refer to [LICENSE](https://github.com/GinoPane/PHPolyglot/blob/master/LICENSE).
-The [PHPolyglot](https://github.com/GinoPane/PHPolyglot) does not own any of results that APIs may return. Also, APIs may have their own rules about data usage, so beware of them when you use them.
+> The [PHPolyglot](https://github.com/GinoPane/PHPolyglot) does not own any of results that APIs may return. Also, APIs may have their own rules about data usage, so beware of them when you use them.
 
 Notes
 =====
 
-Powered by [composer-package-template](https://github.com/GinoPane/composer-package-template)
+Powered by [composer-package-template](https://github.com/GinoPane/composer-package-template) and [PHP Nano Rest](https://github.com/GinoPane/php-nano-rest).
