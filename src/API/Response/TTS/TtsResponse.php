@@ -62,13 +62,7 @@ class TtsResponse extends ApiResponseAbstract
      */
     public function storeFile(string $fileName = '', string $extension = '', string $directory = ''): string
     {
-        $fileName = $fileName ? $fileName : $this->generateFilename($this->text);
-
-        $fullFileName = $extension
-            ? "$fileName.$extension"
-            : sprintf("%s.%s", $fileName, $this->format->getFileExtension());
-
-        $directory = $directory ? $directory : $this->getTtsApiFactory()->getTargetDirectory();
+        list($fileName, $fullFileName, $directory) = $this->fillFilePathParts($fileName, $extension, $directory);
 
         if (!$this->filePutContents($directory . DIRECTORY_SEPARATOR . $fullFileName, $this->getData())) {
             throw new InvalidIoException(
@@ -112,5 +106,26 @@ class TtsResponse extends ApiResponseAbstract
     private function generateFilename(string $text): string
     {
         return md5($text);
+    }
+
+    /**
+     * @param string $fileName
+     * @param string $extension
+     * @param string $directory
+     *
+     * @throws InvalidPathException
+     * @return array
+     */
+    private function fillFilePathParts(string $fileName, string $extension, string $directory): array
+    {
+        $fileName = $fileName ? $fileName : $this->generateFilename($this->text);
+
+        $fullFileName = $extension
+            ? "$fileName.$extension"
+            : sprintf("%s.%s", $fileName, $this->format->getFileExtension());
+
+        $directory = $directory ? $directory : $this->getTtsApiFactory()->getTargetDirectory();
+
+        return array($fileName, $fullFileName, $directory);
     }
 }

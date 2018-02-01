@@ -3,8 +3,8 @@ PHPolyglot
 
 [![Latest Stable Version](https://poser.pugx.org/gino-pane/phpolyglot/v/stable)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![Build Status](https://travis-ci.org/GinoPane/PHPolyglot.svg?branch=master)](https://travis-ci.org/GinoPane/PHPolyglot)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b1e2b6042612f67f7e13/maintainability)](https://codeclimate.com/github/GinoPane/phpolyglot/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/b1e2b6042612f67f7e13/test_coverage)](https://codeclimate.com/github/GinoPane/phpolyglot/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b1e2b6042612f67f7e13/maintainability)](https://codeclimate.com/github/GinoPane/PHPolyglot/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/b1e2b6042612f67f7e13/test_coverage)](https://codeclimate.com/github/GinoPane/PHPolyglot/test_coverage)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/GinoPane/phpolyglot/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/GinoPane/phpolyglot/?branch=master)
 [![License](https://poser.pugx.org/gino-pane/phpolyglot/license)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![composer.lock](https://poser.pugx.org/gino-pane/phpolyglot/composerlock)](https://packagist.org/packages/gino-pane/phpolyglot)
