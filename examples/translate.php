@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use GinoPane\PHPolyglot\PHPolyglot;
 
@@ -12,7 +12,7 @@ try {
     $languages = ['it', 'de', 'es', 'ru', 'fi', 'be', 'en'];
     $languageFrom = 'en';
 
-    foreach($languages as $languageTo) {
+    foreach ($languages as $languageTo) {
         $response = $phpolyglot->translate($textToTranslate, $languageTo, $languageFrom);
 
         echo sprintf(

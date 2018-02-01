@@ -80,7 +80,7 @@ trait IbmWatsonAudioFormatsTrait
             );
         }
 
-        return new TtsAudioFormat(array_search($matches[1], self::$formatMapping));
+        return new TtsAudioFormat((string)array_search($matches[1], self::$formatMapping));
     }
 
     /**

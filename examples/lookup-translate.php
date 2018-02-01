@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use GinoPane\PHPolyglot\PHPolyglot;
 
@@ -14,7 +14,7 @@ try {
 
     $response = $phpolyglot->lookup($textToLookup, $languageFrom, $languageTo)->getEntries();
 
-    if (!$response) {
+    if (empty($response)) {
         throw new Exception('Nothing returned! Maybe API has changed?');
     }
 
