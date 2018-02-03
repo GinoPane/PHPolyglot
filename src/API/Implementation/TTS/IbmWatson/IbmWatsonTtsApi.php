@@ -173,7 +173,7 @@ class IbmWatsonTtsApi extends TtsApiAbstract
                 $error = "{$data['code_description']}: $error";
             }
 
-            throw new BadResponseContextException($error, $data['code'] ?? '');
+            throw new BadResponseContextException($error, (int)$data['code'] ?? 0);
         }
     }
 }
