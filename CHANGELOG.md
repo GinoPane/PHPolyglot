@@ -16,12 +16,12 @@ Types of changes
 
 ## [Unreleased]
 
-## 1.0.1 - 2017-02-05
+## 1.0.1 - 2018-02-05
 
 ### Changed
 * Updated dependencies and resolved issues which it caused.
 
-## 1.0.0 - 2017-01-31
+## 1.0.0 - 2018-01-31
 
 ### Features
 * The first major release;
