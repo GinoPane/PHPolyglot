@@ -3,7 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Implementation\Translate\Yandex;
 
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
@@ -85,11 +85,11 @@ class YandexTranslateApi extends TranslateApiAbstract
     /**
      * Process response of translate request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return TranslateResponse
      */
-    protected function prepareTranslateResponse(ResponseContext $context): TranslateResponse
+    protected function prepareTranslateResponse(ResponseContextAbstract $context): TranslateResponse
     {
         return $this->processTranslateResponse($context);
     }
@@ -126,11 +126,11 @@ class YandexTranslateApi extends TranslateApiAbstract
     /**
      * Process response of bulk translate request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return TranslateResponse
      */
-    protected function prepareTranslateBulkResponse(ResponseContext $context): TranslateResponse
+    protected function prepareTranslateBulkResponse(ResponseContextAbstract $context): TranslateResponse
     {
         return $this->processTranslateResponse($context);
     }
@@ -138,12 +138,12 @@ class YandexTranslateApi extends TranslateApiAbstract
     /**
      * Filters ResponseContext from common HTTP errors
      *
-     * @param ResponseContext $responseContext
+     * @param ResponseContextAbstract $responseContext
      *
      * @throws BadResponseContextException
      * @throws InvalidResponseContent
      */
-    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
+    protected function processApiResponseContextErrors(ResponseContextAbstract $responseContext): void
     {
         $responseArray = $responseContext->getArray();
 
@@ -157,11 +157,11 @@ class YandexTranslateApi extends TranslateApiAbstract
     }
 
     /**
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return TranslateResponse
      */
-    private function processTranslateResponse(ResponseContext $context): TranslateResponse
+    private function processTranslateResponse(ResponseContextAbstract $context): TranslateResponse
     {
         $responseArray = $context->getArray();
 

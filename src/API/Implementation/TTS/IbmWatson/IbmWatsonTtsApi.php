@@ -3,18 +3,17 @@
 namespace GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson;
 
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
-use GinoPane\PHPolyglot\Exception\BadResponseContextException;
-use GinoPane\PHPolyglot\Exception\InvalidContentTypeException;
-use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\Exception\InvalidVoiceCodeException;
 use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiAbstract;
+use GinoPane\PHPolyglot\Exception\BadResponseContextException;
+use GinoPane\PHPolyglot\Exception\InvalidContentTypeException;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
 use GinoPane\PHPolyglot\Exception\InvalidVoiceParametersException;
 use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
@@ -111,13 +110,13 @@ class IbmWatsonTtsApi extends TtsApiAbstract
     /**
      * Process response of text-to-speech request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @throws InvalidContentTypeException
      *
      * @return TtsResponse
      */
-    protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse
+    protected function prepareTextToSpeechResponse(ResponseContextAbstract $context): TtsResponse
     {
         $response = new TtsResponse(
             $context->getRaw(),
@@ -144,11 +143,11 @@ class IbmWatsonTtsApi extends TtsApiAbstract
     /**
      * Filters ResponseContext from common HTTP errors
      *
-     * @param ResponseContext $responseContext
+     * @param ResponseContextAbstract $responseContext
      *
      * @throws BadResponseContextException
      */
-    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
+    protected function processApiResponseContextErrors(ResponseContextAbstract $responseContext): void
     {
         if ($responseContext->hasHttpError()) {
             $jsonResponse = new JsonResponseContext($responseContext->getRaw());

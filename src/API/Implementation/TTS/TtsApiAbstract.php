@@ -3,11 +3,11 @@
 namespace GinoPane\PHPolyglot\API\Implementation\TTS;
 
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
@@ -67,9 +67,9 @@ abstract class TtsApiAbstract extends ApiAbstract implements TtsApiInterface
     /**
      * Process response of text-to-speech request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return TtsResponse
      */
-    abstract protected function prepareTextToSpeechResponse(ResponseContext $context): TtsResponse;
+    abstract protected function prepareTextToSpeechResponse(ResponseContextAbstract $context): TtsResponse;
 }

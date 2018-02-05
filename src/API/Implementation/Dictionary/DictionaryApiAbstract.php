@@ -3,9 +3,9 @@
 namespace GinoPane\PHPolyglot\API\Implementation\Dictionary;
 
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
@@ -83,11 +83,11 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Process response of get-text-alternatives request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return DictionaryResponse
      */
-    abstract protected function prepareGetTextAlternativesResponse(ResponseContext $context): DictionaryResponse;
+    abstract protected function prepareGetTextAlternativesResponse(ResponseContextAbstract $context): DictionaryResponse;
 
     /**
      * Create request context for get-translate-alternatives request
@@ -107,9 +107,9 @@ abstract class DictionaryApiAbstract extends ApiAbstract implements DictionaryAp
     /**
      * Process response of get-translate-alternatives request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return DictionaryResponse
      */
-    abstract protected function prepareGetTranslateAlternativesResponse(ResponseContext $context): DictionaryResponse;
+    abstract protected function prepareGetTranslateAlternativesResponse(ResponseContextAbstract $context): DictionaryResponse;
 }

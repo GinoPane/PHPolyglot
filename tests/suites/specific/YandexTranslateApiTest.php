@@ -4,7 +4,7 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
@@ -130,13 +130,13 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getErroneousResponsesForErrorProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param string          $expectedError
      * @param int             $expectedErrorCode
      *
      * @throws InvalidConfigException
      */
-    public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError, int $expectedErrorCode = 0)
+    public function testIfProcessApiErrorsWorksCorrectly(ResponseContextAbstract $context, string $expectedError, int $expectedErrorCode = 0)
     {
         $this->expectExceptionCode($expectedErrorCode);
         $this->expectExceptionMessage($expectedError);
@@ -159,7 +159,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidResponsesForResponseProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @param array           $translations
      * @param string          $languageFrom
@@ -168,7 +168,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
      * @throws InvalidConfigException
      */
     public function testIfValidResponseCanBeProcessed(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         array $translations,
         string $languageFrom,
         string $languageTo
@@ -196,7 +196,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidResponsesForBulkResponseProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @param array           $translations
      * @param string          $languageFrom
@@ -205,7 +205,7 @@ class YandexTranslateApiTest extends PHPolyglotTestCase
      * @throws InvalidConfigException
      */
     public function testIfValidBulkResponseCanBeProcessed(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         array $translations,
         string $languageFrom,
         string $languageTo

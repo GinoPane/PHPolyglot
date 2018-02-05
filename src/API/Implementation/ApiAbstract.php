@@ -2,11 +2,11 @@
 
 namespace GinoPane\PHPolyglot\API\Implementation;
 
-use GinoPane\NanoRest\Exceptions\ResponseContextException;
-use GinoPane\NanoRest\Exceptions\TransportException;
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Exceptions\TransportException;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
+use GinoPane\NanoRest\Exceptions\ResponseContextException;
 use GinoPane\PHPolyglot\API\Response\ApiResponseInterface;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
 use GinoPane\PHPolyglot\Exception\BadResponseContextException;
@@ -89,13 +89,13 @@ abstract class ApiAbstract
     /**
      * Filters ResponseContext from common HTTP errors
      *
-     * @param ResponseContext $responseContext
+     * @param ResponseContextAbstract $responseContext
      *
      * @throws BadResponseContextException
      *
      * @return void
      */
-    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
+    protected function processApiResponseContextErrors(ResponseContextAbstract $responseContext): void
     {
         if ($responseContext->hasHttpError()) {
             throw new BadResponseContextException(
@@ -139,9 +139,9 @@ abstract class ApiAbstract
      * @throws ResponseContextException
      * @throws BadResponseContextException
      *
-     * @return ResponseContext
+     * @return ResponseContextAbstract
      */
-    private function getApiResponseContext(RequestContext $requestContext): ResponseContext
+    private function getApiResponseContext(RequestContext $requestContext): ResponseContextAbstract
     {
         $responseContext = $this->httpClient->sendRequest(
             $requestContext
@@ -176,15 +176,17 @@ abstract class ApiAbstract
     /**
      * Prepares API response by processing ResponseContext
      *
-     * @param ResponseContext $responseContext
+     * @param ResponseContextAbstract $responseContext
      * @param string $apiClassMethod
      *
      * @throws MethodDoesNotExistException
      *
      * @return ApiResponseInterface
      */
-    private function prepareApiResponse(ResponseContext $responseContext, string $apiClassMethod): ApiResponseInterface
-    {
+    private function prepareApiResponse(
+        ResponseContextAbstract $responseContext,
+        string $apiClassMethod
+    ): ApiResponseInterface {
         $prepareApiResponse = sprintf("prepare%sResponse", ucfirst($apiClassMethod));
 
         $this->assertMethodExists($prepareApiResponse);

@@ -4,8 +4,8 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
 use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
@@ -111,13 +111,11 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getErroneousResponsesForErrorProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param string          $expectedError
      * @param int             $expectedErrorCode
-     *
-     * @throws InvalidConfigException
      */
-    public function testIfProcessApiErrorsWorksCorrectly(ResponseContext $context, string $expectedError, int $expectedErrorCode = 0)
+    public function testIfProcessApiErrorsWorksCorrectly(ResponseContextAbstract $context, string $expectedError, int $expectedErrorCode = 0)
     {
         $this->expectExceptionCode($expectedErrorCode);
         $this->expectExceptionMessage($expectedError);
@@ -192,11 +190,9 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getInvalidResponseForTextLookupProcessing
      *
-     * @param ResponseContext $response
-     *
-     * @throws InvalidConfigException
+     * @param ResponseContextAbstract $response
      */
-    public function testIfInvalidTextLookupResponseCanBeProcessed(ResponseContext $response)
+    public function testIfInvalidTextLookupResponseCanBeProcessed(ResponseContextAbstract $response)
     {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
@@ -307,9 +303,9 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     }
 
     /**
-     * @return ResponseContext
+     * @return ResponseContextAbstract
      */
-    public function getValidResponseForTextLookupProcessing(): ResponseContext
+    public function getValidResponseForTextLookupProcessing(): ResponseContextAbstract
     {
         return (
                 new JsonResponseContext('{
@@ -705,7 +701,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
         ];
     }
 
-    public function getEmptyResponseForTextLookupProcessing(): ResponseContext
+    public function getEmptyResponseForTextLookupProcessing(): ResponseContextAbstract
     {
         return (
             new JsonResponseContext('{
@@ -718,7 +714,7 @@ class YandexDictionaryApiTest extends PHPolyglotTestCase
     /**
      * @return ResponseContext
      */
-    public function getValidResponseForTextTranslateLookupProcessing(): ResponseContext
+    public function getValidResponseForTextTranslateLookupProcessing(): ResponseContextAbstract
     {
         return (
                     new JsonResponseContext('{

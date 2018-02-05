@@ -3,8 +3,8 @@
 namespace GinoPane\PHPolyglot\API\Implementation\SpellCheck;
 
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Exceptions\TransportException;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\NanoRest\Exceptions\ResponseContextException;
@@ -56,9 +56,9 @@ abstract class SpellCheckApiAbstract extends ApiAbstract implements SpellCheckAp
     /**
      * Process response of spell-check request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return SpellCheckResponse
      */
-    abstract protected function prepareCheckTextsResponse(ResponseContext $context): SpellCheckResponse;
+    abstract protected function prepareCheckTextsResponse(ResponseContextAbstract $context): SpellCheckResponse;
 }

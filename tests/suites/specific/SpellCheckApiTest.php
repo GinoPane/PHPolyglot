@@ -4,25 +4,12 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\DummyResponseContext;
-use GinoPane\NanoRest\Response\ResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
-use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
-use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
-use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiInterface;
-use GinoPane\PHPolyglot\API\Implementation\TTS\IbmWatson\IbmWatsonTtsApi;
-use GinoPane\PHPolyglot\API\Response\SpellCheck\SpellCheckResponse;
-use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
-use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
-use GinoPane\PHPolyglot\Exception\InvalidAudioFormatCodeException;
-use GinoPane\PHPolyglot\Exception\InvalidAudioFormatParameterException;
-use GinoPane\PHPolyglot\Exception\InvalidIoException;
-use GinoPane\PHPolyglot\Exception\InvalidPathException;
-use GinoPane\PHPolyglot\Exception\InvalidPropertyException;
-use GinoPane\PHPolyglot\Exception\InvalidEnvironmentException;
-use GinoPane\PHPolyglot\Exception\InvalidVoiceCodeException;
-use GinoPane\PHPolyglot\Exception\InvalidVoiceParametersException;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
+use GinoPane\PHPolyglot\API\Response\SpellCheck\SpellCheckResponse;
+use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
+use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiInterface;
 
 /**
 *  Corresponding class to test SpellCheckApi class
@@ -96,7 +83,7 @@ class SpellCheckApiTest extends PHPolyglotTestCase
         ], $response->getCorrections());
     }
 
-    private function getResponseContext(): ResponseContext
+    private function getResponseContext(): ResponseContextAbstract
     {
         $context = new JsonResponseContext();
 

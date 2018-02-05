@@ -6,7 +6,7 @@ use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
 use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\NanoRest\Response\JsonResponseContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
 use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
@@ -37,14 +37,11 @@ class PHPolyglotTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidTranslateResponses
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param string          $translation
-     *
-     * @throws InvalidLanguageCodeException
-     * @throws InvalidConfigException
      */
     public function testIfTranslateWorksCorrectlyForValidInput(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         string $translation
     ) {
         $translateApi = $this->getApiFactoryWithMockedHttpClient(
@@ -63,14 +60,14 @@ class PHPolyglotTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidTranslateBulkResponses
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param array           $translations
      *
      * @throws InvalidConfigException
      * @throws InvalidLanguageCodeException
      */
     public function testIfTranslateBulkWorksCorrectlyForValidInput(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         array $translations
     ) {
         $translateApi = $this->getApiFactoryWithMockedHttpClient(
@@ -306,7 +303,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
     /**
      * @return JsonResponseContext
      */
-    public function getValidTextAlternativesResponse(): ResponseContext
+    public function getValidTextAlternativesResponse(): ResponseContextAbstract
     {
         return  (
             new JsonResponseContext('{
@@ -375,9 +372,9 @@ class PHPolyglotTest extends PHPolyglotTestCase
     }
 
     /**
-     * @return ResponseContext
+     * @return ResponseContextAbstract
      */
-    public function getValidTranslateAlternativesResponse(): ResponseContext
+    public function getValidTranslateAlternativesResponse(): ResponseContextAbstract
     {
         return  (
             new JsonResponseContext('{
@@ -501,7 +498,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
         )->setHttpStatusCode(200);
     }
 
-    private function getValidSpellCheckResponse(): ResponseContext
+    private function getValidSpellCheckResponse(): ResponseContextAbstract
     {
         $context = new JsonResponseContext();
 
@@ -569,9 +566,9 @@ class PHPolyglotTest extends PHPolyglotTestCase
     }
 
     /**
-     * @return ResponseContext
+     * @return ResponseContextAbstract
      */
-    public function getValidTtsResponse(): ResponseContext
+    public function getValidTtsResponse(): ResponseContextAbstract
     {
         $requestContext = (new RequestContext())
             ->setData(json_encode(['text' => 'hello world']));
@@ -621,13 +618,13 @@ class PHPolyglotTest extends PHPolyglotTestCase
     }
 
     /**
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param                 $apiFactory
      *
      * @return mixed
      */
     private function getApiFactoryWithMockedHttpClient(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         ApiAbstract $apiFactory
     ) {
         $nanoRest = $this->getMockBuilder(NanoRest::class)

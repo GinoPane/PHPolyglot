@@ -4,7 +4,7 @@ namespace GinoPane\PHPolyglot;
 
 use GinoPane\NanoRest\NanoRest;
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\NanoRest\Response\JsonResponseContext;
 use GinoPane\NanoRest\Response\DummyResponseContext;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
@@ -162,12 +162,12 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getErroneousResponsesForErrorProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param string          $expectedError
      * @param int             $expectedErrorCode
      */
     public function testIfProcessApiErrorsWorksCorrectly(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         string $expectedError,
         int $expectedErrorCode = 0
     ) {
@@ -190,10 +190,10 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidResponsesForResponseProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      */
     public function testIfValidResponseCanBeProcessed(
-        ResponseContext $context
+        ResponseContextAbstract $context
     ) {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
@@ -214,10 +214,10 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidResponseWithSingleContentTypeForResponseProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      */
     public function testIfValidResponseWIthSingleContentTypeCanBeProcessed(
-        ResponseContext $context
+        ResponseContextAbstract $context
     ) {
         $nanoRest = $this->getMockBuilder(NanoRest::class)
             ->setMethods(array('sendRequest'))
@@ -238,14 +238,14 @@ class IbmWatsonTtsApiTest extends PHPolyglotTestCase
     /**
      * @dataProvider getValidResponsesForResponseProcessing
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      * @param string          $expected
      *
      * @throws InvalidIoException
      * @throws InvalidPathException
      */
     public function testIfValidResponseCanBeProcessedByTtsResponse(
-        ResponseContext $context,
+        ResponseContextAbstract $context,
         string $expected
     ) {
         $api = $this->getTtsApiFactory()->getApi();

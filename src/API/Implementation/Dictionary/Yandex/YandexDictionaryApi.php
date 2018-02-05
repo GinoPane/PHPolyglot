@@ -3,7 +3,7 @@
 namespace GinoPane\PHPolyglot\API\Implementation\Dictionary\Yandex;
 
 use GinoPane\NanoRest\Request\RequestContext;
-use GinoPane\NanoRest\Response\ResponseContext;
+use GinoPane\NanoRest\Response\ResponseContextAbstract;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\Exception\InvalidResponseContent;
 use GinoPane\NanoRest\Exceptions\RequestContextException;
@@ -88,11 +88,11 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     /**
      * Process response of get-text-alternatives request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return DictionaryResponse
      */
-    protected function prepareGetTextAlternativesResponse(ResponseContext $context): DictionaryResponse
+    protected function prepareGetTextAlternativesResponse(ResponseContextAbstract $context): DictionaryResponse
     {
         return $this->processLookupResponse($context);
     }
@@ -121,11 +121,11 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     /**
      * Process response of get-translate-alternatives request and prepare valid response
      *
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return DictionaryResponse
      */
-    protected function prepareGetTranslateAlternativesResponse(ResponseContext $context): DictionaryResponse
+    protected function prepareGetTranslateAlternativesResponse(ResponseContextAbstract $context): DictionaryResponse
     {
         return $this->processLookupResponse($context);
     }
@@ -133,12 +133,12 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     /**
      * Filters ResponseContext from common HTTP errors
      *
-     * @param ResponseContext $responseContext
+     * @param ResponseContextAbstract $responseContext
      *
      * @throws InvalidResponseContent
      * @throws BadResponseContextException
      */
-    protected function processApiResponseContextErrors(ResponseContext $responseContext): void
+    protected function processApiResponseContextErrors(ResponseContextAbstract $responseContext): void
     {
         $responseArray = $responseContext->getArray();
 
@@ -176,11 +176,11 @@ class YandexDictionaryApi extends DictionaryApiAbstract
     }
 
     /**
-     * @param ResponseContext $context
+     * @param ResponseContextAbstract $context
      *
      * @return DictionaryResponse
      */
-    private function processLookupResponse(ResponseContext $context): DictionaryResponse
+    private function processLookupResponse(ResponseContextAbstract $context): DictionaryResponse
     {
         $responseArray = $context->getArray()['def'];
 
