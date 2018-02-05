@@ -3,19 +3,12 @@
 namespace GinoPane\PHPolyglot;
 
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
-use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
+use GinoPane\PHPolyglot\Supplemental\GetApiInstancesTrait;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
 use GinoPane\PHPolyglot\API\Supplemental\TTS\TtsAudioFormat;
-use GinoPane\PHPolyglot\API\Implementation\TTS\TtsApiInterface;
 use GinoPane\PHPolyglot\API\Response\Translate\TranslateResponse;
-use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Response\Dictionary\DictionaryResponse;
 use GinoPane\PHPolyglot\API\Response\SpellCheck\SpellCheckResponse;
-use GinoPane\PHPolyglot\API\Factory\Dictionary\DictionaryApiFactory;
-use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
-use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
-use GinoPane\PHPolyglot\API\Implementation\Dictionary\DictionaryApiInterface;
-use GinoPane\PHPolyglot\API\Implementation\SpellCheck\SpellCheckApiInterface;
 
 define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 
@@ -27,6 +20,8 @@ define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
  */
 class PHPolyglot
 {
+    use GetApiInstancesTrait;
+
     /**
      * @param string $text
      * @param string $languageTo
@@ -118,61 +113,5 @@ class PHPolyglot
     public function spellCheckBulk(array $texts, string $languageFrom = ''): SpellCheckResponse
     {
         return $this->getSpellCheckApi()->checkTexts($texts, new Language($languageFrom));
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * Get Translate API instance
-     *
-     * @param array $parameters
-     *
-     * @return TranslateApiInterface
-     */
-    protected function getTranslateApi(array $parameters = []): TranslateApiInterface
-    {
-        return (new TranslateApiFactory())->getApi($parameters);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * Get Dictionary API instance
-     *
-     * @param array $parameters
-     *
-     * @return DictionaryApiInterface
-     */
-    protected function getDictionaryApi(array $parameters = []): DictionaryApiInterface
-    {
-        return (new DictionaryApiFactory())->getApi($parameters);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * Get Tts API instance
-     *
-     * @param array $parameters
-     *
-     * @return TtsApiInterface
-     */
-    protected function getTtsApi(array $parameters = []): TtsApiInterface
-    {
-        return (new TtsApiFactory())->getApi($parameters);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * Get SpellCheck API instance
-     *
-     * @param array $parameters
-     *
-     * @return SpellCheckApiInterface
-     */
-    protected function getSpellCheckApi(array $parameters = []): SpellCheckApiInterface
-    {
-        return (new SpellCheckApiFactory())->getApi($parameters);
     }
 }
