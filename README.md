@@ -7,7 +7,6 @@ PHPolyglot
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b1e2b6042612f67f7e13/test_coverage)](https://codeclimate.com/github/GinoPane/PHPolyglot/test_coverage)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/GinoPane/phpolyglot/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/GinoPane/phpolyglot/?branch=master)
 [![License](https://poser.pugx.org/gino-pane/phpolyglot/license)](https://packagist.org/packages/gino-pane/phpolyglot)
-[![composer.lock](https://poser.pugx.org/gino-pane/phpolyglot/composerlock)](https://packagist.org/packages/gino-pane/phpolyglot)
 [![Total Downloads](https://poser.pugx.org/gino-pane/phpolyglot/downloads)](https://packagist.org/packages/gino-pane/phpolyglot)
 
 Combining and featuring different APIs for language translation, dictionary lookup, spelling correction and speech synthesis (TTS) in an easy to use and extend way.
