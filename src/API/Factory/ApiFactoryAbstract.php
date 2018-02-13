@@ -3,9 +3,9 @@
 namespace GinoPane\PHPolyglot\API\Factory;
 
 use Dotenv\Dotenv;
-use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 use GinoPane\PHPolyglot\Exception\InvalidPathException;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
+use GinoPane\PHPolyglot\Exception\InvalidApiClassException;
 
 /**
  * Interface ApiFactoryAbstract
@@ -39,6 +39,8 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     protected static $config = null;
 
     /**
+     * Boolean configuration flag which says
+     *
      * @var array|null
      */
     protected static $env = null;
@@ -64,11 +66,15 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      *
      * @throws InvalidPathException
      * @throws InvalidConfigException
+     * @throws InvalidApiClassException
      */
     public function __construct()
     {
-        if (is_null(self::$config) || is_null(self::$env)) {
+        if (is_null(self::$config)) {
             $this->initConfig();
+        }
+
+        if (is_null(self::$env)) {
             $this->initEnvironment();
         }
 
@@ -90,6 +96,62 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     }
 
     /**
+     * @param array $config
+     */
+    public static function setConfig(array $config = [])
+    {
+        self::$config = $config;
+    }
+
+    /**
+     * @param array $env
+     */
+    public static function setEnv(array $env = [])
+    {
+        self::$env = true;
+
+        foreach ($env as $variable => $value) {
+            self::setEnvironmentVariable($variable, $value);
+        }
+    }
+
+    /**
+     * @param   $name
+     * @param   $value
+     */
+    private static function setEnvironmentVariable($name, $value = null)
+    {
+        if (self::environmentVariableExists($name)) {
+            return;
+        }
+
+        if (function_exists('putenv')) {
+            putenv("$name=$value");
+        }
+
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
+    private static function environmentVariableExists($name)
+    {
+        switch (true) {
+            case array_key_exists($name, $_ENV):
+                return true;
+            case array_key_exists($name, $_SERVER):
+                return true;
+            default:
+                $value = getenv($name);
+                return $value !== false;
+        }
+    }
+
+    /**
      * Returns config section specific for current factory. Returns an empty array for invalid section name in case of
      * improper method call
      *
@@ -105,6 +167,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
      * required
      *
      * @throws InvalidConfigException
+     * @throws InvalidApiClassException
      */
     protected function assertConfigIsValid(): void
     {
@@ -112,7 +175,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
             if (empty(self::$config[$this->configSectionName][$property])) {
                 throw new InvalidConfigException(
                     sprintf(
-                        "Config section does not exist or is not filled properly: %s (required parameter \"%s\" is missing)",
+                        "Config section does not exist or is not filled properly: %s (\"%s\" is missing)",
                         $this->configSectionName,
                         $property
                     )
@@ -156,7 +219,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
 
         $this->assertFileIsReadable($envFile);
 
-        self::$env = (new Dotenv($this->getRootDirectory(), $this->getEnvFileName()))->load();
+        self::$env = (bool)(new Dotenv($this->getRootDirectory(), $this->getEnvFileName()))->load();
     }
 
     /**

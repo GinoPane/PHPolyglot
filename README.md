@@ -68,7 +68,11 @@ Basic Usage
 
 The package contains a plenty of ready-to-use examples in [examples](https://github.com/GinoPane/PHPolyglot/blob/master/examples) directory.
 All endpoints either return a valid response or throws a relevant exception.
-All APIs are configured through [config.php](https://github.com/GinoPane/PHPolyglot/blob/master/config.php) file which contains the default API classes mapping. Dynamic configs are not supported yet, but they are listed in [possible todos](#possible-todos).
+All APIs are configured through [config.php](https://github.com/GinoPane/PHPolyglot/blob/master/config.php) file which contains the default API classes mapping. Support of dynamic configs was added in [1.1.0](https://github.com/GinoPane/PHPolyglot/releases/tag/v1.1.0) update:
+
+```
+$phpolyglot = new PHPolyglot();
+```
 
 Translation
 -----------
@@ -258,8 +262,7 @@ Possible ToDos
 * transcribe words;
 * get synonyms, antonyms, derivatives;
 * detect text language;
-* add more configuration flexibility (choose API based on config constraints, like different APIs for different languages);
-* pass config override into root constructor.
+* add more configuration flexibility (choose API based on config constraints, like different APIs for different languages).
     
 Useful Tools
 ============

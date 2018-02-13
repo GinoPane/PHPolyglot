@@ -16,6 +16,11 @@ Types of changes
 
 ## [Unreleased]
 
+## 1.1.0 - 2018-02-13
+
+### Changed
+* Implemented dynamic configs.
+
 ## 1.0.1 - 2018-02-05
 
 ### Changed

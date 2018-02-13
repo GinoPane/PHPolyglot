@@ -2,6 +2,7 @@
 
 namespace GinoPane\PHPolyglot;
 
+use GinoPane\PHPolyglot\API\Factory\ApiFactoryAbstract;
 use GinoPane\PHPolyglot\API\Response\TTS\TtsResponse;
 use GinoPane\PHPolyglot\Supplemental\GetApiInstancesTrait;
 use GinoPane\PHPolyglot\Supplemental\Language\Language;
@@ -21,6 +22,25 @@ define(__NAMESPACE__ . '\ROOT_DIRECTORY', dirname(__FILE__));
 class PHPolyglot
 {
     use GetApiInstancesTrait;
+
+    /**
+     * PHPolyglot constructor
+     *
+     * You can pass configuration arrays manually if you want to dynamically override default behaviour
+     *
+     * @param array|null $config
+     * @param array|null $env
+     */
+    public function __construct(array $config = null, array $env = null)
+    {
+        if (!is_null($config)) {
+            ApiFactoryAbstract::setConfig($config);
+        }
+
+        if (!is_null($env)) {
+            ApiFactoryAbstract::setEnv($env);
+        }
+    }
 
     /**
      * @param string $text
