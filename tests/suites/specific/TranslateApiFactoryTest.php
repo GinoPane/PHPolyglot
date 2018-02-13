@@ -34,7 +34,7 @@ class TranslateApiFactoryTest extends PHPolyglotTestCase
 
     public function testIfTranslateApiFactoryThrowsExceptionOnWrongEnvFile()
     {
-        $this->setInternalProperty(TranslateApiFactory::class, 'env', null);
+        $this->setInternalProperty(TranslateApiFactory::class, 'envIsSet', false);
 
         $this->expectException(InvalidPathException::class);
 

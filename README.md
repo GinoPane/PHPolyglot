@@ -71,8 +71,10 @@ All endpoints either return a valid response or throws a relevant exception.
 All APIs are configured through [config.php](https://github.com/GinoPane/PHPolyglot/blob/master/config.php) file which contains the default API classes mapping. Support of dynamic configs was added in [1.1.0](https://github.com/GinoPane/PHPolyglot/releases/tag/v1.1.0) update:
 
 ```
-$phpolyglot = new PHPolyglot();
+$phpolyglot = new PHPolyglot($config, $env);
 ```
+
+This allows you to pass your own configuration values if you don't want to rely on those that are stored in configuration files.
 
 Translation
 -----------
@@ -108,7 +110,7 @@ In order to use the API you need to get the valid [API key](https://tech.yandex.
 Dictionary Lookup
 -----------------
 
-There a single endpoint, which can be used in two different forms.
+There is a single endpoint, which can be used in two different forms.
 
 For a lookup within the same language (get word forms):
 

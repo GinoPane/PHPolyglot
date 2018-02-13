@@ -13,6 +13,8 @@ use GinoPane\PHPolyglot\API\Factory\SpellCheck\SpellCheckApiFactory;
 use GinoPane\PHPolyglot\API\Factory\Translate\TranslateApiFactory;
 use GinoPane\PHPolyglot\API\Factory\TTS\TtsApiFactory;
 use GinoPane\PHPolyglot\API\Implementation\ApiAbstract;
+use GinoPane\PHPolyglot\API\Implementation\Translate\TranslateApiInterface;
+use GinoPane\PHPolyglot\API\Implementation\Translate\Yandex\YandexTranslateApi;
 use GinoPane\PHPolyglot\API\Response\Dictionary\Entry\POS\DictionaryEntryPos;
 use GinoPane\PHPolyglot\API\Response\SpellCheck\SpellCheckResponse;
 use GinoPane\PHPolyglot\Exception\InvalidConfigException;
@@ -45,7 +47,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
         putenv('YANDEX_TRANSLATE_API_KEY');
 
         $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'envIsSet', false);
 
         $object = new PHPolyglot(null, []);
 
@@ -54,10 +56,35 @@ class PHPolyglotTest extends PHPolyglotTestCase
         $this->getTranslateApiFactory()->getApi();
     }
 
+    public function testIfGetApiWorksForValidCustomEnv()
+    {
+        unset($_SERVER['YANDEX_TRANSLATE_API_KEY']);
+        unset($_ENV['YANDEX_TRANSLATE_API_KEY']);
+        putenv('YANDEX_TRANSLATE_API_KEY');
+        $_SERVER['PHPOLYGLOT_TEST_SERVER_KEY'] = 'test';
+
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'envIsSet', false);
+
+        $object = new PHPolyglot(null, [
+            'YANDEX_TRANSLATE_API_KEY' => 'YANDEX_TRANSLATE_API_TEST_KEY',
+            'YANDEX_DICTIONARY_API_KEY' => 'overriden',
+            'PHPOLYGLOT_TEST_SERVER_KEY' => 'overriden'
+        ]);
+
+        $this->assertTrue(is_object($object));
+
+        $api = $this->getTranslateApiFactory()->getApi();
+        $this->assertInstanceOf(TranslateApiInterface::class, $api);
+        $this->assertEquals('YANDEX_TRANSLATE_API_TEST_KEY', getenv('YANDEX_TRANSLATE_API_KEY'));
+        $this->assertEquals('YANDEX_DICTIONARY_TEST_KEY', getenv('YANDEX_DICTIONARY_API_KEY'));
+        $this->assertEquals('test', $_SERVER['PHPOLYGLOT_TEST_SERVER_KEY']);
+    }
+
     public function testIfGetApiThrowsExceptionForBadConfig()
     {
         $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'envIsSet', false);
 
         $this->expectException(InvalidConfigException::class);
 
@@ -66,6 +93,26 @@ class PHPolyglotTest extends PHPolyglotTestCase
         $this->assertTrue(is_object($object));
 
         $this->getTranslateApiFactory()->getApi();
+    }
+
+    public function testIfGetApiWorksForValidCustomConfig()
+    {
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'envIsSet', false);
+
+        $object = new PHPolyglot(
+            [
+                'translateApi' => [
+                    'default' => YandexTranslateApi::class
+                ]
+            ]
+        );
+
+        $this->assertTrue(is_object($object));
+
+        $api = $this->getTranslateApiFactory()->getApi();
+
+        $this->assertInstanceOf(TranslateApiInterface::class, $api);
     }
 
     /**
@@ -79,7 +126,7 @@ class PHPolyglotTest extends PHPolyglotTestCase
         string $translation
     ) {
         $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
+        $this->setInternalProperty(ApiFactoryAbstract::class, 'envIsSet', false);
 
         $translateApi = $this->getApiFactoryWithMockedHttpClient(
             $context,
@@ -104,9 +151,6 @@ class PHPolyglotTest extends PHPolyglotTestCase
         ResponseContextAbstract $context,
         array $translations
     ) {
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
-
         $translateApi = $this->getApiFactoryWithMockedHttpClient(
             $context,
             $this->getTranslateApiFactory()->getApi()
@@ -132,9 +176,6 @@ class PHPolyglotTest extends PHPolyglotTestCase
 
     public function testIfTextAlternativesLookupWorksCorrectlyForValidInput()
     {
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
-
         $translateApi = $this->getApiFactoryWithMockedHttpClient(
             $this->getValidTextAlternativesResponse(),
             $this->getDictionaryApiFactory()->getApi()
@@ -156,9 +197,6 @@ class PHPolyglotTest extends PHPolyglotTestCase
 
     public function testIfTranslateAlternativesLookupWorksCorrectlyForValidInput()
     {
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
-
         $translateApi = $this->getApiFactoryWithMockedHttpClient(
             $this->getValidTranslateAlternativesResponse(),
             $this->getDictionaryApiFactory()->getApi()
@@ -180,9 +218,6 @@ class PHPolyglotTest extends PHPolyglotTestCase
 
     public function testIfSpeakWorksCorrectlyForValidInput()
     {
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
-
         $ttsApi = $this->getApiFactoryWithMockedHttpClient(
             $this->getValidTtsResponse(),
             $this->getTtsApiFactory()->getApi()
@@ -205,9 +240,6 @@ class PHPolyglotTest extends PHPolyglotTestCase
 
     public function testIfSpellCheckWorksCorrectlyForValidInput()
     {
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'config', null);
-        $this->setInternalProperty(ApiFactoryAbstract::class, 'env', null);
-
         $spellCheckApi = $this->getApiFactoryWithMockedHttpClient(
             $this->getValidSpellCheckResponse(),
             $this->getSpellCheckApiFactory()->getApi()

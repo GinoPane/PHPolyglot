@@ -39,11 +39,11 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     protected static $config = null;
 
     /**
-     * Boolean configuration flag which says
+     * Boolean configuration flag which indicates whether environment variables were set or not
      *
      * @var array|null
      */
-    protected static $env = null;
+    protected static $envIsSet = false;
 
     /**
      * Config properties that must exist for valid config
@@ -74,7 +74,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
             $this->initConfig();
         }
 
-        if (is_null(self::$env)) {
+        if (!self::$envIsSet) {
             $this->initEnvironment();
         }
 
@@ -104,11 +104,13 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
     }
 
     /**
+     * Sets environment variables using $env array. Existing variables will not be overwritten
+     *
      * @param array $env
      */
     public static function setEnv(array $env = [])
     {
-        self::$env = true;
+        self::$envIsSet = true;
 
         foreach ($env as $variable => $value) {
             self::setEnvironmentVariable($variable, $value);
@@ -219,7 +221,7 @@ abstract class ApiFactoryAbstract implements ApiFactoryInterface
 
         $this->assertFileIsReadable($envFile);
 
-        self::$env = (bool)(new Dotenv($this->getRootDirectory(), $this->getEnvFileName()))->load();
+        self::$envIsSet = (bool)(new Dotenv($this->getRootDirectory(), $this->getEnvFileName()))->load();
     }
 
     /**
