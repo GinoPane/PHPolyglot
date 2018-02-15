@@ -16,6 +16,11 @@ Types of changes
 
 ## [Unreleased]
 
+## 1.1.1 - 2018-02-13
+
+### Changed
+* Upgraded to PHPUnit >= 7.0.
+
 ## 1.1.0 - 2018-02-13
 
 ### Changed
@@ -40,4 +45,4 @@ Types of changes
 ### Features
 * The initial release after clean installation from composer-package-template.
 
-[Unreleased]: https://github.com/GinoPane/composer-package-template/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/GinoPane/composer-package-template/compare/v1.1.1...HEAD
