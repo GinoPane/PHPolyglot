@@ -69,7 +69,7 @@ The package contains a plenty of ready-to-use examples in [examples](https://git
 All endpoints either return a valid response or throws a relevant exception.
 All APIs are configured through [config.php](https://github.com/GinoPane/PHPolyglot/blob/master/config.php) file which contains the default API classes mapping. Support of dynamic configs was added in [1.1.0](https://github.com/GinoPane/PHPolyglot/releases/tag/v1.1.0) update:
 
-```
+```php
 $phpolyglot = new PHPolyglot($config, $env);
 ```
 
@@ -80,19 +80,19 @@ Translation
 
 There are two endpoints. For a single string:
 
-```
+```php
 function translate(string $text, string $languageTo, string $languageFrom = ''): TranslateResponse
 ```
 
 and for multiple strings:
 
-```
+```php
 function translateBulk(array $text, string $languageTo, string $languageFrom = ''): TranslateResponse
 ```
 
 As a minimum example you can pass text and language to translate into (source language will be detected by API):
 
-```
+```php
 $response = (new PHPolyglot())->translate('Hello world', 'it')->getTranslations(); // [ 0 => Ciao mondo ]
 ```
 
@@ -113,19 +113,19 @@ There is a single endpoint, which can be used in two different forms.
 
 For a lookup within the same language (get word forms):
 
-```
+```php
 function lookup(string $text, string $languageFrom): DictionaryResponse
 ```
 
 and for translation-with-lookup (get multiple translations and additional information including word forms, examples, meanings, synonyms, transcription, etc.):
 
-```
+```php
 function lookup(string $text, string $languageFrom, string $languageTo): DictionaryResponse
 ```
 
 As a minimum example you can pass text and its source language:
 
-```
+```php
 $response = (new PHPolyglot)->lookup('Hello', 'en)->getEntries();
 
 $synonyms = implode(", ", $response[0]->getSynonyms());
@@ -167,19 +167,19 @@ Spelling Check
 
 There are two endpoints. For a single string:
 
-```
+```php
 function spellCheck(string $text, string $languageFrom = ''): SpellCheckResponse
 ```
 
 and for multiple strings:
 
-```
+```php
 function spellCheckBulk(array $texts, string $languageFrom = ''): SpellCheckResponse
 ```
 
 As a minimum example you can pass only a text to check:
 
-```
+```php
 $corrections = $phpolyglot->spellCheckText('Helo werld', $languageFrom)->getCorrections();
 
 /**
@@ -214,7 +214,7 @@ Speech Synthesis
 
 The main endpoint is `PHPolyglot`'s `speak` method:
 
-```
+```php
 public function speak(
     string $text,
     string $languageFrom,
@@ -243,13 +243,13 @@ Please note that not all of them may be supported by your API of choice.
 
 The TTS method returns `TtsResponse` which has `storeFile` method to store generated file with required name and extension into the specified directory (or by using default values):
 
-```
+```php
 function storeFile(string $fileName = '', string $extension = '', string $directory = ''): string
 ```
 
 By default the file name is a simple `md5` hash of `$text` that was used for TTS, `$extension` is being populated based on `content-type` header (at least, for IBM Watson API), `$directory` is based on config setting.
 
-```
+```php
 (new PHPolyglot())->speak('Hello world', 'en')->storeFile(); // stores 3e25960a79dbc69b674cd4ec67a72c62.mp3
 ```
 
